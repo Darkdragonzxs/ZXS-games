@@ -14,66 +14,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particles.js Demo</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap">
     <style>
         body {
             margin: 0;
             position: relative;
             height: 100vh;
-            background-color: black; /* Adjust the background color as needed */
+            overflow: hidden;
+            background-color: black; /* Set the body background color to black */
         }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: transparent; /* Make the background transparent for particles to float */
+        }
+
         #title {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: 'Orbitron', sans-serif;
-            font-size: 64px; /* Adjust font size as needed */
-            color: white; /* Text color */
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),  /* White glow */
-                         0 0 20px rgba(0, 255, 0, 0.8); /* Green glow */
-            transition: transform 0.3s; /* Smooth transition for hover effect */
+            font-size: 64px;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 255, 0, 0.8);
+            transition: transform 0.3s;
         }
+
         #title:hover {
             transform: translate(-50%, -50%) scale(1.1); /* Scale effect on hover */
         }
+
         #random-message {
             position: absolute;
-            bottom: 60px; /* Adjusted to position above the battery percentage */
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Orbitron', sans-serif;
             font-size: 20px;
-            color: white; /* Text color set to white */
+            color: white;
         }
+
         #battery-percentage {
             position: absolute;
-            bottom: 20px; /* Distance from the bottom */
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Orbitron', sans-serif;
             font-size: 24px;
-            color: white; /* Changed the color to white */
+            color: white;
         }
     </style>
-    <title>Battery Percentage Display</title>
 </head>
-<body>
 
+<body>
+    <div id="particles-js"></div>
     <div id="title">ZXS GAMES</div>
     <div id="random-message">Welcome to your device!</div>
     <div id="battery-percentage">Battery: 0%</div>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": { "value": "#ffffff" },
+                "shape": {
+                    "type": "circle",
+                    "stroke": { "width": 0, "color": "#000000" },
+                    "polygon": { "nb_sides": 5 }
+                },
+                "opacity": { "value": 0.5, "random": false, },
+                "size": {
+                    "value": 3,
+                    "random": true
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "repulse" },
+                    "onclick": { "enable": true, "mode": "push" },
+                    "resize": true
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+
+</html>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         // Array of random messages
         const messages = [
             "Mahan!",
             "Teacher",
             "Ver. 1.1 Beta: removed herobrine",
-            "i wrote thise in class",
-            "you aint sigma",
+            "I wrote this in class",
+            "You ain't sigma",
             "Ben said skibidi",
-            "its gooning time",
-            "Dedede computer happ"
+            "It's gooning time",
+            "Dedede computer happy"
         ];
 
         // Function to display a random message
@@ -98,8 +176,9 @@
             });
         });
     </script>
-
 </body>
+
+</html>
 </html>
   </div>
     <style>
@@ -652,7 +731,4 @@
     document.getElementById('home-button').addEventListener('click', function() {
         document.getElementById('proxy-section').style.display = 'none'; // Hide the proxy section
     });
-</script>
-<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
-
-   
+</script>   
