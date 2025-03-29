@@ -70,7 +70,7 @@
             "Teacher",
             "Ver. 1.1 Beta: removed herobrine",
             "i wrote thise in class",
-            "Fuck you",
+            "you aint sigma",
             "Ben said skibidi",
             "its gooning time",
             "Dedede computer happ"
@@ -303,6 +303,7 @@
                 <button id="apps-button">Apps</button>
                 <button id="proxy-button">Proxy</button>
                 <button id="hacks-button">Hacks</button>
+              <button id="links-button">Links</button>
                 <button id="settings-button">Settings</button>
             </div>
         </div>
@@ -627,3 +628,31 @@
 </html>
 </body>
 </html>
+
+<script>
+    // Show proxy section when the proxy button is clicked
+    document.getElementById('proxy-button').addEventListener('click', function() {
+        document.getElementById('proxy-section').style.display = 'block'; // Show the proxy section
+    });
+
+    // Open the specified Google Document in the iframe when the links button is clicked
+    document.getElementById('links-button').addEventListener('click', function() {
+        openLinks();
+    });
+
+    // Function to open the Google Document in the iframe
+    function openLinks() {
+        var iframeContainer = document.querySelector('.iframe-container');
+        var iframe = document.getElementById('game-iframe');
+        iframe.src = 'https://docs.google.com/document/d/1SpbsuGgRsg0tzW9cP7434SavIxjPwbAyrZqLw4aZe0I/preview?tab=t.0';
+        iframeContainer.style.display = 'block';
+    }
+
+    // Hide proxy section when the home button is clicked
+    document.getElementById('home-button').addEventListener('click', function() {
+        document.getElementById('proxy-section').style.display = 'none'; // Hide the proxy section
+    });
+</script>
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
