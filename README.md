@@ -1,3 +1,5 @@
-#ZXS GAMES
+# ZXS GAMES
+Discord: https://dsc.gg/zxsgames
 
-IN ALPHA TESTING
+**our official Github Repository!**
+Make sure to star for more updates
