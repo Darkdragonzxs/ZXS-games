@@ -1,52 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <title>ZXS GAMES 1.5</title>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZXS GAMES 1.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
     <link rel="icon" href="https://media-hosting.imagekit.io//22df2e446d5a4996/logo.png?Expires=1837211717&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=sjK~86wttUnoBhQ2Cm6ZK7ScYviFq25M1oKzSJ3nmeCOkS4QbCnfRIdMN96V7LRyw1e6jCsHWkTuwHDt4LHD6HthRuYp5opZTzkHOYTIRcmXfjysGmVP17Vf9MHfJ-DribNeHppDrmgYT9ebXcbIMYntbv8fukxuhr9mAUbpPxhU8am3D9JZIMgDf5H0A38H2jSe2dZLRaS3y0AMMhS1yxbmUV-PP9T4nUykjKCSHoGedkN0yKE4vNC2sWEdnDntwMydRhClbacG047auKhODUsnC6P6xQ9VSsNsmQOC6LTzpNic~ULOeZw5DXP99Wq7tM-4sL3U0cVh8M~~tq2e1g__" type="image/png">
-<div class="title-container">
-<html lang="en">
-<head>
-<html lang="en">
-<head>
-  
-</body>
-</html>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
-    <!DOCTYPE html>
-<html lang="en">
-<script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
-    new Crate({
-        server: '1358480735995953173', // ZXS GAMES
-        channel: '1358480736927354987' // #📣announcement
-    })
-</script>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Particles.js Demo</title>
-    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap">
     <style>
         body {
             margin: 0;
             position: relative;
             height: 100vh;
             overflow: hidden;
-            background-color: black; /* Set the body background color to black */
+            background-color: black;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
         }
 
         #particles-js {
             position: absolute;
             width: 100%;
             height: 100%;
-            background-color: transparent; /* Make the background transparent for particles to float */
+            background-color: transparent;
         }
 
         #title {
@@ -59,10 +34,11 @@
             color: white;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 255, 0, 0.8);
             transition: transform 0.3s;
+            z-index: 2;
         }
 
         #title:hover {
-            transform: translate(-50%, -50%) scale(1.1); /* Scale effect on hover */
+            transform: translate(-50%, -50%) scale(1.1);
         }
 
         #random-message {
@@ -73,6 +49,7 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 20px;
             color: white;
+            z-index: 2;
         }
 
         #battery-percentage {
@@ -83,15 +60,182 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 24px;
             color: white;
+            z-index: 2;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            z-index: 11;
+        }
+
+        .header-left .logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .centered-buttons {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 11;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-container button {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            padding: 8px 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        /* Homepage content */
+        .homepage-content {
+            position: absolute;
+            top: 70px;
+            width: 100%;
+            height: calc(100% - 70px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        /* Section iframes */
+        .section-iframe {
+            display: none;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 70px);
+            z-index: 5;
+            border: none;
+        }
+
+        /* Settings section */
+        .settings-section {
+            display: none;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            z-index: 10;
+            color: white;
+            overflow-y: auto;
+        }
+
+        .setting-option {
+            margin-bottom: 20px;
+        }
+
+        .setting-option input {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid white;
+            border-radius: 5px;
+            background-color: transparent;
+            color: white;
+        }
+
+        .setting-option button {
+            padding: 8px 12px;
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .setting-option button:hover {
+            background-color: white;
+            color: black;
         }
     </style>
 </head>
-    <div id="title">ZXS ゲーム</div>
 <body>
-    <div id="particles-js"></div>
-    <div id="random-message">skibidi placeholder</div>
-    <div id="battery-percentage">Battery: 0%</div>
+    <!-- Top navigation bar -->
+    <div class="top-bar">
+        <div class="header-left">
+            <img class="logo" src="https://media-hosting.imagekit.io//22df2e446d5a4996/logo.png?Expires=1837211717&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=sjK~86wttUnoBhQ2Cm6ZK7ScYviFq25M1oKzSJ3nmeCOkS4QbCnfRIdMN96V7LRyw1e6jCsHWkTuwHDt4LHD6HthRuYp5opZTzkHOYTIRcmXfjysGmVP17Vf9MHfJ-DribNeHppDrmgYT9ebXcbIMYntbv8fukxuhr9mAUbpPxhU8am3D9JZIMgDf5H0A38H2jSe2dZLRaS3y0AMMhS1yxbmUV-PP9T4nUykjKCSHoGedkN0yKE4vNC2sWEdnDntwMydRhClbacG047auKhODUsnC6P6xQ9VSsNsmQOC6LTzpNic~ULOeZw5DXP99Wq7tM-4sL3U0cVh8M~~tq2e1g__" alt="Logo">
+        </div>
+        <div class="centered-buttons">
+            <div class="button-container">
+                <button id="home-button">Home</button>
+                <button id="games-button">Games</button>
+                <button id="apps-button">Apps</button>
+                <button id="proxy-button">VM</button>
+                <button id="hacks-button">Hacks</button>
+                <button id="links-button">Partners</button>
+                <button id="settings-button">Settings</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Homepage content with particles -->
+    <div class="homepage-content">
+        <div id="particles-js"></div>
+        <div id="title">ZXS ゲーム</div>
+        <div id="random-message">skibidi placeholder</div>
+        <div id="battery-percentage">Battery: 0%</div>
+    </div>
+
+    <!-- Section iframes -->
+    <iframe id="games-iframe" class="section-iframe" src="about:blank"></iframe>
+    <iframe id="apps-iframe" class="section-iframe" src="about:blank"></iframe>
+    <iframe id="vm-iframe" class="section-iframe" src="about:blank"></iframe>
+    <iframe id="hacks-iframe" class="section-iframe" src="about:blank"></iframe>
+    <iframe id="partners-iframe" class="section-iframe" src="about:blank"></iframe>
+
+    <!-- Settings section -->
+    <div class="settings-section">
+        <h2>Settings</h2>
+        <div class="setting-option"> 
+            <h3>Tab Cloak</h3>
+            <input type="text" id="tab-name" placeholder="Enter tab name">
+            <input type="text" id="favicon-url" placeholder="Enter favicon URL"> 
+            <button onclick="applyTabCloak()">Apply Tab Cloak</button> 
+        </div>
+        <div class="setting-option">
+            <h3>About:blank Launch</h3>
+            <button onclick="openAboutBlank()">Open ZXS Games in About:blank</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         // Initialize particles.js
@@ -141,12 +285,8 @@
             },
             "retina_detect": true
         });
-    </script>
-</body>
 
-</html>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
+        // Random messages
         const messages = [
             "Mahan!",
             "Teacher",
@@ -169,586 +309,137 @@
             batteryPercentageDiv.textContent = `Battery: ${Math.round(battery.level * 100)}%`;
         }
 
-
         displayRandomMessage();
 
-        navigator.getBattery().then(function(battery) {
-            updateBatteryStatus(battery);
-            battery.addEventListener('levelchange', function() {
+        if (navigator.getBattery) {
+            navigator.getBattery().then(function(battery) {
                 updateBatteryStatus(battery);
+                battery.addEventListener('levelchange', function() {
+                    updateBatteryStatus(battery);
+                });
             });
-        });
-    </script>
-</body>
+        }
 
-</html>
-</html>
-  </div>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            background-color: black;
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            overflow: hidden;
-.top-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 70px;
-    background-color: rgba(0, 0, 0, 0.7); 
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    z-index: 10;
-}
-
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            z-index: 11;
-        }
-        .header-left .logo {
-            width: 50px;
-            height: 50px;
-        }
-        .header-left .name {
-            font-size: 32px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-left: 15px;
-        }
-        .centered-buttons {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 11;
-        }
-        .button-container {
-            display: flex;
-            gap: 10px;
-        }
-        .button-container button {
-            background-color: transparent;
-            border: 2px solid white;
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
-            padding: 8px 12px;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .button-container button:hover {
-            background-color: white;
-            color: black;
-        }
-        .games-section, .apps-section, .hacks-section {
-            display: none;
-            position: absolute;
-            top: 70px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            overflow-y: auto;
-            z-index: 5;
-        }
-        .search-bar {
-            width: 100%;
-            padding: 10px;
-            margin: 20px 0;
-            border: 2px solid white;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
-        }
-        .game-tiles, .app-tiles, .hack-tiles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-        }
-        .game-tile, .app-tile, .hack-tile {
-            width: 100px;
-            height: 100px;
-            background-color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 14px;
-            text-align: center;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        .game-tile:hover, .app-tile:hover, .hack-tile:hover {
-            transform: scale(1.05);
-        }
-        .iframe-container {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #333;
-            border-radius: 10px;
-            width: 80%;
-            height: 80%;
-            z-index: 20;
-        }
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .close-btn:hover {
-            background-color: red;
-        }
-        .settings-section {
-            display: none;
-            position: absolute;
-            top: 70px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            z-index: 10;
-            color: white;
-            overflow-y: auto;
-        }
-     
-        .setting-option {
-            margin-bottom: 20px;
-        }
-        .setting-option input {
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid white;
-            border-radius: 5px;
-            background-color: transparent;
-            color: white;
-        }
-        .setting-option button {
-            padding: 8px 12px;
-            background-color: transparent;
-            border: 2px solid white;
-            color: white;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .setting-option button:hover {
-            background-color: white;
-            color: black;
-        }
-    </style>
-</head>
-<body>
-
-
-    <div class="title-container">
-
-    </div>
-
-
-    <div class="top-bar">
-        <div class="header-left">
-            <img class="logo" src="https://media-hosting.imagekit.io//22df2e446d5a4996/logo.png?Expires=1837211717&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=sjK~86wttUnoBhQ2Cm6ZK7ScYviFq25M1oKzSJ3nmeCOkS4QbCnfRIdMN96V7LRyw1e6jCsHWkTuwHDt4LHD6HthRuYp5opZTzkHOYTIRcmXfjysGmVP17Vf9MHfJ-DribNeHppDrmgYT9ebXcbIMYntbv8fukxuhr9mAUbpPxhU8am3D9JZIMgDf5H0A38H2jSe2dZLRaS3y0AMMhS1yxbmUV-PP9T4nUykjKCSHoGedkN0yKE4vNC2sWEdnDntwMydRhClbacG047auKhODUsnC6P6xQ9VSsNsmQOC6LTzpNic~ULOeZw5DXP99Wq7tM-4sL3U0cVh8M~~tq2e1g__" alt="Logo">
-        </div>
-        <div class="centered-buttons">
-            <div class="button-container">
-                <button id="home-button">Home</button>
-                <button id="games-button">Games</button>
-                <button id="apps-button">Apps</button>
-                <button id="proxy-button">VM</button>
-                <button id="hacks-button">Hacks</button>
-              <button id="links-button">Partners</button>
-                <button id="settings-button">Settings</button>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="games-section">
-        <input type="text" class="search-bar" placeholder="Search for a game..." oninput="filterGames()">
-        <div class="game-tiles">
-          <div class="game-tile" onclick="openGame('https://html.cafe/x2bca0f8a')">1</div>
-            <div class="game-tile" onclick="openGame('https://html.cafe/x439eb616')">10 minutes till dawn</div>
-          <div class="game-tile" onclick="openGame('https://html.cafe/x07f85a5f')">1 on 1 soccer</div>
-            <div class="game-tile" onclick="openGame('https://html.cafe/x24d7f2d2')">1v1.lol</div>
-            <div class="game-tile" onclick="openGame('https://html.cafe/x3e8ef276')">ADOFAI</div>
-            <div class="game-tile" onclick="openGame('https://html.cafe/x56ef0937')">Amazing Strange Rope Police</div>
-            <div class="game-tile" onclick="openGame('https://html.cafe/x31af4ca1')">Animal Crossing Wild World</div>
-            <div class="game-tile" onclick="openGame('https://html.cafe/x95275485')">Bad Time Simulator</div>
-            <div class="game-tile" onclick="openGame('https://html.cafe/xbb24d780')">Baldi's Basics</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x315713ec')">Banjo-kazooie</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x94a9c242')">Basket Random</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xaea1d2bc')">Basketball Stars</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x6fa3e8c5')">Bitlife</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x22a42a5e')">Boxing Random</div> 
-    <div class="game-tile" onclick="openGame('https://html.cafe/x253923a0')">Cell Machine</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x660cee92')">Chess</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x2915e6b0')">Cluster Rush</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xe5f79f8e')">Cookie Clicker</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xb16c99e2')">Call of Duty - Black Ops</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x0987cd16')">Crossy Road</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xa376eff2')">CS:GO Clicker</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xef20df01')">Doge Miner</div>       
-    <div class="game-tile" onclick="openGame('https://html.cafe/x564e0ae3')">Donkey Kong 64</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x5cfb5291')">Doodle Jump</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x32d68b77')">DOOM</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xe5185150')">Dragon Ball Z Devolution</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x0c75d08e')">Drift Boss</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x5c0f302d')">Duck life</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x9274d0e7')">Duck life 2</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x16845f82')">Duck life 3</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x3670bc59')">Duck life 4</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x5bbdb41a')">Duck life 5</div> 
-    <div class="game-tile" onclick="openGame('https://html.cafe/x0961d6eb')">Eaglercraft (MC)</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x2944b3d1/')">Escape Road</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xdc4362ad/')">Factory balls</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xe95ac4a5')">Fancy Pants Adventure</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x3c630f38/')">FNAF 2</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x737f92fa/')">FNAF 3</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xf5c46683')">FNAF 4</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x520c1df0/')">GD LITE</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xde706cea/')">Gladihoppers</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xe2f35239/')">Google Dino</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xd60a74a8/')">Granny</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x5dd814b8')">Hole.io</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xac49551a')">Infinite Craft</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xe595b18d')">Jetpack Joyride</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x68dc41c7')">Johnny Upgrade</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xd00e9e0f')">Justfall.lol</div>
-        <div class="game-tile" onclick="openGame('https://html.cafe/x6d50c4e8')">Learn to fly</div>
-        <div class="game-tile" onclick="openGame('https://html.cafe/xc1e0a9e3')">Low Knight</div>
-        <div class="game-tile" onclick="openGame('https://html.cafe/x6225bb97')">Madalin Stunt Cars Multiplayer</div>
-        <div class="game-tile" onclick="openGame('https://html.cafe/x8d0315a8')">Melon Playground</div>
-        <div class="game-tile" onclick="openGame('https://html.cafe/x90f6f8a8')">MotoX3M</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x4ce02684')">OvO</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x886ce87b')">Papa's Pizzeria</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xd243fd55')">Paper.io 2</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xdf252d7c')">Ragdoll Archers</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x1693cbf5')">Retro Bowl</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xa0e4da39')">Rocket Leauge</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x41021f9c')">Run 2</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xb50973be')">Slither.io</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xbb12dd1c')">Slope</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x72322a1e')">Soccer Random</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xf9257001')">Sprunki</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xba2e1268')">Stickman Hook</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xa13664d4')">Subway Surfers</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x1f6e0335')">Super hot</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x967d4495')">Super Mario Bros.</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xc401d42c')">Super Mario 64</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x1b1247c1')">Mario Kart 64</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xe74ca21b')">Mario Kart Super Circut</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x078e2c9d')">Pokemon Emerald</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xc0e44ce8')">Pokemon Firered</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x3ac90ec4')">Pokemon Too Many Types</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x687c84dd')">The Impossible Quiz</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/xc4a97eb7')">Tiny Fishing</div>
-    <div class="game-tile" onclick="openGame('https://html.cafe/x0b61b5c1')">There is no Game</div>
-        <div class="game-tile" onclick="openGame('https://html.cafe/x9936a009')">Sonic</div>
-        <div class="game-tile" onclick="openGame('https://html.cafe/xa78411bd')">Sonic.EXE</div>
-        <div class="game-tile" onclick="openGame('https://html.cafe/x2fe9b893')">Final Fantasy VII</div>
-   <div class="game-tile" onclick="openGame('https://html.cafe/x8093575f')">Parappa The Rapper</div>
-          <div class="game-tile" onclick="openGame('https://html.cafe/xf57efd87')">Achivement Unlocked</div>
-          <div class="game-tile" onclick="openGame('https://html.cafe/x7e93b2a5')">Cat Mario</div>
-          <div class="game-tile" onclick="openGame('https://html.cafe/x28314654')">Little Devil</div>
-          <div class="game-tile" onclick="openGame('https://html.cafe/x080eb442')">Pizza Tower</div>
-          <div class="game-tile" onclick="openGame('https://html.cafe/x33537336')">Plants VS Zombies</div>
-          <div class="game-tile" onclick="openGame('https://html.cafe/x5a08302f')">Sandtris</div>
-          <div class="game-tile" onclick="openGame('https://html.cafe/x5ede91ec')">Wheely</div>
-          <div class="game-tile" onclick="openGame('https://html.cafe/xf9f63b1d')">Tom Clancy's Rainbow 6</div>
-          <div class="game-tile" onclick="openGame('https://www.autistici.org/burnedprojects/UNDERTALE/')">Undertale</div>
-   
-        </div>
-    </div>
-
-
-    <div class="apps-section">
-        <input type="text" class="search-bar" placeholder="Search for an app..." oninput="filterApps()">
-        <div class="app-tiles">
-          <div class="app-tile" onclick="openApp('https://html.cafe/x1d78aa07')">ZXS Proxy</div>
-            <div class="app-tile" onclick="openApp('https://html.cafe/x777066d8')">EmulatorJS</div>
-            <div class="app-tile" onclick="openApp('https://html.cafe/xa8327e69')">Movie Hub</div>
-            <div class="app-tile" onclick="openApp('https://html.cafe/x8957b19d')">Chatgpt</div>
-                <div class="app-tile" onclick="openApp('https://html.cafe/x4f113e83')">Invidious (YT)</div>
-    <div class="app-tile" onclick="openApp('https://html.cafe/xb3210647')">Spotify</div>
-    <div class="app-tile" onclick="openApp('https://html.cafe/x5f474946')">Xbox Cloud Gaming</div>
-    <div class="app-tile" onclick="openApp('https://html.cafe/x8168bf54')">Peacock TV</div>
-          <div class="app-tile" onclick="openApp('https://html.cafe/xe209b177')">Code editor</div>
-
-        </div>
-    </div>
-
-
-    <div class="hacks-section">
-        <input type="text" class="search-bar" placeholder="Search for some hax..." oninput="filterHacks()">
-        <div class="hack-tiles">
-            <div class="hack-tile" onclick="openHack('https://Kahoot.rocks')">Kahoot Hacks</div>
-            <div class="hack-tile" onclick="openHack('https://docs.google.com/document/d/1Gb8IW_mdFP8GgWrJ6knmojxFqR1h9HqXI4JMeO-9iHM/preview?tab=t.0')">Blooket Answer Bot</div>
-            <div class="hack-tile" onclick="openHack('https://docs.google.com/document/d/1YE6I8y3fwClrLuRWelAEcTrwGaYEMoXAD4ZkC47IVLg/preview?tab=t.0')">Bypass random blooket name</div>
-            
-        </div>
-    </div>
-
-
-    <div class="iframe-container">
-        <button class="close-btn">✘</button>
-        <iframe id="game-iframe" src=""></iframe>
-    </div>
-
-
-    <div class="settings-section">
-        <h2>Settings</h2>
-        <div class="setting-option"> 
-          <h3>Tab Cloak</h3>
-          <input type="text" id="tab-name" placeholder="Enter tab name">
-          <input type="text" id="favicon-url" placeholder="Enter favicon URL"> 
-          <button onclick="applyTabCloak()">Apply Tab Cloak</button> 
-        </div>
-        <div class="setting-option">
-            <h3>About:blank Launch</h3>
-            <button onclick="openAboutBlank()">Open ZXS Games in About:blank</button>
-        </div>
-    </div>
-
-    <script>
-      // Toggle sections
-        document.getElementById('games-button').addEventListener('click', function() {
-            document.querySelector('.games-section').style.display = 'block';
-            document.querySelector('.apps-section').style.display = 'none';
-            document.querySelector('.hacks-section').style.display = 'none';
+        // Hide all sections function
+        function hideAllSections() {
+            document.getElementById('games-iframe').style.display = 'none';
+            document.getElementById('apps-iframe').style.display = 'none';
+            document.getElementById('vm-iframe').style.display = 'none';
+            document.getElementById('hacks-iframe').style.display = 'none';
+            document.getElementById('partners-iframe').style.display = 'none';
             document.querySelector('.settings-section').style.display = 'none';
+            document.querySelector('.homepage-content').style.display = 'flex';
+        }
+
+        // Button click handlers
+        document.getElementById('home-button').addEventListener('click', function() {
+            hideAllSections();
+        });
+
+        document.getElementById('games-button').addEventListener('click', function() {
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const gamesIframe = document.getElementById('games-iframe');
+            gamesIframe.src = "https://html.cafe/xccb86013";
+            gamesIframe.style.display = 'block';
         });
 
         document.getElementById('apps-button').addEventListener('click', function() {
-            document.querySelector('.games-section').style.display = 'none';
-            document.querySelector('.apps-section').style.display = 'block';
-            document.querySelector('.hacks-section').style.display = 'none';
-            document.querySelector('.settings-section').style.display = 'none';
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const appsIframe = document.getElementById('apps-iframe');
+            appsIframe.src = "https://html.cafe/xdef0284f";
+            appsIframe.style.display = 'block';
+        });
+
+        document.getElementById('proxy-button').addEventListener('click', function() {
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const vmIframe = document.getElementById('vm-iframe');
+            vmIframe.src = "https://zxsandroidem.netlify.app";
+            vmIframe.style.display = 'block';
         });
 
         document.getElementById('hacks-button').addEventListener('click', function() {
-            document.querySelector('.games-section').style.display = 'none';
-            document.querySelector('.apps-section').style.display = 'none';
-            document.querySelector('.hacks-section').style.display = 'block';
-            document.querySelector('.settings-section').style.display = 'none';
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const hacksIframe = document.getElementById('hacks-iframe');
+            hacksIframe.src = "https://html.cafe/xb7a4fcac";
+            hacksIframe.style.display = 'block';
         });
 
-        document.getElementById('home-button').addEventListener('click', function() {
-            // Reset to initial view, showing specific sections based on requirement
-            document.querySelector('.games-section').style.display = 'none';
-            document.querySelector('.apps-section').style.display = 'none';
-            document.querySelector('.hacks-section').style.display = 'none';
-            document.querySelector('.settings-section').style.display = 'none';
-            document.querySelector('.iframe-container').style.display = 'none';
-            // Reset iframe src
-            document.getElementById('game-iframe').src = '';
+        document.getElementById('links-button').addEventListener('click', function() {
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const partnersIframe = document.getElementById('partners-iframe');
+            partnersIframe.src = "https://html.cafe/x28801550";
+            partnersIframe.style.display = 'block';
         });
 
         document.getElementById('settings-button').addEventListener('click', function() {
-            const settings = document.querySelector('.settings-section');
-            settings.style.display = settings.style.display === 'block' ? 'none' : 'block';
-            // Hide other sections when opening settings
-            document.querySelector('.games-section').style.display = 'none';
-            document.querySelector('.apps-section').style.display = 'none';
-            document.querySelector('.hacks-section').style.display = 'none';
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            document.querySelector('.settings-section').style.display = 'block';
         });
 
-        // Search and filter functions
-        function filterGames() {
-            const searchInput = document.querySelector('.games-section .search-bar').value.toLowerCase();
-            const gameTiles = document.querySelectorAll('.game-tile');
-            gameTiles.forEach(tile => {
-                const tileText = tile.textContent.toLowerCase();
-                tile.style.display = tileText.includes(searchInput) ? 'flex' : 'none';
-            });
-        }
-
-        function filterApps() {
-            const searchInput = document.querySelector('.apps-section .search-bar').value.toLowerCase();
-            const appTiles = document.querySelectorAll('.app-tile');
-            appTiles.forEach(tile => {
-                const tileText = tile.textContent.toLowerCase();
-                tile.style.display = tileText.includes(searchInput) ? 'flex' : 'none';
-            });
-        }
-
-        function filterHacks() {
-            const searchInput = document.querySelector('.hacks-section .search-bar').value.toLowerCase();
-            const hackTiles = document.querySelectorAll('.hack-tile');
-            hackTiles.forEach(tile => {
-                const tileText = tile.textContent.toLowerCase();
-                tile.style.display = tileText.includes(searchInput) ? 'flex' : 'none';
-            });
-        }
-
-        
-        function openGame(url) {
-            var iframeContainer = document.querySelector('.iframe-container');
-            var iframe = document.getElementById('game-iframe');
-            iframe.src = url;
-            iframeContainer.style.display = 'block';
-        }
-
-        function openApp(url) {
-            var iframeContainer = document.querySelector('.iframe-container');
-            var iframe = document.getElementById('game-iframe');
-            iframe.src = url;
-            iframeContainer.style.display = 'block';
-        }
-
-        function openHack(url) {
-            var iframeContainer = document.querySelector('.iframe-container');
-            var iframe = document.getElementById('game-iframe');
-            iframe.src = url;
-            iframeContainer.style.display = 'block';
-        }
-
-        
-        document.querySelector('.close-btn').addEventListener('click', function() {
-            document.querySelector('.iframe-container').style.display = 'none';
-            document.getElementById('game-iframe').src = '';
-        });
-
-        
+        // Tab cloak function
         function applyTabCloak() {
             const tabName = document.getElementById('tab-name').value;
             const faviconUrl = document.getElementById('favicon-url').value;
-            if (tabName && faviconUrl) {
+            
+            if (tabName) {
                 document.title = tabName;
+            }
+            
+            if (faviconUrl) {
                 const link = document.querySelector('link[rel="icon"]');
                 if (link) {
                     link.href = faviconUrl;
+                } else {
+                    const newLink = document.createElement('link');
+                    newLink.rel = 'icon';
+                    newLink.href = faviconUrl;
+                    document.head.appendChild(newLink);
                 }
-            } else {
-                alert('Please enter both a tab name and favicon URL.');
+            }
+            
+            if (!tabName && !faviconUrl) {
+                alert('Please enter both a tab name and favicon URL for full cloaking.');
             }
         }
 
-        
+        // About:blank function
         function openAboutBlank() {
-            const gameUrl = 'https://html.cafe/x6df7f6e9';
-            window.open('about:blank', '_blank').document.write(`<iframe src="${gameUrl}" width="100%" height="100%"></iframe>`);
+            const gameUrl = window.location.href;
+            const newWindow = window.open('about:blank', '_blank');
+            if (newWindow) {
+                newWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>ZXS GAMES</title>
+                        <style>
+                            body, html {
+                                margin: 0;
+                                padding: 0;
+                                height: 100%;
+                                overflow: hidden;
+                            }
+                            iframe {
+                                width: 100%;
+                                height: 100%;
+                                border: none;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe src="${gameUrl}"></iframe>
+                    </body>
+                    </html>
+                `);
+                newWindow.document.close();
+            }
         }
     </script>
-
-</body>
-
- <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            background-color: black;
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-        }
-        .top-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 70px;
-            background-color: black;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 10;
-        }
-        .button-container {
-            margin-left: auto;
-        }
-        .proxy-section {
-            display: none; /* Initially hidden */
-            position: fixed; /* Changed to fixed */
-            top: 70px; /* Below the top bar */
-            left: 0;
-            right: 0;
-            bottom: 0; /* Making sure it goes to the bottom */
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 5;
-        }
-        .proxy-section iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
-</head>
-<body> 
-  
-    <div class="proxy-section" id="proxy-section">
-        <iframe src="https://html.cafe/xb8925877"></iframe>
-    </div>
-
-    <script>
-        // Show proxy section when the proxy button is clicked
-        document.getElementById('proxy-button').addEventListener('click', function() {
-            document.getElementById('proxy-section').style.display = 'block'; // Show the proxy section
-        });
-
-        // Hide proxy section when the home button is clicked
-        document.getElementById('home-button').addEventListener('click', function() {
-            document.getElementById('proxy-section').style.display = 'none'; // Hide the proxy section
-        });
-    </script>
-
 </body>
 </html>
-</body>
-</html>
-
-<script>
-    // Show proxy section when the proxy button is clicked
-    document.getElementById('proxy-button').addEventListener('click', function() {
-        document.getElementById('proxy-section').style.display = 'block'; // Show the proxy section
-    });
-
-    // Open the specified Google Document in the iframe when the links button is clicked
-    document.getElementById('links-button').addEventListener('click', function() {
-        openLinks();
-    });
-
-    // Function to open the Google Document in the iframe
-    function openLinks() {
-        var iframeContainer = document.querySelector('.iframe-container');
-        var iframe = document.getElementById('game-iframe');
-        iframe.src = 'https://html.cafe/x28801550';
-        iframeContainer.style.display = 'block';
-    }
-
-    // Hide proxy section when the home button is clicked
-    document.getElementById('home-button').addEventListener('click', function() {
-        document.getElementById('proxy-section').style.display = 'none'; // Hide the proxy section
-    });
-</script>   
-
-<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
-
-   
