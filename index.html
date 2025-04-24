@@ -1,9 +1,120 @@
+<div id="announcement-popup" class="popup-hidden">
+    <div class="popup-overlay"></div>
+    <div class="popup-content">
+        <h2>🚀 Welcome to ZXS GAMES 1.6!</h2>
+        <p>New features have landed.</p>
+      <p>1. New android emulator (appetize)</p>
+      <p>2. all games and apps have the option to proxy.</p>
+      <p>3. Discord has been moved to Apps.</p>
+      <p>4. New panic key option</p>
+      <p>5. New games including roblox, brawl stars, and undertale</p>
+
+        <button id="close-popup-btn">Let's Go</button>
+    </div>
+</div>
+
+<style>
+    #announcement-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        font-family: 'Orbitron', sans-serif;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #announcement-popup.popup-visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .popup-overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(30, 30, 30, 0.8);
+    }
+
+    .popup-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #2e2e2e;
+        padding: 30px;
+        border-radius: 12px;
+        color: white;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        max-width: 90%;
+        width: 400px;
+        font-family: 'Orbitron', sans-serif;
+        z-index: 10000;
+        transition: transform 0.3s ease, opacity 0.5s ease;
+        opacity: 0;
+    }
+
+    #announcement-popup.popup-visible .popup-content {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .popup-content h2 {
+        margin: 0 0 10px;
+        font-size: 24px;
+    }
+
+    .popup-content p {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .popup-content button {
+        background-color: transparent;
+        border: 2px solid white;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-family: 'Orbitron', sans-serif;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .popup-content button:hover {
+        background-color: white;
+        color: black;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const popup = document.getElementById('announcement-popup');
+    const closeBtn = document.getElementById('close-popup-btn');
+
+    // Show popup with animation
+    setTimeout(() => {
+        popup.classList.remove('popup-hidden');
+        popup.classList.add('popup-visible');
+    }, 200); // Delay for smoother entry
+
+    // Hide popup with fade-out effect
+    closeBtn.addEventListener('click', function () {
+        popup.classList.remove('popup-visible');
+        popup.classList.add('popup-hidden');
+    });
+});
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZXS GAMES 1.5</title>
+    <title>ZXS GAMES 1.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
     <link rel="icon" href="https://media-hosting.imagekit.io//22df2e446d5a4996/logo.png?Expires=1837211717&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=sjK~86wttUnoBhQ2Cm6ZK7ScYviFq25M1oKzSJ3nmeCOkS4QbCnfRIdMN96V7LRyw1e6jCsHWkTuwHDt4LHD6HthRuYp5opZTzkHOYTIRcmXfjysGmVP17Vf9MHfJ-DribNeHppDrmgYT9ebXcbIMYntbv8fukxuhr9mAUbpPxhU8am3D9JZIMgDf5H0A38H2jSe2dZLRaS3y0AMMhS1yxbmUV-PP9T4nUykjKCSHoGedkN0yKE4vNC2sWEdnDntwMydRhClbacG047auKhODUsnC6P6xQ9VSsNsmQOC6LTzpNic~ULOeZw5DXP99Wq7tM-4sL3U0cVh8M~~tq2e1g__" type="image/png">
     <style>
@@ -323,7 +434,7 @@
         const messages = [
             "Mahan!",
             "Teacher",
-            "Ver. 1.5: removed herobrine",
+            "Ver. 1.6: removed herobrine",
             "I wrote this in class",
             "174.227.103.239",
             "technonyte should answer his DMS",
