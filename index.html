@@ -1,4 +1,4 @@
-    <link rel="icon" href="https://media-hosting.imagekit.io//22df2e446d5a4996/logo.png?Expires=1837211717&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=sjK~86wttUnoBhQ2Cm6ZK7ScYviFq25M1oKzSJ3nmeCOkS4QbCnfRIdMN96V7LRyw1e6jCsHWkTuwHDt4LHD6HthRuYp5opZTzkHOYTIRcmXfjysGmVP17Vf9MHfJ-DribNeHppDrmgYT9ebXcbIMYntbv8fukxuhr9mAUbpPxhU8am3D9JZIMgDf5H0A38H2jSe2dZLRaS3y0AMMhS1yxbmUV-PP9T4nUykjKCSHoGedkN0yKE4vNC2sWEdnDntwMydRhClbacG047auKhODUsnC6P6xQ9VSsNsmQOC6LTzpNic~ULOeZw5DXP99Wq7tM-4sL3U0cVh8M~~tq2e1g__" type="image/png">
+<link rel="icon" href="https://media-hosting.imagekit.io//22df2e446d5a4996/logo.png?Expires=1837211717&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=sjK~86wttUnoBhQ2Cm6ZK7ScYviFq25M1oKzSJ3nmeCOkS4QbCnfRIdMN96V7LRyw1e6jCsHWkTuwHDt4LHD6HthRuYp5opZTzkHOYTIRcmXfjysGmVP17Vf9MHfJ-DribNeHppDrmgYT9ebXcbIMYntbv8fukxuhr9mAUbpPxhU8am3D9JZIMgDf5H0A38H2jSe2dZLRaS3y0AMMhS1yxbmUV-PP9T4nUykjKCSHoGedkN0yKE4vNC2sWEdnDntwMydRhClbacG047auKhODUsnC6P6xQ9VSsNsmQOC6LTzpNic~ULOeZw5DXP99Wq7tM-4sL3U0cVh8M~~tq2e1g__" type="image/png">
 <div id="announcement-popup" class="popup-hidden">
     <div class="popup-overlay"></div>
     <div class="popup-content">
@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -141,12 +142,14 @@ document.addEventListener('DOMContentLoaded', function () {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 64px;
-            color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 255, 0, 0.8);
             transition: transform 0.3s;
             z-index: 2;
+        }
+
+        #title img {
+            max-width: 600px;  /* Doubled from 300px to 600px */
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 20px rgba(0, 255, 0, 0.8));
         }
 
         #title:hover {
@@ -335,7 +338,9 @@ document.addEventListener('DOMContentLoaded', function () {
     <!-- Homepage content with particles -->
     <div class="homepage-content">
         <div id="particles-js"></div>
-        <div id="title">ZXS ゲーム</div>
+        <div id="title">
+            <img src="https://i.postimg.cc/76XGyLrK/Screenshot-2025-04-24-12-28-06-PM-removebg-preview.png" alt="ZXS Logo">
+        </div>
         <div id="random-message">skibidi placeholder</div>
         <div id="battery-percentage">Battery: 0%</div>
     </div>
