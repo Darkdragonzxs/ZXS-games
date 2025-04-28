@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZXS Games - Apps Section</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .apps-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            border: 2px solid white;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .app-tiles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .app-tile {
+            width: 120px;
+            height: 120px;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            padding: 10px;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+
+        .app-tile:hover {
+            transform: scale(1.05);
+            background-color: #444;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .iframe-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .iframe-container.visible {
+            opacity: 1;
+        }
+
+        .iframe-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 90%;
+            height: 90%;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .iframe-container.visible .iframe-content {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .iframe-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .iframe-container.visible .iframe-content iframe {
+            opacity: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            z-index: 101;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .iframe-container.visible .close-btn {
+            opacity: 1;
+            transform: scale(1);
+            transition-delay: 0.3s;
+        }
+
+        .close-btn:hover {
+            background-color: red;
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Proxy selection modal styles */
+        .proxy-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .proxy-modal.visible {
+            opacity: 1;
+            display: flex;
+        }
+
+        .proxy-content {
+            background-color: #222;
+            padding: 25px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .proxy-modal.visible .proxy-content {
+            transform: scale(1);
+        }
+
+        .proxy-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #0ff;
+        }
+
+        .proxy-select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .proxy-select option {
+            background-color: #333;
+            color: white;
+        }
+
+        .proxy-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .proxy-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: transform 0.2s, background-color 0.2s;
+            background-color: #444;
+            color: white;
+        }
+
+        .proxy-button.launch {
+            background-color: #00aa88;
+        }
+
+        .proxy-button:hover {
+            transform: scale(1.05);
+            background-color: #0ff;
+            color: black;
+        }
+
+        .proxy-button.cancel:hover {
+            background-color: #ff3366;
+            color: white;
+        }
+
+        .app-info {
+            color: #0ff;
+            margin-bottom: 15px;
+            font-size: 16px;
+            word-break: break-word;
+        }
+
+        /* For mobile devices */
+        @media (max-width: 768px) {
+            .app-tile {
+                width: 100px;
+                height: 100px;
+                font-size: 12px;
+            }
+            
+            .iframe-content {
+                width: 95%;
+                height: 80%;
+            }
+
+            .proxy-content {
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="apps-section">
+        <h1 class="section-title">Apps</h1>
+        <input type="text" class="search-bar" placeholder="Search for an app..." id="app-search" oninput="filterApps()">
+        <div class="app-tiles" id="app-tiles">
+            <!-- App tiles will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <div class="iframe-container" id="iframe-container">
+        <div class="iframe-content">
+            <button class="close-btn" onclick="closeApp()">✕</button>
+            <iframe id="app-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <!-- Proxy selection modal -->
+    <div class="proxy-modal" id="proxy-modal">
+        <div class="proxy-content">
+            <div class="proxy-title">Launch Options</div>
+            <div class="app-info" id="selected-app-title">App Title</div>
+            <select class="proxy-select" id="proxy-select">
+                <option value="direct">Direct (No Proxy)</option>
+                <option value="proxy">Use Proxy</option>
+            </select>
+            <div class="proxy-buttons">
+                <button class="proxy-button cancel" onclick="cancelProxyModal()">Cancel</button>
+                <button class="proxy-button launch" onclick="launchApp()">Launch</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App data - title and URL
+        const apps = [
+            { title: "ZXS Proxy", url: "https://html.cafe/x1d78aa07" },
+            { title: "ZXS AI", url: "https://html.cafe/x34967c9d" },
+            { title: "ZXS Chat", url: "https://html.cafe/xdd94f3b2" },
+            { title: "EmulatorJS", url: "https://html.cafe/x777066d8" },
+            { title: "Movie Hub", url: "https://html.cafe/xa8327e69" },
+            { title: "Chatgpt", url: "https://html.cafe/x8957b19d" },
+            { title: "Invidious (YT)", url: "https://html.cafe/x4f113e83" },
+            { title: "Spotify", url: "https://html.cafe/xb3210647" },
+            { title: "Xbox Cloud Gaming", url: "https://html.cafe/x5f474946" },
+            { title: "Peacock TV", url: "https://html.cafe/x8168bf54" },
+            { title: "Code editor", url: "https://html.cafe/xbb149bdb" }
+        ];
+
+        // Variables to store the currently selected app
+        let selectedAppUrl = '';
+        let selectedAppTitle = '';
+
+        // Function to create and populate app tiles
+        function populateAppTiles() {
+            const appTilesContainer = document.getElementById('app-tiles');
+            
+            // Clear existing tiles
+            appTilesContainer.innerHTML = '';
+            
+            // Create a tile for each app
+            apps.forEach(app => {
+                const tile = document.createElement('div');
+                tile.className = 'app-tile';
+                tile.textContent = app.title;
+                tile.onclick = function() {
+                    showProxyModal(app.title, app.url);
+                };
+                appTilesContainer.appendChild(tile);
+            });
+        }
+
+        // Function to filter apps based on search input
+        function filterApps() {
+            const searchInput = document.getElementById('app-search').value.toLowerCase();
+            const appTiles = document.querySelectorAll('.app-tile');
+            
+            appTiles.forEach(tile => {
+                const tileText = tile.textContent.toLowerCase();
+                tile.style.display = tileText.includes(searchInput) ? 'flex' : 'none';
+            });
+        }
+
+        // Function to show the proxy selection modal
+        function showProxyModal(appTitle, appUrl) {
+            const proxyModal = document.getElementById('proxy-modal');
+            const selectedAppTitleElement = document.getElementById('selected-app-title');
+            
+            // Store the selected app info for later use
+            selectedAppUrl = appUrl;
+            selectedAppTitle = appTitle;
+            
+            // Update the modal with app info
+            selectedAppTitleElement.textContent = appTitle;
+            
+            // Reset the select value
+            document.getElementById('proxy-select').value = 'direct';
+            
+            // Show the modal
+            proxyModal.style.display = 'flex';
+            setTimeout(() => {
+                proxyModal.classList.add('visible');
+            }, 10);
+        }
+
+        // Function to close the proxy modal without launching the app
+        function cancelProxyModal() {
+            const proxyModal = document.getElementById('proxy-modal');
+            
+            // Hide the modal with animation
+            proxyModal.classList.remove('visible');
+            setTimeout(() => {
+                proxyModal.style.display = 'none';
+            }, 300);
+        }
+
+        // Function to launch the app based on proxy selection
+        function launchApp() {
+            const proxyOption = document.getElementById('proxy-select').value;
+            let finalUrl = '';
+            
+            // Determine the URL based on the proxy option
+            if (proxyOption === 'proxy') {
+                // Use the proxy URL
+                finalUrl = 'https://latte.molkify.dev/embed.html#' + selectedAppUrl;
+            } else {
+                // Use the direct URL
+                finalUrl = selectedAppUrl;
+            }
+            
+            // Close the proxy modal
+            cancelProxyModal();
+            
+            // Open the app in the iframe
+            openApp(finalUrl);
+        }
+
+        // Function to open an app in the iframe with animation
+        function openApp(url) {
+            const iframeContainer = document.getElementById('iframe-container');
+            const appIframe = document.getElementById('app-iframe');
+            
+            // Set the iframe source
+            appIframe.src = url;
+            
+            // Show the container first
+            iframeContainer.style.display = 'block';
+            
+            // Prevent scrolling of the background
+            document.body.style.overflow = 'hidden';
+            
+            // Trigger animation by adding visible class after a small delay
+            setTimeout(() => {
+                iframeContainer.classList.add('visible');
+            }, 10);
+            
+            // Add event listener for iframe load
+            appIframe.onload = function() {
+                // Iframe content is loaded, animation proceeds due to the CSS transitions
+            };
+        }
+
+        // Function to close the app iframe with animation
+        function closeApp() {
+            const iframeContainer = document.getElementById('iframe-container');
+            const appIframe = document.getElementById('app-iframe');
+            
+            // Remove the visible class to start the closing animation
+            iframeContainer.classList.remove('visible');
+            
+            // Wait for the animation to complete before hiding the container
+            setTimeout(() => {
+                iframeContainer.style.display = 'none';
+                appIframe.src = '';
+                
+                // Restore scrolling
+                document.body.style.overflow = 'auto';
+            }, 500); // This should match the CSS transition duration
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateAppTiles();
+            
+            // Handle ESC key to close the app or modal
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const proxyModal = document.getElementById('proxy-modal');
+                    const iframeContainer = document.getElementById('iframe-container');
+                    
+                    // Check if proxy modal is visible
+                    if (proxyModal.classList.contains('visible')) {
+                        cancelProxyModal();
+                    } 
+                    // Check if app iframe is visible
+                    else if (iframeContainer.classList.contains('visible')) {
+                        closeApp();
+                    }
+                }
+            });
+        });
+
+        // Handle messages from parent frame if needed
+        window.addEventListener('message', function(event) {
+            // Add message handling logic here if needed
+            // Example: if(event.data === 'close-app') closeApp();
+        });
+    </script>
+</body>
+</html>
