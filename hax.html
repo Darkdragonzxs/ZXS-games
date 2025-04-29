@@ -325,10 +325,8 @@
         let selectedGameUrl = '';
         let selectedGameTitle = '';
 
-        // Function to get proxy URL with the new direct URL
-        function getProxyUrl() {
-            return "https://yomamasostupidsheboughtticketstoxbox.live/embed#https://www.coolmathgames.com";
-        }
+        // Direct declaration of proxy URL - clearly visible in source code
+        const PROXY_URL = "https://yomamasostupidsheboughtticketstoxbox.live/embed#https://www.coolmathgames.com";
 
         // Function to create and populate game tiles
         function populateGameTiles() {
@@ -400,9 +398,9 @@
             
             // Determine the URL based on the proxy option
             if (proxyOption === 'proxy') {
-                // Use the proxy URL
-                const proxyUrl = getProxyUrl();
-                finalUrl = proxyUrl.split('#')[0] + '#' + selectedGameUrl;
+                // Use the proxy URL - base part of the URL before the # symbol
+                const proxyBase = PROXY_URL.split('#')[0];
+                finalUrl = proxyBase + '#' + selectedGameUrl;
             } else {
                 // Use the direct URL
                 finalUrl = selectedGameUrl;
