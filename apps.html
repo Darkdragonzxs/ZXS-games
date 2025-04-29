@@ -281,7 +281,7 @@
 <body>
     <div class="games-section">
         <h1 class="section-title">APPS</h1>
-        <input type="text" class="search-bar" placeholder="Search for a game..." id="game-search" oninput="filterGames()">
+        <input type="text" class="search-bar" placeholder="Search for a app..." id="game-search" oninput="filterGames()">
         <div class="game-tiles" id="game-tiles">
             <!-- Game tiles will be populated by JavaScript -->
         </div>
@@ -313,7 +313,7 @@
     <script>
         // Game data - title and URL
         const games = [
-{ title: "ZXS Proxy", url: "/p.html" },
+            { title: "ZXS Proxy", url: "/p.html" },
             { title: "ZXS AI", url: "https://html.cafe/x34967c9d" },
             { title: "ZXS Chat", url: "https://html.cafe/xdd94f3b2" },
             { title: "EmulatorJS", url: "https://html.cafe/x777066d8" },
@@ -331,16 +331,8 @@
         let selectedGameUrl = '';
         let selectedGameTitle = '';
 
-        // Function to get proxy URL without directly embedding it
-        function getProxyUrl() {
-            // Split the URL across different encoding methods to avoid detection
-            const p1 = String.fromCharCode(104, 116, 116, 112, 115, 58, 47, 47); // "https://"
-            const p2 = atob("aXA2NS0zOC05OS0yNy5wYmlhYXMuY29t"); // "ip65-38-99-27.pbiaas.com"
-            const p3 = String.fromCharCode(47, 101, 109, 98, 101, 100, 46, 104, 116, 109, 108); // "/embed.html"
-            
-            // Return the reconstructed URL
-            return p1 + p2 + p3;
-        }
+        // Direct declaration of proxy URL - clearly visible in source code
+        const PROXY_URL = "https://yomamasostupidsheboughtticketstoxbox.live/embed#https://www.coolmathgames.com";
 
         // Function to create and populate game tiles
         function populateGameTiles() {
@@ -412,8 +404,9 @@
             
             // Determine the URL based on the proxy option
             if (proxyOption === 'proxy') {
-                // Use the encoded proxy URL generated at runtime
-                finalUrl = getProxyUrl() + '#' + selectedGameUrl;
+                // Use the proxy URL - base part of the URL before the # symbol
+                const proxyBase = PROXY_URL.split('#')[0];
+                finalUrl = proxyBase + '#' + selectedGameUrl;
             } else {
                 // Use the direct URL
                 finalUrl = selectedGameUrl;
