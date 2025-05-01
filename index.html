@@ -763,3 +763,92 @@
     </script>
 </body>
 </html>
+<script>
+    // Global panic key settings
+let panicKey = localStorage.getItem('panicKey') || ']';
+let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
+
+// Listen for key events in the main window
+document.addEventListener('keydown', function(e) {
+    if (e.key === panicKey) {
+        window.location.href = panicURL;
+    }
+});
+
+// Function to instruct iframes to set up their own listeners
+function setupIframeListeners() {
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach(iframe => {
+        try {
+            // Send a message to each iframe to set up panic key listener
+            iframe.contentWindow.postMessage({
+                type: 'SETUP_PANIC_LISTENER',
+                key: panicKey
+            }, '*');
+        } catch (e) {
+            console.log("Cross-origin iframe, cannot inject script directly.");
+        }
+    });
+}
+
+// Handle messages from iframes
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'PANIC_KEY_PRESSED') {
+        window.location.href = panicURL;
+    }
+});
+
+// When page loads or panic key changes, set up listeners
+document.addEventListener('DOMContentLoaded', setupIframeListeners);
+</script>
+<script>
+    // Inside iframe HTML or script
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'SETUP_PANIC_LISTENER') {
+        const panicKey = event.data.key;
+        document.addEventListener('keydown', function(e) {
+            if (e.key === panicKey) {
+                // Notify parent window
+                window.parent.postMessage({ type: 'PANIC_KEY_PRESSED' }, '*');
+            }
+        });
+    }
+});
+</script>
+<script>
+    // 1. Main window: listen globally
+document.addEventListener('keydown', function(e) {
+    if (e.key === panicKey) {
+        window.location.href = panicURL;
+    }
+});
+
+// 2. Communicate with iframes
+function setupIframeListeners() {
+    document.querySelectorAll('iframe').forEach(iframe => {
+        try {
+            iframe.contentWindow.postMessage({ type: 'SETUP_PANIC_LISTENER', key: panicKey }, '*');
+        } catch (e) {
+            // Cross-origin, cannot inject
+        }
+    });
+}
+
+// 3. Handle messages from iframes
+window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'PANIC_KEY_PRESSED') {
+        window.location.href = panicURL;
+    }
+});
+
+// 4. Inside same-origin iframe (if possible)
+window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'SETUP_PANIC_LISTENER') {
+        document.addEventListener('keydown', function(e) {
+            if (e.key === e.data.key) {
+                window.parent.postMessage({ type: 'PANIC_KEY_PRESSED' }, '*');
+            }
+        });
+    }
+});
+</script>
