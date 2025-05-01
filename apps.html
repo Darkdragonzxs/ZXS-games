@@ -77,89 +77,93 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
             z-index: 100;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
         }
 
-        .iframe-container.visible {
-            opacity: 1;
-        }
-
-        .iframe-content {
+        .iframe-window {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            width: 90%;
-            height: 90%;
-            background-color: #333;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background-color: #222;
             border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            overflow: hidden;
+            transition: width 0.3s, height 0.3s;
         }
 
-        .iframe-container.visible .iframe-content {
-            transform: translate(-50%, -50%) scale(1);
+        .iframe-window.fullscreen {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+        }
+
+        .window-titlebar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #111;
+            padding: 8px 15px;
+            cursor: move;
+            user-select: none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .window-title {
+            font-size: 16px;
+            color: #0ff;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .window-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            background-color: #333;
+            color: white;
+            font-size: 14px;
+        }
+
+        .window-btn:hover {
+            background-color: #555;
+        }
+
+        .window-btn.close-btn:hover {
+            background-color: #ff3366;
+        }
+
+        .window-btn.fullscreen-btn:hover {
+            background-color: #00aa88;
+        }
+
+        .iframe-content {
+            width: 100%;
+            height: calc(100% - 41px);
+            overflow: hidden;
         }
 
         .iframe-content iframe {
             width: 100%;
             height: 100%;
             border: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
         }
 
-        .iframe-container.visible .iframe-content iframe {
-            opacity: 1;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #333;
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            z-index: 101;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transform: scale(0);
-        }
-
-        .iframe-container.visible .close-btn {
-            opacity: 1;
-            transform: scale(1);
-            transition-delay: 0.3s;
-        }
-
-        .close-btn:hover {
-            background-color: red;
-            transform: scale(1.1) rotate(90deg);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 32px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
-        /* Proxy selection modal styles */
         .proxy-modal {
             display: none;
             position: fixed;
@@ -258,6 +262,16 @@
             word-break: break-word;
         }
 
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
         /* For mobile devices */
         @media (max-width: 768px) {
             .game-tile {
@@ -266,7 +280,7 @@
                 font-size: 12px;
             }
             
-            .iframe-content {
+            .iframe-window {
                 width: 95%;
                 height: 80%;
             }
@@ -280,7 +294,7 @@
 </head>
 <body>
     <div class="games-section">
-        <h1 class="section-title">APPS</h1>
+        <h1 class="section-title">Apps</h1>
         <input type="text" class="search-bar" placeholder="Search for a app..." id="game-search" oninput="filterGames()">
         <div class="game-tiles" id="game-tiles">
             <!-- Game tiles will be populated by JavaScript -->
@@ -288,9 +302,17 @@
     </div>
 
     <div class="iframe-container" id="iframe-container">
-        <div class="iframe-content">
-            <button class="close-btn" onclick="closeGame()">✕</button>
-            <iframe id="game-iframe" src=""></iframe>
+        <div class="iframe-window" id="iframe-window">
+            <div class="window-titlebar" id="window-titlebar">
+                <div class="window-title" id="window-title">Game Title</div>
+                <div class="window-controls">
+                    <div class="window-btn fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</div>
+                    <div class="window-btn close-btn" onclick="closeGame()" title="Close">✕</div>
+                </div>
+            </div>
+            <div class="iframe-content">
+                <iframe id="game-iframe" src=""></iframe>
+            </div>
         </div>
     </div>
 
@@ -313,26 +335,32 @@
     <script>
         // Game data - title and URL
         const games = [
-            { title: "ZXS Proxy", url: "/p.html" },
+             { title: "ZXS Proxy", url: "/p.html" },
             { title: "ZXS AI", url: "https://html.cafe/x34967c9d" },
             { title: "ZXS Chat", url: "https://html.cafe/xdd94f3b2" },
             { title: "EmulatorJS", url: "https://html.cafe/x777066d8" },
             { title: "Movie Hub", url: "https://html.cafe/xa8327e69" },
-            { title: "Chatgpt", url: "https://html.cafe/x8957b19d" },
             { title: "Invidious (YT)", url: "https://html.cafe/x4f113e83" },
             { title: "Spotify", url: "https://html.cafe/xb3210647" },
             { title: "Xbox Cloud Gaming", url: "https://html.cafe/x5f474946" },
             { title: "Peacock TV", url: "https://html.cafe/x8168bf54" },
             { title: "Code editor", url: "https://html.cafe/xbb149bdb" },
             { title: "multiuser sketchpad", url: "https://multiuser-sketchpad.glitch.me/" },
-        ];
+      ];
 
         // Variables to store the currently selected game
         let selectedGameUrl = '';
         let selectedGameTitle = '';
+        
+        // Flag for fullscreen mode
+        let isFullscreen = false;
 
-        // Direct declaration of proxy URL - clearly visible in source code
+        // Direct declaration of proxy URL
         const PROXY_URL = "https://yomamasostupidsheboughtticketstoxbox.live/embed#https://www.coolmathgames.com";
+
+        // Variables for drag functionality
+        let isDragging = false;
+        let offsetX, offsetY;
 
         // Function to create and populate game tiles
         function populateGameTiles() {
@@ -404,7 +432,7 @@
             
             // Determine the URL based on the proxy option
             if (proxyOption === 'proxy') {
-                // Use the proxy URL - base part of the URL before the # symbol
+                // Use the proxy URL
                 const proxyBase = PROXY_URL.split('#')[0];
                 finalUrl = proxyBase + '#' + selectedGameUrl;
             } else {
@@ -416,55 +444,165 @@
             cancelProxyModal();
             
             // Open the game in the iframe
-            openGame(finalUrl);
+            openGame(finalUrl, selectedGameTitle);
         }
 
-        // Function to open a game in the iframe with animation
-        function openGame(url) {
+        // Function to open a game in the iframe window
+        function openGame(url, title) {
             const iframeContainer = document.getElementById('iframe-container');
             const gameIframe = document.getElementById('game-iframe');
+            const windowTitle = document.getElementById('window-title');
             
             // Set the iframe source
             gameIframe.src = url;
             
-            // Show the container first
+            // Set the window title
+            windowTitle.textContent = title;
+            
+            // Reset window position to center if it was moved before
+            const iframeWindow = document.getElementById('iframe-window');
+            iframeWindow.style.top = '50%';
+            iframeWindow.style.left = '50%';
+            iframeWindow.style.transform = 'translate(-50%, -50%)';
+            
+            // Make sure it's not in fullscreen
+            if (isFullscreen) {
+                toggleFullscreen();
+            }
+            
+            // Show the container
             iframeContainer.style.display = 'block';
             
             // Prevent scrolling of the background
             document.body.style.overflow = 'hidden';
-            
-            // Trigger animation by adding visible class after a small delay
-            setTimeout(() => {
-                iframeContainer.classList.add('visible');
-            }, 10);
-            
-            // Add event listener for iframe load
-            gameIframe.onload = function() {
-                // Iframe content is loaded, animation proceeds due to the CSS transitions
-            };
         }
 
-        // Function to close the game iframe with animation
+        // Function to close the game iframe
         function closeGame() {
             const iframeContainer = document.getElementById('iframe-container');
             const gameIframe = document.getElementById('game-iframe');
             
-            // Remove the visible class to start the closing animation
-            iframeContainer.classList.remove('visible');
+            // Hide the container
+            iframeContainer.style.display = 'none';
             
-            // Wait for the animation to complete before hiding the container
-            setTimeout(() => {
-                iframeContainer.style.display = 'none';
-                gameIframe.src = '';
+            // Clear the iframe source
+            gameIframe.src = '';
+            
+            // Restore scrolling
+            document.body.style.overflow = 'auto';
+        }
+
+        // Function to toggle fullscreen mode
+        function toggleFullscreen() {
+            const iframeWindow = document.getElementById('iframe-window');
+            
+            isFullscreen = !isFullscreen;
+            
+            if (isFullscreen) {
+                iframeWindow.classList.add('fullscreen');
+                // Center the window when going fullscreen
+                iframeWindow.style.top = '50%';
+                iframeWindow.style.left = '50%';
+                iframeWindow.style.transform = 'translate(-50%, -50%)';
+            } else {
+                iframeWindow.classList.remove('fullscreen');
+            }
+        }
+
+        // Initialize drag functionality for the window
+        function initDrag() {
+            const titlebar = document.getElementById('window-titlebar');
+            const iframeWindow = document.getElementById('iframe-window');
+            
+            titlebar.addEventListener('mousedown', function(e) {
+                // Only allow dragging if not in fullscreen
+                if (isFullscreen) return;
                 
-                // Restore scrolling
-                document.body.style.overflow = 'auto';
-            }, 500); // This should match the CSS transition duration
+                isDragging = true;
+                
+                // Calculate the offset of the mouse from the window corner
+                const rect = iframeWindow.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                
+                // Change cursor to indicate dragging
+                titlebar.style.cursor = 'grabbing';
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                
+                // Get window dimensions
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const rect = iframeWindow.getBoundingClientRect();
+                
+                // Calculate new position
+                let newLeft = e.clientX - offsetX;
+                let newTop = e.clientY - offsetY;
+                
+                // Ensure window stays within viewport boundaries
+                newLeft = Math.max(0, Math.min(newLeft, windowWidth - rect.width));
+                newTop = Math.max(0, Math.min(newTop, windowHeight - rect.height));
+                
+                // Update position with direct styles instead of transform
+                iframeWindow.style.left = newLeft + 'px';
+                iframeWindow.style.top = newTop + 'px';
+                iframeWindow.style.transform = 'none';
+            });
+            
+            document.addEventListener('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    titlebar.style.cursor = 'move';
+                }
+            });
+            
+            // Touch support for mobile
+            titlebar.addEventListener('touchstart', function(e) {
+                if (isFullscreen) return;
+                
+                isDragging = true;
+                
+                const rect = iframeWindow.getBoundingClientRect();
+                const touch = e.touches[0];
+                
+                offsetX = touch.clientX - rect.left;
+                offsetY = touch.clientY - rect.top;
+                
+                e.preventDefault(); // Prevent scrolling while dragging
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (!isDragging) return;
+                
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const rect = iframeWindow.getBoundingClientRect();
+                const touch = e.touches[0];
+                
+                let newLeft = touch.clientX - offsetX;
+                let newTop = touch.clientY - offsetY;
+                
+                newLeft = Math.max(0, Math.min(newLeft, windowWidth - rect.width));
+                newTop = Math.max(0, Math.min(newTop, windowHeight - rect.height));
+                
+                iframeWindow.style.left = newLeft + 'px';
+                iframeWindow.style.top = newTop + 'px';
+                iframeWindow.style.transform = 'none';
+                
+                e.preventDefault(); // Prevent scrolling while dragging
+            });
+            
+            document.addEventListener('touchend', function() {
+                isDragging = false;
+            });
         }
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             populateGameTiles();
+            initDrag();
             
             // Handle ESC key to close the game or modal
             document.addEventListener('keydown', function(event) {
@@ -473,12 +611,43 @@
                     const iframeContainer = document.getElementById('iframe-container');
                     
                     // Check if proxy modal is visible
-                    if (proxyModal.classList.contains('visible')) {
+                    if (proxyModal.style.display === 'flex') {
                         cancelProxyModal();
                     } 
                     // Check if game iframe is visible
-                    else if (iframeContainer.classList.contains('visible')) {
+                    else if (iframeContainer.style.display === 'block') {
                         closeGame();
+                    }
+                }
+                
+                // Handle F11 key for fullscreen
+                if (event.key === 'F11') {
+                    if (document.getElementById('iframe-container').style.display === 'block') {
+                        toggleFullscreen();
+                        event.preventDefault();
+                    }
+                }
+            });
+            
+            // Resize handler to ensure window stays in viewport when browser is resized
+            window.addEventListener('resize', function() {
+                if (isDragging || isFullscreen) return;
+                
+                const iframeWindow = document.getElementById('iframe-window');
+                const iframeContainer = document.getElementById('iframe-container');
+                
+                // Only adjust if window is visible
+                if (iframeContainer.style.display === 'block') {
+                    const rect = iframeWindow.getBoundingClientRect();
+                    const windowWidth = window.innerWidth;
+                    const windowHeight = window.innerHeight;
+                    
+                    // Check if window is outside viewport after resize
+                    if (rect.right > windowWidth || rect.bottom > windowHeight || rect.left < 0 || rect.top < 0) {
+                        // Reset position to center if window is outside viewport
+                        iframeWindow.style.top = '50%';
+                        iframeWindow.style.left = '50%';
+                        iframeWindow.style.transform = 'translate(-50%, -50%)';
                     }
                 }
             });
