@@ -203,7 +203,7 @@
       if (!urlInput || currentTabIndex === -1) return;
 
       const sanitizedURL = urlInput.replace(/^https?:\/\//, '');
-      const proxyURL = `https://educational-playground.global.ssl.fastly.net/static/iframe.html#https://${sanitizedURL}`;
+      const proxyURL = `https://test-dp1.pages.dev/static/embed.html#${sanitizedURL}`;
 
       tabs[currentTabIndex].url = sanitizedURL;
       tabs[currentTabIndex].title = sanitizedURL;
