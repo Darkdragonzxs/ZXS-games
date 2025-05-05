@@ -19,14 +19,19 @@
     </style>
   </head>
   <body>
-    <iframe id="proxy"></iframe>
+    <iframe name="proxy-frame" id="proxy-frame"></iframe>
+
+    <form id="proxy-form" method="POST" target="proxy-frame" action="/vaprox/" style="display:none;">
+      <input type="hidden" name="url" id="proxy-url">
+    </form>
 
     <script>
       const params = new URLSearchParams(window.location.search);
       const url = params.get("url");
 
       if (url) {
-        document.getElementById("proxy").src = "/vaprox/" + encodeURIComponent(url);
+        document.getElementById("proxy-url").value = url;
+        document.getElementById("proxy-form").submit();
       } else {
         document.body.innerHTML = "<p style='color:white;text-align:center;margin-top:20%;font-size:24px;'>No URL provided.</p>";
       }
