@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Proxy Embed</title>
+  <title>ZXS PROXY YAY</title>
   <style>
     html, body {
       margin: 0;
@@ -18,11 +18,13 @@
 </head>
 <body>
   <iframe id="proxy-frame"></iframe>
+  <script src="u/bundle.js"></script>
+  <script src="u/config.js"></script>
   <script>
-    const rawUrl = decodeURIComponent(location.hash.slice(1));
-    const proxyBase = "https://your-uv-backend.onrender.com/service/";
-    const finalUrl = proxyBase + "http/" + rawUrl.replace(/^https?:\/\//, "");
-    document.getElementById("proxy-frame").src = finalUrl;
+    const url = decodeURIComponent(location.hash.slice(1));
+    const encodedUrl = __uv$config.encodeUrl(url);
+    const prefix = __uv$config.prefix;
+    document.getElementById("proxy-frame").src = prefix + encodedUrl;
   </script>
 </body>
 </html>
