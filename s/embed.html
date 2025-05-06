@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Proxy Embed</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="proxy-frame"></iframe>
+  <script>
+    const rawUrl = decodeURIComponent(location.hash.slice(1));
+    const proxyBase = "https://your-uv-backend.onrender.com/service/";
+    const finalUrl = proxyBase + "http/" + rawUrl.replace(/^https?:\/\//, "");
+    document.getElementById("proxy-frame").src = finalUrl;
+  </script>
+</body>
+</html>
