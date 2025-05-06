@@ -1376,6 +1376,14 @@ html, body, .games-section, #fancy-loader {
 iframe {
   filter: none !important;
 }
+html, body, .games-section, #fancy-loader {
+  filter: grayscale(100%);
+}
+
+html > *:not(iframe), body > *:not(iframe), .games-section > *:not(iframe), #fancy-loader > *:not(iframe) {
+  filter: grayscale(100%);
+}
+
       </style>
 </body>
 </html>
