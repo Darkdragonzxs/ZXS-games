@@ -1,4 +1,5 @@
 
+
 <div id="fancy-loader">
   <div class="loader-container">
     <div class="spinner-container">
@@ -217,6 +218,8 @@
     }, 800);
   });
 </script><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -226,9 +229,10 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: black;
-            color: white;
+            background-color: #121212;
+            color: #e0e0e0;
             font-family: 'Orbitron', sans-serif;
+            overflow-y: auto;
         }
 
         .games-section {
@@ -237,22 +241,62 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(30, 30, 30, 0.9);
             padding: 20px;
-            overflow-y: auto;
+            overflow-y: auto; /* Allow scrolling of the entire section */
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
         }
 
         .search-bar {
             width: 100%;
             padding: 12px;
             margin: 20px 0;
-            border: 2px solid white;
+            border: 2px solid #ccc;
             border-radius: 5px;
             background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-family: 'Orbitron', sans-serif;
+            color: #fff;
             font-size: 16px;
-            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #00ffcc;
+        }
+
+        .game-group {
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: rgba(10, 10, 10, 0.8);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .game-group-header {
+            padding: 12px 20px;
+            background-color: rgba(100, 100, 100, 0.6);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .game-group-header:hover {
+            background-color: rgba(100, 100, 100, 0.7);
+        }
+
+        .game-group-content {
+            max-height: 0;
+            overflow: hidden; /* Hide content when not expanded */
+            transition: max-height 0.5s ease;
+        }
+
+        .game-group-content.expanded {
+            max-height: 2000px; /* Increase max-height to accommodate more games */
+            overflow-y: auto; /* Allow vertical scrolling within the expanded group */
         }
 
         .game-tiles {
@@ -260,31 +304,32 @@
             flex-wrap: wrap;
             gap: 15px;
             justify-content: center;
+            padding: 10px;
         }
 
         .game-tile {
             width: 120px;
             height: 120px;
-            background-color: #333;
+            background-color: #444;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
+            color: #fff;
             font-size: 14px;
             text-align: center;
             border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.3s, background-color 0.3s;
+            transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
             padding: 10px;
             overflow: hidden;
             word-wrap: break-word;
-            box-sizing: border-box;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3);
         }
 
         .game-tile:hover {
             transform: scale(1.05);
-            background-color: #444;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            background-color: #555;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
         }
 
         .iframe-container {
@@ -311,12 +356,6 @@
             transition: width 0.3s, height 0.3s;
         }
 
-        .iframe-window.fullscreen {
-            width: 100%;
-            height: 100%;
-            border-radius: 0;
-        }
-
         .window-titlebar {
             display: flex;
             justify-content: space-between;
@@ -333,9 +372,6 @@
         .window-title {
             font-size: 16px;
             color: #0ff;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
         .window-controls {
@@ -351,10 +387,10 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: background-color 0.2s;
             background-color: #333;
             color: white;
             font-size: 14px;
+            transition: background-color 0.3s;
         }
 
         .window-btn:hover {
@@ -363,10 +399,6 @@
 
         .window-btn.close-btn:hover {
             background-color: #ff3366;
-        }
-
-        .window-btn.fullscreen-btn:hover {
-            background-color: #00aa88;
         }
 
         .iframe-content {
@@ -381,104 +413,6 @@
             border: none;
         }
 
-        .proxy-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            z-index: 200;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .proxy-modal.visible {
-            opacity: 1;
-            display: flex;
-        }
-
-        .proxy-content {
-            background-color: #222;
-            padding: 25px;
-            border-radius: 10px;
-            width: 300px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-            transform: scale(0.9);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .proxy-modal.visible .proxy-content {
-            transform: scale(1);
-        }
-
-        .proxy-title {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: #0ff;
-        }
-
-        .proxy-select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #333;
-            color: white;
-            border: 1px solid #555;
-            border-radius: 5px;
-            font-family: 'Orbitron', sans-serif;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .proxy-select option {
-            background-color: #333;
-            color: white;
-        }
-
-        .proxy-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .proxy-button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            transition: transform 0.2s, background-color 0.2s;
-            background-color: #444;
-            color: white;
-        }
-
-        .proxy-button.launch {
-            background-color: #00aa88;
-        }
-
-        .proxy-button:hover {
-            transform: scale(1.05);
-            background-color: #0ff;
-            color: black;
-        }
-
-        .proxy-button.cancel:hover {
-            background-color: #ff3366;
-            color: white;
-        }
-
-        .game-info {
-            color: #0ff;
-            margin-bottom: 15px;
-            font-size: 16px;
-            word-break: break-word;
-        }
-
         .section-title {
             text-align: center;
             font-size: 32px;
@@ -489,22 +423,16 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        /* For mobile devices */
         @media (max-width: 768px) {
             .game-tile {
-                width: 100px;
-                height: 100px;
+                width: 90px;
+                height: 90px;
                 font-size: 12px;
             }
-            
+
             .iframe-window {
                 width: 95%;
                 height: 80%;
-            }
-
-            .proxy-content {
-                width: 90%;
-                max-width: 300px;
             }
         }
     </style>
@@ -513,9 +441,7 @@
     <div class="games-section">
         <h1 class="section-title">GAMES</h1>
         <input type="text" class="search-bar" placeholder="Search for a Game..." id="game-search" oninput="filterGames()">
-        <div class="game-tiles" id="game-tiles">
-            <!-- Game tiles will be populated by JavaScript -->
-        </div>
+        <div id="game-groups-container"></div>
     </div>
 
     <div class="iframe-container" id="iframe-container">
@@ -523,7 +449,6 @@
             <div class="window-titlebar" id="window-titlebar">
                 <div class="window-title" id="window-title">Game Title</div>
                 <div class="window-controls">
-                    <div class="window-btn fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</div>
                     <div class="window-btn close-btn" onclick="closeGame()" title="Close">✕</div>
                 </div>
             </div>
@@ -533,442 +458,182 @@
         </div>
     </div>
 
-    <!-- Proxy selection modal -->
-    <div class="proxy-modal" id="proxy-modal">
-        <div class="proxy-content">
-            <div class="proxy-title">Launch Options</div>
-            <div class="game-info" id="selected-game-title">Game Title</div>
-            <select class="proxy-select" id="proxy-select">
-                <option value="direct">Direct (No Proxy)</option>
-                <option value="proxy">Use Proxy</option>
-            </select>
-            <div class="proxy-buttons">
-                <button class="proxy-button cancel" onclick="cancelProxyModal()">Cancel</button>
-                <button class="proxy-button launch" onclick="launchGame()">Launch</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Game data - title and URL
-        const games = [
-            const games = [
-  { title: "1", url: "/g/1.html" },
-  { title: "10 minutes till dawn", url: "/g/10minutestilldawn.html" },
-  { title: "1 on 1 soccer", url: "/g/1on1soccer.html" },
-  { title: "1v1.lol", url: "/g/1v1lol.html" },
-  { title: "ADOFAI", url: "/g/adofai.html" },
-  { title: "Amazing Strange Rope Police", url: "/g/amazingstrangeropepolice.html" },
-  { title: "Animal Crossing Wild World", url: "/g/wildworld.html" },
-  { title: "Bad Time Simulator", url: "/g/badtimesimulator.html" },
-  { title: "Baldi's Basics", url: "/g/baldisbasics.html" },
-  { title: "Banjo‑kazooie", url: "/g/banjokazooie.html" },
-  { title: "Basket Random", url: "/g/basketrandom.html" },
-  { title: "Basketball Stars", url: "/g/basketballstars.html" },
-  { title: "Bitlife", url: "/g/bitlife.html" },
-  { title: "Boxing Random", url: "/g/boxingrandom.html" },
-  { title: "Cell Machine", url: "/g/cellmachine.html" },
-  { title: "Chess", url: "/g/chess.html" },
-  { title: "Cluster Rush", url: "/g/clusterrush.html" },
-  { title: "Cookie Clicker", url: "/g/cookieclicker.html" },
-  { title: "Call of Duty - Black Ops", url: "/g/codblackops.html" },
-  { title: "Crossy Road", url: "" },
-  { title: "CS:GO Clicker", url: "/g/csgoclicker.html" },
-  { title: "Doge Miner", url: "/g/dogeminer.html" },
-  { title: "Donkey Kong 64", url: "/g/DK64.html" },
-  { title: "Doodle Jump", url: "" },
-  { title: "DOOM", url: "/g/doom.html" },
-  { title: "Dragon Ball Z Devolution", url: "/g/dbzdevolution.html" },
-  { title: "Drift Boss", url: "/g/driftboss.html" },
-  { title: "Duck life", url: "/g/ducklife.html" },
-  { title: "Duck life 2", url: "/g/ducklife2.html" },
-  { title: "Duck life 3", url: "/g/ducklife3.html" },
-  { title: "Duck life 4", url: "/g/ducklife4.html" },
-  { title: "Duck life 5", url: "/g/ducklife5.html" },
-  { title: "Eaglercraft (MC)", url: "" },
-  { title: "Escape Road", url: "/g/escaperoad.html" },
-  { title: "Factory balls", url: "/g/factoryballs.html" },
-  { title: "Fancy Pants Adventure", url: "/g/fancypantsadventure.html" },
-  { title: "FNAF 2", url: "" },
-  { title: "FNAF 3", url: "" },
-  { title: "FNAF 4", url: "" },
-  { title: "GD LITE", url: "/g/gdlite.html" },
-  { title: "Gladihoppers", url: "/g/gladihoppers.html" },
-  { title: "Google Dino", url: "/g/googledino.html" },
-  { title: "Granny", url: "/g/granny.html" },
-  { title: "Hole.io", url: "" },
-  { title: "Infinite Craft", url: "/g/infinitecraft.html" },
-  { title: "Jetpack Joyride", url: "/g/jetpackjoyride.html" },
-  { title: "Johnny Upgrade", url: "/g/Johnnyupgrade.html" },
-  { title: "Justfall.lol", url: "/g/justfall.html" },
-  { title: "Learn to fly", url: "/g/learn2fly.html" },
-  { title: "Low Knight", url: "/g/lowknight.html" },
-  { title: "Madalin Stunt Cars Multiplayer", url: "/g/madilinstunt.html" },
-  { title: "Melon Playground", url: "/g/melonplayground.html" },
-  { title: "MotoX3M", url: "/g/motox3m.html" },
-  { title: "OvO", url: "/g/OVO.html" },
-  { title: "Papa's Pizzeria", url: "/g/papapizzeria.html" },
-  { title: "Paper.io 2", url: "/g/paperio2.html" },
-  { title: "Ragdoll Archers", url: "/g/ragdollarcher.html" },
-  { title: "Retro Bowl", url: "/g/retrobowl.html" },
-  { title: "Rocket Leauge", url: "/g/2drocketleauge.html" },
-  { title: "Run 2", url: "/g/run2.html" },
-  { title: "Slither.io", url: "" },
-  { title: "Slope", url: "/g/slope.html" },
-  { title: "Soccer Random", url: "/g/soccerrandom.html" },
-  { title: "Sprunki", url: "/g/sprunki.html" },
-  { title: "Stickman Hook", url: "/g/stickmanhook.html" },
-  { title: "Subway Surfers", url: "/g/subwaysurfer.html" },
-  { title: "Super hot", url: "/g/superhot.html" },
-  { title: "Super Mario Bros.", url: "/g/supermariobros.html" },
-  { title: "Super Mario 64", url: "/g/supermario64.html" },
-  { title: "Mario Kart 64", url: "/g/mariokart64.html" },
-  { title: "Mario Kart Super Circut", url: "/g/MKsupercircut.html" },
-  { title: "Pokemon Emerald", url: "/g/Pokemonemerald.html" },
-  { title: "Pokemon Firered", url: "/g/PokemonFireRed.html" },
-  { title: "Pokemon Too Many Types", url: "/g/pokemon2manytypes.html" },
-  { title: "The Impossible Quiz", url: "/g/theimpossibleqiuz.html" },
-  { title: "Tiny Fishing", url: "/g/tinyfishing.html" },
-  { title: "There is no Game", url: "/g/thereisnogame.html" },
-  { title: "Sonic", url: "/g/sonic.html" },
-  { title: "Sonic.EXE", url: "/g/sonicexe.html" },
-  { title: "Final Fantasy VII", url: "/g/finalfantasy.html" },
-  { title: "Parappa The Rapper", url: "/g/parappadarappa.html" },
-  { title: "Achivement Unlocked", url: "/g/achivementunlcked.html" },
-  { title: "Cat Mario", url: "/g/catmar10.html" },
-  { title: "Little Devil", url: "/g/littledev1l.html" },
-  { title: "Pizza Tower", url: "/g/pizzat0wer.html" },
-  { title: "Plants VS Zombies", url: "/g/pvz.html" },
-  { title: "Sandtris", url: "/g/sandtris.html" },
-  { title: "Wheely", url: "/g/wheely.html" },
-  { title: "Tom Clancy's Rainbow 6", url: "/g/tomclancyrainbow6.html" },
-  { title: "Undertale", url: "" },
-  { title: "Brawl Stars", url: "" },
-  { title: "Roblox", url: "" },
-  { title: "Mario Maker (Scratch)", url: "" },
-  { title: "10 bullets", url: "/g/10bullets.html" },
-  { title: "2048", url: "/g/2048.html" },
-  { title: "60 sec burger run", url: "/g/60secburgerrun.html" },
-  { title: "8 ball pool", url: "/g/8ballpool.html" },
-  { title: "Among us", url: "/g/amongus.html" },
-  { title: "Angry Birds", url: "/g/angryb1rds.html" },
-  { title: "A small world cup", url: "/g/asmallworldcup.html" },
-  { title: "Bad Parenting", url: "/g/Badparenting.html" },
-  { title: "Buritto Bison", url: "/g/burittobison.html" },
-  { title: "Crazy Cattle 3D", url: "/g/crazycattle.html" },
-  { title: "Friday Night Funkin", url: "/g/Fridaynightfunk1n.html" },
-  { title: "Rocket Soccer Derby", url: "/g/rocketsoccerderb.html" }
+        const gameGroups = [
+            {
+                name: "Duck Life Series",
+                games: [
+                    { title: "Duck life", url: "/g/ducklife.html" },
+                    { title: "Duck life 2", url: "/g/ducklife2.html" },
+                    { title: "Duck life 3", url: "/g/ducklife3.html" },
+                    { title: "Duck life 4", url: "/g/ducklife4.html" },
+                    { title: "Duck life 5", url: "/g/ducklife5.html" }
+                ]
+            },
+            {
+                name: "Mario Games",
+                games: [
+                    { title: "Super Mario Bros.", url: "/g/supermariobros.html" },
+                    { title: "Super Mario 64", url: "/g/supermario64.html" },
+                    { title: "Mario Kart 64", url: "/g/mariokart64.html" },
+                    { title: "Mario Kart Super Circuit", url: "/g/MKsupercircut.html" }
+                ]
+            },
+            {
+                name: "Pokemon Games",
+                games: [
+                    { title: "Pokemon Emerald", url: "/g/Pokemonemerald.html" },
+                    { title: "Pokemon Firered", url: "/g/PokemonFireRed.html" },
+                    { title: "Pokemon Too Many Types", url: "/g/pokemon2manytypes.html" }
+                ]
+            },
+            {
+                name: "All Games",
+                games: [
+                    { title: "1", url: "/g/1.html" },
+                    { title: "10 minutes till dawn", url: "/g/10minutestilldawn.html" },
+                    { title: "1 on 1 soccer", url: "/g/1on1soccer.html" },
+                    { title: "1v1.lol", url: "/g/1v1lol.html" },
+                    { title: "ADOFAI", url: "/g/adofai.html" },
+                    { title: "Amazing Strange Rope Police", url: "/g/amazingstrangeropepolice.html" },
+                    { title: "Animal Crossing Wild World", url: "/g/wildworld.html" },
+                    { title: "Bad Time Simulator", url: "/g/badtimesimulator.html" },
+                    { title: "Baldi's Basics", url: "/g/baldisbasics.html" },
+                    { title: "Banjo‑kazooie", url: "/g/banjokazooie.html" },
+                    { title: "Basket Random", url: "/g/basketrandom.html" },
+                    { title: "Basketball Stars", url: "/g/basketballstars.html" },
+                    { title: "Bitlife", url: "/g/bitlife.html" },
+                    { title: "Boxing Random", url: "/g/boxingrandom.html" },
+                    { title: "Cell Machine", url: "/g/cellmachine.html" },
+                    { title: "Chess", url: "/g/chess.html" },
+                    { title: "Cluster Rush", url: "/g/clusterrush.html" },
+                    { title: "Cookie Clicker", url: "/g/cookieclicker.html" },
+                    { title: "Call of Duty - Black Ops", url: "/g/codblackops.html" },
+                    { title: "CS:GO Clicker", url: "/g/csgoclicker.html" },
+                    { title: "Doge Miner", url: "/g/dogeminer.html" },
+                    { title: "Donkey Kong 64", url: "/g/DK64.html" },
+                    { title: "DOOM", url: "/g/doom.html" },
+                    { title: "Dragon Ball Z Devolution", url: "/g/dbzdevolution.html" },
+                    { title: "Drift Boss", url: "/g/driftboss.html" },
+                    { title: "Escape Road", url: "/g/escaperoad.html" },
+                    { title: "Factory balls", url: "/g/factoryballs.html" },
+                    { title: "Fancy Pants Adventure", url: "/g/fancypantsadventure.html" },
+                    { title: "GD LITE", url: "/g/gdlite.html" },
+                    { title: "Gladihoppers", url: "/g/gladihoppers.html" },
+                    { title: "Google Dino", url: "/g/googledino.html" },
+                    { title: "Granny", url: "/g/granny.html" },
+                    { title: "Infinite Craft", url: "/g/infinitecraft.html" },
+                    { title: "Jetpack Joyride", url: "/g/jetpackjoyride.html" },
+                    { title: "Johnny Upgrade", url: "/g/Johnnyupgrade.html" },
+                    { title: "Justfall.lol", url: "/g/justfall.html" },
+                    { title: "Learn to fly", url: "/g/learn2fly.html" },
+                    { title: "Low Knight", url: "/g/lowknight.html" },
+                    { title: "Madalin Stunt Cars Multiplayer", url: "/g/madilinstunt.html" },
+                    { title: "Melon Playground", url: "/g/melonplayground.html" },
+                    { title: "MotoX3M", url: "/g/motox3m.html" },
+                    { title: "OvO", url: "/g/OVO.html" },
+                    { title: "Papa's Pizzeria", url: "/g/papapizzeria.html" },
+                    { title: "Paper.io 2", url: "/g/paperio2.html" },
+                    { title: "Ragdoll Archers", url: "/g/ragdollarcher.html" },
+                    { title: "Retro Bowl", url: "/g/retrobowl.html" },
+                    { title: "Rocket League", url: "/g/2drocketleauge.html" },
+                    { title: "Run 2", url: "/g/run2.html" },
+                    { title: "Slope", url: "/g/slope.html" },
+                    { title: "Soccer Random", url: "/g/soccerrandom.html" },
+                    { title: "Sprunki", url: "/g/sprunki.html" },
+                    { title: "Stickman Hook", url: "/g/stickmanhook.html" },
+                    { title: "Subway Surfers", url: "/g/subwaysurfer.html" },
+                    { title: "Super hot", url: "/g/superhot.html" },
+                    { title: "Sonic", url: "/g/sonic.html" },
+                    { title: "Sonic.EXE", url: "/g/sonicexe.html" },
+                    { title: "Final Fantasy VII", url: "/g/finalfantasy.html" },
+                    { title: "Parappa The Rapper", url: "/g/parappadarappa.html" },
+                    { title: "Achievement Unlocked", url: "/g/achivementunlcked.html" },
+                    { title: "Cat Mario", url: "/g/catmar10.html" },
+                    { title: "Little Devil", url: "/g/littledev1l.html" },
+                    { title: "Pizza Tower", url: "/g/pizzat0wer.html" },
+                    { title: "Plants VS Zombies", url: "/g/pvz.html" },
+                    { title: "Sandtris", url: "/g/sandtris.html" },
+                    { title: "Wheely", url: "/g/wheely.html" },
+                    { title: "Tom Clancy's Rainbow 6", url: "/g/tomclancyrainbow6.html" },
+                    { title: "10 bullets", url: "/g/10bullets.html" },
+                    { title: "2048", url: "/g/2048.html" },
+                    { title: "60 sec burger run", url: "/g/60secburgerrun.html" },
+                    { title: "8 ball pool", url: "/g/8ballpool.html" },
+                    { title: "Among us", url: "/g/amongus.html" },
+                    { title: "Angry Birds", url: "/g/angryb1rds.html" },
+                    { title: "A small world cup", url: "/g/asmallworldcup.html" },
+                    { title: "Bad Parenting", url: "/g/Badparenting.html" },
+                    { title: "Buritto Bison", url: "/g/burittobison.html" },
+                    { title: "Crazy Cattle 3D", url: "/g/crazycattle.html" },
+                    { title: "Friday Night Funkin", url: "/g/Fridaynightfunk1n.html" },
+                    { title: "Rocket Soccer Derby", url: "/g/rocketsoccerderb.html" }
+                ]
+            }
         ];
 
-        // Variables to store the currently selected game
-        let selectedGameUrl = '';
-        let selectedGameTitle = '';
-        
-        // Flag for fullscreen mode
-        let isFullscreen = false;
-
-        // Direct declaration of proxy URL
-        const PROXY_URL = "https://test-dp1.pages.dev/static/embed.html#";
-
-        // Variables for drag functionality
-        let isDragging = false;
-        let offsetX, offsetY;
-
-        // Function to create and populate game tiles
-        function populateGameTiles() {
-            const gameTilesContainer = document.getElementById('game-tiles');
-            
-            // Clear existing tiles
-            gameTilesContainer.innerHTML = '';
-            
-            // Create a tile for each game
-            games.forEach(game => {
-                const tile = document.createElement('div');
-                tile.className = 'game-tile';
-                tile.textContent = game.title;
-                tile.onclick = function() {
-                    showProxyModal(game.title, game.url);
-                };
-                gameTilesContainer.appendChild(tile);
+        function createGameGroups() {
+            const container = document.getElementById('game-groups-container');
+            container.innerHTML = '';
+            gameGroups.forEach((group, index) => {
+                const groupElement = document.createElement('div');
+                groupElement.className = 'game-group';
+                groupElement.innerHTML = `
+                    <div class="game-group-header" onclick="toggleGroup(${index})">
+                        <div>${group.name} <span class="game-count">${group.games.length}</span></div>
+                    </div>
+                    <div class="game-group-content">
+                        <div class="game-tiles">
+                            ${group.games.map(game => `
+                                <div class="game-tile" onclick="openGame('${game.url}', '${game.title}')">${game.title}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(groupElement);
             });
         }
 
-        // Function to filter games based on search input
+        function toggleGroup(groupIndex) {
+            const groupContent = document.querySelectorAll('.game-group-content')[groupIndex];
+            groupContent.classList.toggle('expanded');
+        }
+
         function filterGames() {
             const searchInput = document.getElementById('game-search').value.toLowerCase();
             const gameTiles = document.querySelectorAll('.game-tile');
-            
+
             gameTiles.forEach(tile => {
                 const tileText = tile.textContent.toLowerCase();
+                // Show or hide tiles based on search input
                 tile.style.display = tileText.includes(searchInput) ? 'flex' : 'none';
+
+                // After filtering, check if any tiles are visible in a group.
+                // If not, you might want to hide the group header, but that adds complexity.
+                // For now, we'll just filter the tiles.
             });
         }
 
-        // Function to show the proxy selection modal
-        function showProxyModal(gameTitle, gameUrl) {
-            const proxyModal = document.getElementById('proxy-modal');
-            const selectedGameTitleElement = document.getElementById('selected-game-title');
-            
-            // Store the selected game info for later use
-            selectedGameUrl = gameUrl;
-            selectedGameTitle = gameTitle;
-            
-            // Update the modal with game info
-            selectedGameTitleElement.textContent = gameTitle;
-            
-            // Reset the select value
-            document.getElementById('proxy-select').value = 'direct';
-            
-            // Show the modal
-            proxyModal.style.display = 'flex';
-            setTimeout(() => {
-                proxyModal.classList.add('visible');
-            }, 10);
-        }
-
-        // Function to close the proxy modal without launching the game
-        function cancelProxyModal() {
-            const proxyModal = document.getElementById('proxy-modal');
-            
-            // Hide the modal with animation
-            proxyModal.classList.remove('visible');
-            setTimeout(() => {
-                proxyModal.style.display = 'none';
-            }, 300);
-        }
-
-        // Function to launch the game based on proxy selection
-        function launchGame() {
-            const proxyOption = document.getElementById('proxy-select').value;
-            let finalUrl = '';
-            
-            // Determine the URL based on the proxy option
-            if (proxyOption === 'proxy') {
-                // Use the proxy URL
-                const proxyBase = PROXY_URL.split('#')[0];
-                finalUrl = proxyBase + '#' + selectedGameUrl;
-            } else {
-                // Use the direct URL
-                finalUrl = selectedGameUrl;
-            }
-            
-            // Close the proxy modal
-            cancelProxyModal();
-            
-            // Open the game in the iframe
-            openGame(finalUrl, selectedGameTitle);
-        }
-
-        // Function to open a game in the iframe window
         function openGame(url, title) {
             const iframeContainer = document.getElementById('iframe-container');
             const gameIframe = document.getElementById('game-iframe');
             const windowTitle = document.getElementById('window-title');
-            
-            // Set the iframe source
             gameIframe.src = url;
-            
-            // Set the window title
             windowTitle.textContent = title;
-            
-            // Reset window position to center if it was moved before
-            const iframeWindow = document.getElementById('iframe-window');
-            iframeWindow.style.top = '50%';
-            iframeWindow.style.left = '50%';
-            iframeWindow.style.transform = 'translate(-50%, -50%)';
-            
-            // Make sure it's not in fullscreen
-            if (isFullscreen) {
-                toggleFullscreen();
-            }
-            
-            // Show the container
             iframeContainer.style.display = 'block';
-            
-            // Prevent scrolling of the background
             document.body.style.overflow = 'hidden';
         }
 
-        // Function to close the game iframe
         function closeGame() {
             const iframeContainer = document.getElementById('iframe-container');
             const gameIframe = document.getElementById('game-iframe');
-            
-            // Hide the container
             iframeContainer.style.display = 'none';
-            
-            // Clear the iframe source
             gameIframe.src = '';
-            
-            // Restore scrolling
             document.body.style.overflow = 'auto';
         }
 
-        // Function to toggle fullscreen mode
-        function toggleFullscreen() {
-            const iframeWindow = document.getElementById('iframe-window');
-            
-            isFullscreen = !isFullscreen;
-            
-            if (isFullscreen) {
-                iframeWindow.classList.add('fullscreen');
-                // Center the window when going fullscreen
-                iframeWindow.style.top = '50%';
-                iframeWindow.style.left = '50%';
-                iframeWindow.style.transform = 'translate(-50%, -50%)';
-            } else {
-                iframeWindow.classList.remove('fullscreen');
-            }
-        }
-
-        // Initialize drag functionality for the window
-        function initDrag() {
-            const titlebar = document.getElementById('window-titlebar');
-            const iframeWindow = document.getElementById('iframe-window');
-            
-            titlebar.addEventListener('mousedown', function(e) {
-                // Only allow dragging if not in fullscreen
-                if (isFullscreen) return;
-                
-                isDragging = true;
-                
-                // Calculate the offset of the mouse from the window corner
-                const rect = iframeWindow.getBoundingClientRect();
-                offsetX = e.clientX - rect.left;
-                offsetY = e.clientY - rect.top;
-                
-                // Change cursor to indicate dragging
-                titlebar.style.cursor = 'grabbing';
-            });
-            
-            document.addEventListener('mousemove', function(e) {
-                if (!isDragging) return;
-                
-                // Get window dimensions
-                const windowWidth = window.innerWidth;
-                const windowHeight = window.innerHeight;
-                const rect = iframeWindow.getBoundingClientRect();
-                
-                // Calculate new position
-                let newLeft = e.clientX - offsetX;
-                let newTop = e.clientY - offsetY;
-                
-                // Ensure window stays within viewport boundaries
-                newLeft = Math.max(0, Math.min(newLeft, windowWidth - rect.width));
-                newTop = Math.max(0, Math.min(newTop, windowHeight - rect.height));
-                
-                // Update position with direct styles instead of transform
-                iframeWindow.style.left = newLeft + 'px';
-                iframeWindow.style.top = newTop + 'px';
-                iframeWindow.style.transform = 'none';
-            });
-            
-            document.addEventListener('mouseup', function() {
-                if (isDragging) {
-                    isDragging = false;
-                    titlebar.style.cursor = 'move';
-                }
-            });
-            
-            // Touch support for mobile
-            titlebar.addEventListener('touchstart', function(e) {
-                if (isFullscreen) return;
-                
-                isDragging = true;
-                
-                const rect = iframeWindow.getBoundingClientRect();
-                const touch = e.touches[0];
-                
-                offsetX = touch.clientX - rect.left;
-                offsetY = touch.clientY - rect.top;
-                
-                e.preventDefault(); // Prevent scrolling while dragging
-            });
-            
-            document.addEventListener('touchmove', function(e) {
-                if (!isDragging) return;
-                
-                const windowWidth = window.innerWidth;
-                const windowHeight = window.innerHeight;
-                const rect = iframeWindow.getBoundingClientRect();
-                const touch = e.touches[0];
-                
-                let newLeft = touch.clientX - offsetX;
-                let newTop = touch.clientY - offsetY;
-                
-                newLeft = Math.max(0, Math.min(newLeft, windowWidth - rect.width));
-                newTop = Math.max(0, Math.min(newTop, windowHeight - rect.height));
-                
-                iframeWindow.style.left = newLeft + 'px';
-                iframeWindow.style.top = newTop + 'px';
-                iframeWindow.style.transform = 'none';
-                
-                e.preventDefault(); // Prevent scrolling while dragging
-            });
-            
-            document.addEventListener('touchend', function() {
-                isDragging = false;
-            });
-        }
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            populateGameTiles();
-            initDrag();
-            
-            // Handle ESC key to close the game or modal
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    const proxyModal = document.getElementById('proxy-modal');
-                    const iframeContainer = document.getElementById('iframe-container');
-                    
-                    // Check if proxy modal is visible
-                    if (proxyModal.style.display === 'flex') {
-                        cancelProxyModal();
-                    } 
-                    // Check if game iframe is visible
-                    else if (iframeContainer.style.display === 'block') {
-                        closeGame();
-                    }
-                }
-                
-                // Handle F11 key for fullscreen
-                if (event.key === 'F11') {
-                    if (document.getElementById('iframe-container').style.display === 'block') {
-                        toggleFullscreen();
-                        event.preventDefault();
-                    }
-                }
-            });
-            
-            // Resize handler to ensure window stays in viewport when browser is resized
-            window.addEventListener('resize', function() {
-                if (isDragging || isFullscreen) return;
-                
-                const iframeWindow = document.getElementById('iframe-window');
-                const iframeContainer = document.getElementById('iframe-container');
-                
-                // Only adjust if window is visible
-                if (iframeContainer.style.display === 'block') {
-                    const rect = iframeWindow.getBoundingClientRect();
-                    const windowWidth = window.innerWidth;
-                    const windowHeight = window.innerHeight;
-                    
-                    // Check if window is outside viewport after resize
-                    if (rect.right > windowWidth || rect.bottom > windowHeight || rect.left < 0 || rect.top < 0) {
-                        // Reset position to center if window is outside viewport
-                        iframeWindow.style.top = '50%';
-                        iframeWindow.style.left = '50%';
-                        iframeWindow.style.transform = 'translate(-50%, -50%)';
-                    }
-                }
-            });
-        });
-
-        // Handle messages from parent frame if needed
-        window.addEventListener('message', function(event) {
-            // Add message handling logic here if needed
-            // Example: if(event.data === 'close-game') closeGame();
+        document.addEventListener('DOMContentLoaded', () => {
+            createGameGroups();
         });
     </script>
 </body>
