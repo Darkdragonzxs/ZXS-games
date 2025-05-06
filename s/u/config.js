@@ -1,11 +1,10 @@
-/*global Ultraviolet*/
 self.__uv$config = {
-	prefix: "/service/",
-	encodeUrl: Ultraviolet.codec.xor.encode,
-	decodeUrl: Ultraviolet.codec.xor.decode,
-	handler: "/uv.handler.js",
-	client: "/uv.client.js",
-	bundle: "/uv.bundle.js",
-	config: "/uv.config.js",
-	sw: "/uv.sw.js",
+    prefix: '/s/internet/',
+    bare:'https://t.thecappuccino.site',
+    encodeUrl: Ultraviolet.codec.xor.encode,
+    decodeUrl: Ultraviolet.codec.xor.decode,
+    handler: '/s/u/handler.js',
+    bundle: '/s/u/bundle.js',
+    config: '/s/u/config.js',
+    sw: '/s/u/sw.js',
 };
