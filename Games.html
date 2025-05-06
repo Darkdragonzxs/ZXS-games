@@ -1228,6 +1228,13 @@ iframe {
 .window-btn.fullscreen-btn:hover {
     background-color: rgba(66, 220, 255, 0.5);
 }
+html, body, .games-section, #fancy-loader {
+  filter: grayscale(100%);
+}
+
+html > *:not(iframe), body > *:not(iframe), .games-section > *:not(iframe), #fancy-loader > *:not(iframe) {
+  filter: grayscale(100%);
+}
 
 /* Fullscreen icon styles */
 .fullscreen-icon {
