@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZXS Movie Launcher</title>
+  <link rel="icon" type="image/x-icon" href="pbmovies.png">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 3rem;
+      color: #00bcd4;
+      text-shadow: 0 0 15px rgba(0, 188, 212, 0.7);
+    }
+
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .tab-button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: 2px solid #444;
+      background-color: #222;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 30px;
+      margin: 0 10px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .tab-button.active {
+      background-color: #00bcd4;
+      border-color: #00bcd4;
+      transform: scale(1.05);
+    }
+
+    .tab-button:hover {
+      background-color: #444;
+      border-color: #00bcd4;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(0, 188, 212, 0.7);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+      border: 2px solid #444;
+      background-color: #1a1a1a;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .input-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    input, select, button {
+      padding: 12px 15px;
+      font-size: 16px;
+      border: 2px solid #444;
+      border-radius: 10px;
+      background-color: #222;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus, button:focus {
+      border-color: #00bcd4;
+      outline: none;
+      box-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
+    }
+
+    button {
+      background-color: #444;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #555;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+    }
+
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 15px;
+      margin-top: 20px;
+      background-color: #000;
+      transition: all 0.3s ease-in-out;
+    }
+
+    iframe:hover {
+      transform: scale(1.02);
+    }
+
+    .premium-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 12px 20px;
+      font-size: 14px;
+      border: 2px solid #444;
+      background-color: #00bcd4;
+      color: #fff;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .premium-btn:hover {
+      background-color: #008c8c;
+      box-shadow: 0 0 15px rgba(0, 188, 212, 0.7);
+    }
+
+    .search-results {
+      margin-top: 25px;
+    }
+
+    .search-item {
+      padding: 15px;
+      border: 2px solid #444;
+      margin: 10px 0;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .search-item:hover {
+      background-color: #444;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+    }
+
+  </style>
+</head>
+<body>
+  <h1>ZXS MOVIE LAUNCHER</h1>
+  <div class="tab-container">
+    <button class="tab-button active" onclick="showTab('movies')">Movies</button>
+    <button class="tab-button" onclick="showTab('tvshows')">TV Shows</button>
+    <button class="tab-button" onclick="showTab('search')">Search</button>
+  </div>
+
+  <div id="movies" class="container">
+    <div class="input-container">
+      <input id="movieMediaId" type="text" placeholder="Enter Movie TMDB ID">
+      <select id="movieProvider">
+        <option value="vidsrc">Vidsrc (always works)</option> <!-- yippee -->
+        <option value="frembed">Frembed (unreliable)</option>
+        <option value="superembed">SuperEmbed</option>
+        <option value="smashystream">SmashyStream</option>
+        <option value="autoembed">AutoEmbed</option>
+        <option value="upcloud">UpCloud</option>
+
+      </select>
+      <button onclick="playMovie()">Play Movie</button>
+    </div>
+    <iframe id="moviePlayer" src="" allowfullscreen></iframe>
+  </div>
+
+  <div id="tvshows" class="container" style="display: none;">
+    <div class="input-container">
+      <input id="tvMediaId" type="text" placeholder="Enter TV Show TMDB ID">
+      <input id="seasonNumber" type="number" placeholder="Season" min="1">
+      <input id="episodeNumber" type="number" placeholder="Episode" min="1">
+      <select id="tvProvider">
+        <option value="frembed">Frembed</option>
+        <option value="superembed">SuperEmbed</option>
+        <option value="smashystream">SmashyStream</option>
+        <option value="autoembed">AutoEmbed</option>
+        <option value="upcloud">UpCloud</option>
+        <option value="vidsrc">Vidsrc</option> <!-- Added Vidsrc option -->
+      </select>
+      <button onclick="playTvShow()">Play TV Show</button>
+    </div>
+    <iframe id="tvPlayer" src="" allowfullscreen></iframe>
+  </div>
+
+  <div id="search" class="container" style="display: none;">
+    <div class="input-container">
+      <input id="searchQuery" type="text" placeholder="Search for a movie or TV show">
+      <button onclick="searchContent()">Search</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+  
+  <script>
+    const apiKey = 'a24c4f9e8a288d266b2453d737f19f54'; 
+
+    function showTab(tab) {
+      const movies = document.getElementById('movies');
+      const tvshows = document.getElementById('tvshows');
+      const search = document.getElementById('search');
+      const buttons = document.querySelectorAll('.tab-button');
+
+      if (tab === 'movies') {
+        movies.style.display = 'block';
+        tvshows.style.display = 'none';
+        search.style.display = 'none';
+      } else if (tab === 'tvshows') {
+        movies.style.display = 'none';
+        tvshows.style.display = 'block';
+        search.style.display = 'none';
+      } else {
+        movies.style.display = 'none';
+        tvshows.style.display = 'none';
+        search.style.display = 'block';
+      }
+
+      buttons.forEach(button => button.classList.remove('active'));
+      document.querySelector(`.tab-button[onclick="showTab('${tab}')"]`).classList.add('active');
+    }
+
+    document.getElementById("searchQuery").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            searchContent();  
+        }
+    });
+
+    function playMovie() {
+      const mediaId = document.getElementById("movieMediaId").value.trim();
+      const provider = document.getElementById("movieProvider").value;
+      const moviePlayer = document.getElementById("moviePlayer");
+
+      if (!mediaId) {
+        alert("Please enter a TMDB ID for the movie.");
+        return;
+      }
+
+      let url = "";
+
+      if (provider === "frembed") {
+        url = `https://frembed.pro/api/film.php?id=${mediaId}`;
+      } else if (provider === "superembed") {
+        url = `https://multiembed.mov/?video_id=${mediaId}&tmdb=1`;
+      } else if (provider === "smashystream") {
+        url = `https://player.smashy.stream/movie/${mediaId}`;
+      } else if (provider === "autoembed") {
+        url = `https://autoembed.co/movie/tmdb/${mediaId}`;
+      } else if (provider === "upcloud") {
+        url = `https://upcloud.stream/movie/${mediaId}`;
+      } else if (provider === "vidsrc") {  // Vidsrc option
+        url = `https://vidsrc.su/embed/movie/${mediaId}`;
+      }
+
+      moviePlayer.src = url;
+    }
+
+    function playTvShow() {
+      const mediaId = document.getElementById("tvMediaId").value.trim();
+      const seasonNumber = document.getElementById("seasonNumber").value.trim();
+      const episodeNumber = document.getElementById("episodeNumber").value.trim();
+      const provider = document.getElementById("tvProvider").value;
+      const tvPlayer = document.getElementById("tvPlayer");
+
+      if (!mediaId || !seasonNumber || !episodeNumber) {
+        alert("Please enter all details for the TV show.");
+        return;
+      }
+
+      let url = "";
+
+      if (provider === "frembed") {
+        url = `https://frembed.pro/api/serie.php?id=${mediaId}&sa=${seasonNumber}&epi=${episodeNumber}`;
+      } else if (provider === "superembed") {
+        url = `https://multiembed.mov/?video_id=${mediaId}&tmdb=1&s=${seasonNumber}&e=${episodeNumber}`;
+      } else if (provider === "smashystream") {
+        url = `https://player.smashy.stream/series/${mediaId}/season/${seasonNumber}/episode/${episodeNumber}`;
+      } else if (provider === "autoembed") {
+        url = `https://autoembed.co/episode/tmdb/${mediaId}/season/${seasonNumber}/episode/${episodeNumber}`;
+      } else if (provider === "upcloud") {
+        url = `https://upcloud.stream/series/${mediaId}/season/${seasonNumber}/episode/${episodeNumber}`;
+      } else if (provider === "vidsrc") {  // Vidsrc option
+        url = `https://vidsrc.su/embed/tv/${mediaId}/${seasonNumber}/${episodeNumber}`;
+      }
+
+      tvPlayer.src = url;
+    }
+
+    async function searchContent() {
+      const query = document.getElementById("searchQuery").value.trim();
+      const resultsContainer = document.getElementById("searchResults");
+
+      if (!query) {
+        alert("Please enter a search term.");
+        return;
+      }
+
+      const response = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${query}`);
+      const data = await response.json();
+
+      resultsContainer.innerHTML = '';
+
+      if (data.results.length === 0) {
+        resultsContainer.innerHTML = 'No results found.';
+      } else {
+        data.results.forEach(item => {
+          const div = document.createElement("div");
+          div.classList.add("search-item");
+          div.innerHTML = `<strong>${item.title || item.name}</strong>`;
+          div.onclick = () => showMedia(item.id, item.media_type);
+          resultsContainer.appendChild(div);
+        });
+      }
+    }
+
+    function showMedia(id, type) {
+      if (type === "movie") {
+        document.getElementById("movieMediaId").value = id;
+        showTab('movies');
+      } else if (type === "tv") {
+        document.getElementById("tvMediaId").value = id;
+        showTab('tvshows');
+      }
+    }
+  </script>
+</body>
+</html>
+
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
