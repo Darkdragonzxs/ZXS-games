@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>zxs code</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      color: #2a2a2a;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+      }
+    }
+    .panel {
+      flex: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .panel-header {
+      background-color: #4a5568;
+      color: white;
+      padding: 0.75rem 1rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel-content {
+      padding: 1rem;
+    }
+    #editor {
+      width: 100%;
+      height: 400px;
+      font-family: monospace;
+      border: none;
+      padding: 0.5rem;
+      resize: vertical;
+      box-sizing: border-box;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e2e8f0;
+    }
+    #output {
+      width: 100%;
+      height: 200px;
+      overflow: auto;
+      border: 1px solid #e2e8f0;
+      background-color: white;
+      transform-origin: top left;
+      transform: scale(0.7);
+    }
+    .output-container {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+      background-color: #f8f9fa;
+    }
+    .scale-control {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .scale-control input {
+      margin: 0 10px;
+    }
+    .buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    button {
+      background-color: #4a5568;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #2d3748;
+    }
+    #openBlankBtn {
+      background-color: #38a169;
+    }
+    #openBlankBtn:hover {
+      background-color: #2f855a;
+    }
+    .examples {
+      margin-top: 1.5rem;
+    }
+    .example-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .example-button {
+      background-color: #e2e8f0;
+      color: #4a5568;
+      padding: 0.3rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .example-button:hover {
+      background-color: #cbd5e0;
+    }
+  </style>
+</head>
+<body>
+  <h1>ZXS CODE</h1>
+  
+  <div class="container">
+    <div class="panel">
+      <div class="panel-header">
+        <span>HTML Editor</span>
+      </div>
+      <div class="panel-content">
+        <textarea id="editor" placeholder="Enter your HTML code here..."></textarea>
+      </div>
+    </div>
+    
+    <div class="panel">
+      <div class="panel-header">
+        <span>Output Preview</span>
+      </div>
+      <div class="panel-content">
+        <div class="scale-control">
+          <span>Scale:</span>
+          <input type="range" id="scaleSlider" min="30" max="100" value="70">
+          <span id="scaleValue">70%</span>
+        </div>
+        <div class="output-container">
+          <div id="output"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="buttons">
+    <button id="runBtn">Run Code</button>
+    <button id="clearBtn">Clear</button>
+    <button id="openBlankBtn">Open in about:blank</button>
+  </div>
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    <div class="example-buttons">
+      <button class="example-button" data-example="hello">Hello World</button>
+      <button class="example-button" data-example="list">List Example</button>
+      <button class="example-button" data-example="table">Table Example</button>
+      <button class="example-button" data-example="form">Form Example</button>
+      <button class="example-button" data-example="styled">Styled Content</button>
+    </div>
+  </div>
+
+  <script>
+    const editor = document.getElementById('editor');
+    const output = document.getElementById('output');
+    const runBtn = document.getElementById('runBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const openBlankBtn = document.getElementById('openBlankBtn');
+    const scaleSlider = document.getElementById('scaleSlider');
+    const scaleValue = document.getElementById('scaleValue');
+    
+    // Run HTML code function
+    function runCode() {
+      try {
+        output.innerHTML = editor.value;
+      } catch (error) {
+        output.innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
+      }
+    }
+    
+    // Clear function
+    function clearAll() {
+      editor.value = '';
+      output.innerHTML = '';
+    }
+    
+    // Open in about:blank function
+    function openInBlank() {
+      const newWindow = window.open('about:blank', '_blank');
+      if (newWindow) {
+        newWindow.document.write(editor.value);
+        newWindow.document.close();
+      } else {
+        alert('Pop-up blocker may have prevented opening the window. Please allow pop-ups for this site.');
+      }
+    }
+    
+    // Update scale function
+    function updateScale() {
+      const scale = scaleSlider.value / 100;
+      output.style.transform = `scale(${scale})`;
+      scaleValue.textContent = `${scaleSlider.value}%`;
+    }
+    
+    // Event listeners
+    runBtn.addEventListener('click', runCode);
+    clearBtn.addEventListener('click', clearAll);
+    openBlankBtn.addEventListener('click', openInBlank);
+    scaleSlider.addEventListener('input', updateScale);
+    
+    // Auto-run when typing with a small delay
+    let timeout;
+    editor.addEventListener('input', () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(runCode, 1000); // Run code 1 second after typing stops
+    });
+    
+    // Example code templates
+    const examples = {
+      hello: '<h1>Hello, World!</h1>\n<p>This is a simple HTML example.</p>',
+      
+      list: '<h2>Shopping List</h2>\n<ul>\n  <li>Apples</li>\n  <li>Bananas</li>\n  <li>Milk</li>\n  <li>Bread</li>\n</ul>',
+      
+      table: '<h2>Simple Table</h2>\n<table border="1" cellpadding="5">\n  <tr>\n    <th>Name</th>\n    <th>Age</th>\n    <th>Country</th>\n  </tr>\n  <tr>\n    <td>John</td>\n    <td>25</td>\n    <td>USA</td>\n  </tr>\n  <tr>\n    <td>Maria</td>\n    <td>30</td>\n    <td>Spain</td>\n  </tr>\n</table>',
+      
+      form: '<h2>Contact Form</h2>\n<form>\n  <div>\n    <label for="name">Name:</label>\n    <input type="text" id="name" name="name">\n  </div>\n  <div style="margin-top: 10px;">\n    <label for="email">Email:</label>\n    <input type="email" id="email" name="email">\n  </div>\n  <div style="margin-top: 10px;">\n    <label for="message">Message:</label>\n    <textarea id="message" name="message" rows="4"></textarea>\n  </div>\n  <div style="margin-top: 10px;">\n    <button type="submit">Submit</button>\n  </div>\n</form>',
+      
+      styled: '<div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">\n  <h2 style="color: #3366cc; border-bottom: 2px solid #eee; padding-bottom: 10px;">Styled Content Example</h2>\n  <p style="line-height: 1.6; color: #333;">This example demonstrates how you can style HTML elements using inline CSS.</p>\n  <ul style="background-color: #f9f9f9; padding: 15px 15px 15px 30px; border-radius: 5px;">\n    <li style="margin-bottom: 8px;">Item with custom styling</li>\n    <li style="margin-bottom: 8px;">Another styled item</li>\n    <li>Final item in the list</li>\n  </ul>\n  <button style="background-color: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin-top: 15px;">Styled Button</button>\n</div>'
+    };
+    
+    // Add event listeners to example buttons
+    document.querySelectorAll('.example-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const exampleType = button.getAttribute('data-example');
+        editor.value = examples[exampleType];
+        runCode();
+      });
+    });
+
+    // Initialize with a simple example
+    editor.value = '<h1>Welcome to zxs code!</h1>\n<p>Type or paste your HTML code in the editor and see it render instantly!</p>\n<p>Try using different HTML tags like <b>bold</b>, <i>italic</i>, or <mark>highlighted</mark> text.</p>';
+    runCode();
+    updateScale();
+  </script>
+</body>
+</html>
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
