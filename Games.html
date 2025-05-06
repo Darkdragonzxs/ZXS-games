@@ -1,224 +1,3 @@
-
-
-
-<div id="fancy-loader">
-  <div class="loader-container">
-    <div class="spinner-container">
-      <div class="spinner-ring"></div>
-      <div class="spinner-ring"></div>
-    </div>
-    <div class="loader-text">
-      <h2 class="loading-title">LOADING</h2>
-      <div class="progress-container">
-        <div class="progress-bar"></div>
-      </div>
-      <div class="loading-dots">
-        <span class="dot">.</span>
-        <span class="dot">.</span>
-        <span class="dot">.</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<style>
-#fancy-loader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(6px);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: opacity 0.5s ease-out;
-  font-family: 'Orbitron', sans-serif;
-}
-
-.loader-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
-
-.spinner-container {
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-
-.spinner-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 3px solid transparent;
-}
-
-.spinner-ring:nth-child(1) {
-  width: 100%;
-  height: 100%;
-  border-top-color: #ffffff;
-  border-left-color: #ffffff;
-  animation: spin 1.5s linear infinite;
-  opacity: 0.9;
-}
-
-.spinner-ring:nth-child(2) {
-  width: 70%;
-  height: 70%;
-  top: 15%;
-  left: 15%;
-  border-bottom-color: #ffffff;
-  border-right-color: #ffffff;
-  animation: spin 1.2s linear infinite reverse;
-  opacity: 0.6;
-}
-
-.loader-text {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.loading-title {
-  font-size: 18px;
-  letter-spacing: 6px;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.9);
-  text-transform: uppercase;
-  font-weight: 300;
-}
-
-.progress-container {
-  width: 160px;
-  height: 2px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-  margin: 8px 0;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: rgba(255, 255, 255, 0.8);
-  animation: progress-animation 1.5s ease-out infinite;
-  border-radius: 2px;
-}
-
-.loading-dots {
-  display: flex;
-  justify-content: center;
-  height: 10px;
-}
-
-.dot {
-  opacity: 0;
-  animation: fade 1.5s infinite;
-  font-size: 18px;
-  line-height: 10px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.dot:nth-child(2) {
-  animation-delay: 0.5s;
-}
-
-.dot:nth-child(3) {
-  animation-delay: 1s;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes progress-animation {
-  0% { width: 0%; }
-  100% { width: 100%; }
-}
-
-@keyframes fade {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
-}
-
-/* Subtle reflection */
-.spinner-container::after {
-  content: '';
-  position: absolute;
-  width: 80%;
-  height: 10px;
-  bottom: -20px;
-  left: 10%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
-}
-
-/* Ensure Orbitron font is loaded */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400&display=swap');
-</style>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Random duration between 1 and 3 seconds
-    const randomDuration = Math.random() * 2000 + 1000; // 1000-3000ms
-    
-    // Add a class to body to prevent scrolling during loading
-    document.body.style.overflow = "hidden";
-    
-    // Get our loader element
-    const loader = document.getElementById("fancy-loader");
-    
-    // Simulate loading progress
-    const progressBar = document.querySelector(".progress-bar");
-    let progress = 0;
-    
-    // Calculate animation speed based on the random duration
-    const intervalTime = randomDuration / 100;
-    
-    // Update progress bar
-    const progressInterval = setInterval(() => {
-      progress += 1;
-      progressBar.style.width = `${progress}%`;
-      
-      if (progress >= 100) {
-        clearInterval(progressInterval);
-      }
-    }, intervalTime);
-    
-    // Remove the loader after the random time
-    setTimeout(() => {
-      loader.style.opacity = "0";
-      
-      // Remove the loader from DOM after fade-out animation
-      setTimeout(() => {
-        loader.remove();
-        document.body.style.overflow = "auto"; // Restore scrolling
-      }, 500);
-    }, randomDuration);
-    
-    // Add subtle pulse effect occasionally
-    setInterval(() => {
-      if (Math.random() > 0.8) {
-        const rings = document.querySelectorAll('.spinner-ring');
-        rings.forEach(ring => {
-          ring.style.borderWidth = '4px';
-          setTimeout(() => {
-            ring.style.borderWidth = '3px';
-          }, 100);
-        });
-      }
-    }, 800);
-  });
-</script><html lang="en">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -230,8 +9,8 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #121212;
-            color: #e0e0e0;
+            background-color: #121212; /* Dark grey background */
+            color: #e0e0e0; /* Light grey text */
             font-family: 'Orbitron', sans-serif;
             overflow-y: auto;
         }
@@ -242,41 +21,41 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(30, 30, 30, 0.9);
+            background-color: rgba(30, 30, 30, 0.9); /* Slightly lighter dark grey with transparency */
             padding: 20px;
-            overflow-y: auto; /* Allow scrolling of the entire section */
-            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1); /* Subtle white inner shadow */
         }
 
         .search-bar {
             width: 100%;
             padding: 12px;
             margin: 20px 0;
-            border: 2px solid #ccc;
+            border: 2px solid #ccc; /* Light grey border */
             border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1); /* White with transparency */
+            color: #fff; /* White text */
             font-size: 16px;
             transition: border-color 0.3s;
         }
 
         .search-bar:focus {
             outline: none;
-            border-color: #00ffcc;
+            border-color: #ffffff; /* White focus border */
         }
 
         .game-group {
             margin: 20px 0;
             border-radius: 10px;
             overflow: hidden;
-            background-color: rgba(10, 10, 10, 0.8);
+            background-color: rgba(10, 10, 10, 0.8); /* Very dark grey with transparency */
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Subtle white shadow */
         }
 
         .game-group-header {
             padding: 12px 20px;
-            background-color: rgba(100, 100, 100, 0.6);
+            background-color: rgba(100, 100, 100, 0.6); /* Medium grey with transparency */
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -286,18 +65,18 @@
         }
 
         .game-group-header:hover {
-            background-color: rgba(100, 100, 100, 0.7);
+            background-color: rgba(100, 100, 100, 0.7); /* Slightly more opaque medium grey on hover */
         }
 
         .game-group-content {
             max-height: 0;
-            overflow: hidden; /* Hide content when not expanded */
+            overflow: hidden;
             transition: max-height 0.5s ease;
         }
 
         .game-group-content.expanded {
-            max-height: 2000px; /* Increase max-height to accommodate more games */
-            overflow-y: auto; /* Allow vertical scrolling within the expanded group */
+            max-height: 2000px;
+            overflow-y: auto;
         }
 
         .game-tiles {
@@ -311,11 +90,11 @@
         .game-tile {
             width: 120px;
             height: 120px;
-            background-color: #444;
+            background-color: #444; /* Dark grey tile background */
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #fff;
+            color: #fff; /* White text */
             font-size: 14px;
             text-align: center;
             border-radius: 10px;
@@ -324,13 +103,13 @@
             padding: 10px;
             overflow: hidden;
             word-wrap: break-word;
-            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3); /* Subtle white shadow */
         }
 
         .game-tile:hover {
             transform: scale(1.05);
-            background-color: #555;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            background-color: #555; /* Slightly lighter grey on hover */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* White shadow on hover */
         }
 
         .iframe-container {
@@ -350,9 +129,9 @@
             transform: translate(-50%, -50%);
             width: 80%;
             height: 80%;
-            background-color: #222;
+            background-color: #222; /* Dark grey window background */
             border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3); /* White window shadow */
             overflow: hidden;
             transition: width 0.3s, height 0.3s;
         }
@@ -361,18 +140,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #111;
+            background-color: #111; /* Very dark grey titlebar */
             padding: 8px 15px;
             cursor: move;
             user-select: none;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #444; /* Dark grey border */
         }
 
         .window-title {
             font-size: 16px;
-            color: #0ff;
+            color: #fff; /* White title text */
         }
 
         .window-controls {
@@ -388,18 +167,18 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            background-color: #333;
-            color: white;
+            background-color: #333; /* Dark grey button background */
+            color: white; /* White button text */
             font-size: 14px;
             transition: background-color 0.3s;
         }
 
         .window-btn:hover {
-            background-color: #555;
+            background-color: #555; /* Slightly lighter grey on hover */
         }
 
         .window-btn.close-btn:hover {
-            background-color: #ff3366;
+            background-color: #ff0000; /* Red close button on hover (kept for visibility) */
         }
 
         .iframe-content {
@@ -421,7 +200,7 @@
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* White text shadow */
         }
 
         @media (max-width: 768px) {
@@ -436,12 +215,281 @@
                 height: 80%;
             }
         }
+
+        /* New Black and White Styles */
+        body {
+            background: #000; /* Black background */
+            color: #fff; /* White text */
+        }
+
+        .games-section {
+            background-color: rgba(0, 0, 0, 0.8); /* Black with transparency */
+            backdrop-filter: blur(8px);
+            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            background: linear-gradient(90deg, #ffffff, #cccccc); /* White to light grey gradient */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .section-title::after {
+            background: linear-gradient(90deg, #ffffff, #cccccc); /* White to light grey gradient */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        }
+
+        .search-bar {
+            border: 2px solid #444; /* Dark grey border */
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .search-bar:focus {
+            border-color: #fff; /* White focus border */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .search-container::before {
+            color: #fff; /* White search icon */
+        }
+
+        .game-group {
+            background-color: rgba(20, 20, 20, 0.6); /* Very dark grey with transparency */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-group:hover {
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .game-group-header {
+            background: linear-gradient(90deg, rgba(30, 30, 30, 0.8), rgba(40, 40, 40, 0.6)); /* Dark grey gradient */
+            color: #fff; /* White header text */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-group-header:hover {
+            background: linear-gradient(90deg, rgba(40, 40, 40, 0.9), rgba(50, 50, 50, 0.7)); /* Slightly lighter dark grey gradient on hover */
+        }
+
+        .game-count {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .game-tile {
+            background: linear-gradient(135deg, #202020 0%, #101010 100%); /* Dark grey gradient */
+            color: #fff; /* White tile text */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .game-tile::before {
+            background: linear-gradient(90deg, #ffffff, #cccccc); /* White to light grey gradient */
+        }
+
+        .game-tile:hover {
+            background: linear-gradient(135deg, #303030 0%, #202020 100%); /* Slightly lighter dark grey gradient on hover */
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+            color: #fff; /* White text on hover */
+        }
+
+        .iframe-container {
+            background-color: rgba(0, 0, 0, 0.8); /* Black with transparency */
+            backdrop-filter: blur(5px);
+        }
+
+        .iframe-window {
+            background-color: #101010; /* Very dark grey window background */
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .window-titlebar {
+            background: linear-gradient(90deg, #101010, #202020); /* Dark grey gradient */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .window-title {
+            color: #fff; /* White title text */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .window-controls {
+            gap: 12px;
+        }
+
+        .window-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .window-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .window-btn.close-btn:hover {
+            background-color: #ff0000; /* Red close button on hover (kept for visibility) */
+            border-color: #ff0000;
+        }
+
+        .iframe-content iframe {
+            background-color: #fff; /* White iframe background */
+        }
+
+        /* Fancy Loader */
+        #fancy-loader {
+            background: rgba(0, 0, 0, 0.9); /* Black with transparency */
+            backdrop-filter: blur(8px);
+            color: white;
+        }
+
+        .spinner-ring:nth-child(1) {
+            border-top-color: #ffffff; /* White */
+            border-left-color: #ffffff; /* White */
+        }
+
+        .spinner-ring:nth-child(2) {
+            border-bottom-color: #ffffff; /* White */
+            border-right-color: #ffffff; /* White */
+        }
+
+        .loading-title {
+            background: linear-gradient(90deg, #ffffff, #ffffff); /* White gradient */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .progress-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #ffffff, #cccccc); /* White to light grey gradient */
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .dot {
+            color: #ffffff; /* White dots */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Reflection effect for loader */
+        .spinner-container::after {
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+        }
+
+        /* Fullscreen button CSS */
+        .window-btn.fullscreen-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            margin-right: 5px;
+        }
+
+        .window-btn.fullscreen-btn:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Fullscreen icon styles */
+        .fullscreen-icon {
+            position: relative;
+            width: 12px;
+            height: 12px;
+            border: 1px solid white;
+            border-radius: 1px;
+            transition: all 0.3s;
+        }
+
+        .fullscreen-icon::before,
+        .fullscreen-icon::after {
+            content: '';
+            position: absolute;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .fullscreen-icon::before {
+            width: 4px;
+            height: 1px;
+            top: -3px;
+            left: 4px;
+        }
+
+        .fullscreen-icon::after {
+            width: 1px;
+            height: 4px;
+            top: 4px;
+            left: -3px;
+        }
+
+        .exit-fullscreen-icon {
+            position: relative;
+            width: 10px;
+            height: 10px;
+        }
+
+        .exit-fullscreen-icon::before,
+        .exit-fullscreen-icon::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 1px;
+            background: white;
+            top: 50%;
+            left: 50%;
+        }
+
+        .exit-fullscreen-icon::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .exit-fullscreen-icon::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        /* Fullscreen mode styles */
+        .iframe-window.fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 0 !important;
+        }
+
+        /* Pulse animation for fullscreen button */
+        @keyframes pulse-button {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .fullscreen-btn {
+            animation: pulse-button 2s infinite;
+        }
+
+        /* Grayscale filter */
+        html, body, .games-section, #fancy-loader {
+             /* filter: grayscale(100%); */ /* Removed the filter */
+        }
+
+        iframe {
+            filter: none !important;
+        }
     </style>
 </head>
 <body>
     <div class="games-section">
         <h1 class="section-title">GAMES</h1>
-        <input type="text" class="search-bar" placeholder="Search for a Game..." id="game-search" oninput="filterGames()">
+        <div class="search-container">
+           <input type="text" class="search-bar" placeholder="Search for a Game..." id="game-search" oninput="filterGames()">
+        </div>
         <div id="game-groups-container"></div>
     </div>
 
@@ -450,6 +498,9 @@
             <div class="window-titlebar" id="window-titlebar">
                 <div class="window-title" id="window-title">Game Title</div>
                 <div class="window-controls">
+                    <div class="window-btn fullscreen-btn" onclick="toggleFullscreen()" title="Fullscreen">
+                        <div class="fullscreen-icon"></div>
+                    </div>
                     <div class="window-btn close-btn" onclick="closeGame()" title="Close">✕</div>
                 </div>
             </div>
@@ -583,7 +634,7 @@
                 const groupElement = document.createElement('div');
                 groupElement.className = 'game-group';
                 groupElement.innerHTML = `
-                    <div class="game-group-header" onclick="toggleGroup(${index})">
+                    <div class="game-group-header" onclick="toggleGroup(event, ${index})">
                         <div>${group.name} <span class="game-count">${group.games.length}</span></div>
                     </div>
                     <div class="game-group-content">
@@ -598,9 +649,11 @@
             });
         }
 
-        function toggleGroup(groupIndex) {
-            const groupContent = document.querySelectorAll('.game-group-content')[groupIndex];
+         function toggleGroup(event, groupIndex) {
+            const groupHeader = event.currentTarget;
+            const groupContent = groupHeader.nextElementSibling;
             groupContent.classList.toggle('expanded');
+            groupHeader.classList.toggle('expanded');
         }
 
         function filterGames() {
@@ -609,12 +662,7 @@
 
             gameTiles.forEach(tile => {
                 const tileText = tile.textContent.toLowerCase();
-                // Show or hide tiles based on search input
                 tile.style.display = tileText.includes(searchInput) ? 'flex' : 'none';
-
-                // After filtering, check if any tiles are visible in a group.
-                // If not, you might want to hide the group header, but that adds complexity.
-                // For now, we'll just filter the tiles.
             });
         }
 
@@ -626,6 +674,10 @@
             windowTitle.textContent = title;
             iframeContainer.style.display = 'block';
             document.body.style.overflow = 'hidden';
+
+            // Make sure the fullscreen button is added
+            // Use setTimeout to ensure DOM is updated
+            setTimeout(addFullscreenButton, 100);
         }
 
         function closeGame() {
@@ -636,746 +688,50 @@
             document.body.style.overflow = 'auto';
         }
 
+        // This function modifies the existing window controls to add the fullscreen button
+        function addFullscreenButton() {
+            // Find the window controls div
+            const windowControls = document.querySelector('.window-controls');
+
+            if (windowControls && !windowControls.querySelector('.fullscreen-btn')) { // Check if button already exists
+                // Create the fullscreen button
+                const fullscreenBtn = document.createElement('div');
+                fullscreenBtn.className = 'window-btn fullscreen-btn';
+                fullscreenBtn.setAttribute('onclick', 'toggleFullscreen()');
+                fullscreenBtn.setAttribute('title', 'Fullscreen');
+
+                // Create the fullscreen icon
+                const fullscreenIcon = document.createElement('div');
+                fullscreenIcon.className = 'fullscreen-icon';
+
+                // Append the icon to the button
+                fullscreenBtn.appendChild(fullscreenIcon);
+
+                // Add the button before the close button
+                const closeBtn = windowControls.querySelector('.close-btn');
+                windowControls.insertBefore(fullscreenBtn, closeBtn);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             createGameGroups();
         });
+
+        function toggleFullscreen() {
+            const iframeWindow = document.getElementById('iframe-window');
+            const fullscreenBtn = document.querySelector('.fullscreen-btn');
+            const fullscreenIcon = fullscreenBtn.querySelector('div');
+
+            if (iframeWindow.classList.contains('fullscreen')) {
+                // Exit fullscreen
+                iframeWindow.classList.remove('fullscreen');
+                fullscreenIcon.className = 'fullscreen-icon';
+            } else {
+                // Enter fullscreen
+                iframeWindow.classList.add('fullscreen');
+                fullscreenIcon.className = 'exit-fullscreen-icon';
+            }
+        }
     </script>
-<style>
-body {
-    background-color: transparent;
-}
-
-.games-section {
-    background-color: transparent;
-    box-shadow: none;
-}
-
-.game-group {
-    background-color: rgba(10, 10, 10, 0.5);
-}
-
-.game-group-header {
-    background-color: rgba(100, 100, 100, 0.4);
-}
-
-#fancy-loader {
-    background: rgba(0, 0, 0, 0.7);
-}
-  /* Import fonts */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&display=swap');
-
-/* Base styles */
-body {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
-    color: #e0e0e0;
-    font-family: 'Rajdhani', sans-serif;
-    overflow-y: auto;
-    min-height: 100vh;
-}
-
-/* Main container */
-.games-section {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(15, 15, 25, 0.7);
-    backdrop-filter: blur(10px);
-    padding: 20px;
-    overflow-y: auto;
-    box-shadow: inset 0 0 30px rgba(66, 220, 255, 0.1);
-}
-
-/* Section title */
-.section-title {
-    text-align: center;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 38px;
-    margin-top: 15px;
-    margin-bottom: 25px;
-    text-transform: uppercase;
-    letter-spacing: 8px;
-    background: linear-gradient(90deg, #4286f4, #42dcf4);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 15px rgba(66, 137, 244, 0.4);
-    position: relative;
-}
-
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 2px;
-    background: linear-gradient(90deg, #4286f4, #42dcf4);
-    box-shadow: 0 0 10px rgba(66, 137, 244, 0.6);
-}
-
-/* Search bar */
-.search-bar {
-    width: 100%;
-    padding: 15px;
-    margin: 20px 0;
-    border: 2px solid #304b78;
-    border-radius: 50px;
-    background-color: rgba(20, 30, 60, 0.3);
-    color: #fff;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(66, 137, 244, 0.1);
-    padding-left: 50px;
-    position: relative;
-}
-
-.search-bar:focus {
-    outline: none;
-    border-color: #42dcf4;
-    box-shadow: 0 0 20px rgba(66, 220, 255, 0.3);
-}
-
-/* Add a search icon before the input */
-.search-container {
-    position: relative;
-    margin: 20px 0;
-}
-
-.search-container::before {
-    content: '🔍';
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: #42dcf4;
-    z-index: 1;
-}
-
-/* Game groups */
-.game-group {
-    margin: 30px 0;
-    border-radius: 15px;
-    overflow: hidden;
-    background-color: rgba(25, 25, 45, 0.6);
-    transition: all 0.4s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(66, 137, 244, 0.2);
-    transform: translateY(0);
-}
-
-.game-group:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(66, 137, 244, 0.2);
-}
-
-.game-group-header {
-    padding: 15px 25px;
-    background: linear-gradient(90deg, rgba(33, 33, 60, 0.8), rgba(45, 45, 80, 0.6));
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 500;
-    font-size: 18px;
-    letter-spacing: 1px;
-    color: #42dcf4;
-    transition: all 0.3s;
-    text-shadow: 0 0 5px rgba(66, 220, 255, 0.3);
-    border-bottom: 1px solid rgba(66, 137, 244, 0.2);
-    position: relative;
-}
-
-.game-group-header:hover {
-    background: linear-gradient(90deg, rgba(40, 40, 75, 0.9), rgba(55, 55, 95, 0.7));
-}
-
-.game-group-header::after {
-    content: '▼';
-    font-size: 12px;
-    transition: transform 0.3s ease;
-}
-
-.game-group-header.expanded::after {
-    transform: rotate(180deg);
-}
-
-.game-count {
-    background-color: rgba(66, 220, 255, 0.2);
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 14px;
-    margin-left: 10px;
-}
-
-.game-group-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
-}
-
-.game-group-content.expanded {
-    max-height: 2000px;
-    transition: max-height 1s ease-in-out;
-    padding-bottom: 10px;
-}
-
-/* Game tiles */
-.game-tiles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 20px;
-}
-
-.game-tile {
-    width: 140px;
-    height: 140px;
-    background: linear-gradient(135deg, #2a2a45 0%, #1d1d35 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 16px;
-    text-align: center;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 15px;
-    overflow: hidden;
-    word-wrap: break-word;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(66, 137, 244, 0.1);
-    position: relative;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600;
-}
-
-.game-tile::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #4286f4, #42dcf4);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.game-tile:hover {
-    transform: translateY(-8px) scale(1.03);
-    background: linear-gradient(135deg, #2d2d4a 0%, #212140 100%);
-    box-shadow: 0 8px 25px rgba(66, 137, 244, 0.3);
-    color: #42dcf4;
-}
-
-.game-tile:hover::before {
-    opacity: 1;
-}
-
-/* Iframe container */
-.iframe-container {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.iframe-window {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 85%;
-    height: 85%;
-    background-color: #1a1a2e;
-    border-radius: 15px;
-    box-shadow: 0 0 50px rgba(66, 137, 244, 0.5);
-    overflow: hidden;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(66, 220, 255, 0.3);
-    animation: scaleIn 0.3s ease;
-}
-
-@keyframes scaleIn {
-    from { transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
-    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-}
-
-.window-titlebar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(90deg, #1a1a2e, #2a2a45);
-    padding: 12px 20px;
-    cursor: move;
-    user-select: none;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    border-bottom: 1px solid rgba(66, 137, 244, 0.3);
-}
-
-.window-title {
-    font-size: 18px;
-    color: #42dcf4;
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 1px;
-    text-shadow: 0 0 5px rgba(66, 220, 255, 0.3);
-}
-
-.window-controls {
-    display: flex;
-    gap: 12px;
-}
-
-.window-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    background-color: rgba(66, 137, 244, 0.2);
-    color: white;
-    font-size: 14px;
-    transition: all 0.3s;
-    border: 1px solid rgba(66, 220, 255, 0.2);
-}
-
-.window-btn:hover {
-    background-color: rgba(66, 137, 244, 0.4);
-    transform: scale(1.1);
-}
-
-.window-btn.close-btn:hover {
-    background-color: #ff3366;
-    border-color: #ff3366;
-}
-
-.iframe-content {
-    width: 100%;
-    height: calc(100% - 53px);
-    overflow: hidden;
-}
-
-.iframe-content iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background-color: #fff;
-}
-
-/* Fancy Loader */
-#fancy-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(10, 10, 20, 0.9);
-    backdrop-filter: blur(8px);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 0.5s ease-out;
-    font-family: 'Orbitron', sans-serif;
-}
-
-.loader-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 25px;
-}
-
-.spinner-container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-}
-
-.spinner-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 3px solid transparent;
-}
-
-.spinner-ring:nth-child(1) {
-    width: 100%;
-    height: 100%;
-    border-top-color: #42dcf4;
-    border-left-color: #4286f4;
-    animation: spin 1.5s linear infinite;
-    opacity: 0.9;
-}
-
-.spinner-ring:nth-child(2) {
-    width: 70%;
-    height: 70%;
-    top: 15%;
-    left: 15%;
-    border-bottom-color: #42dcf4;
-    border-right-color: #4286f4;
-    animation: spin 1.2s linear infinite reverse;
-    opacity: 0.7;
-}
-
-.loader-text {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-}
-
-.loading-title {
-    font-size: 22px;
-    letter-spacing: 8px;
-    margin: 0;
-    background: linear-gradient(90deg, #4286f4, #42dcf4);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-transform: uppercase;
-    font-weight: 500;
-    text-shadow: 0 0 10px rgba(66, 137, 244, 0.5);
-}
-
-.progress-container {
-    width: 200px;
-    height: 3px;
-    background-color: rgba(66, 137, 244, 0.1);
-    border-radius: 3px;
-    overflow: hidden;
-    margin: 10px 0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #4286f4, #42dcf4);
-    animation: progress-animation 1.5s ease-out infinite;
-    border-radius: 3px;
-    box-shadow: 0 0 8px rgba(66, 220, 255, 0.5);
-}
-
-.loading-dots {
-    display: flex;
-    justify-content: center;
-    height: 10px;
-}
-
-.dot {
-    opacity: 0;
-    animation: fade 1.5s infinite;
-    font-size: 20px;
-    line-height: 10px;
-    color: #42dcf4;
-    text-shadow: 0 0 5px rgba(66, 220, 255, 0.5);
-}
-
-.dot:nth-child(2) {
-    animation-delay: 0.5s;
-}
-
-.dot:nth-child(3) {
-    animation-delay: 1s;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes progress-animation {
-    0% { width: 0%; }
-    100% { width: 100%; }
-}
-
-@keyframes fade {
-    0%, 100% { opacity: 0; }
-    50% { opacity: 1; }
-}
-
-/* Reflection effect for loader */
-.spinner-container::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 15px;
-    bottom: -25px;
-    left: 0;
-    border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(66, 220, 255, 1) 0%, rgba(0, 0, 0, 0) 70%);
-}
-
-/* Responsive design */
-@media (max-width: 992px) {
-    .game-tiles {
-        gap: 15px;
-    }
-    
-    .game-tile {
-        width: 120px;
-        height: 120px;
-        font-size: 14px;
-    }
-    
-    .iframe-window {
-        width: 90%;
-        height: 80%;
-    }
-    
-    .section-title {
-        font-size: 32px;
-        letter-spacing: 6px;
-    }
-}
-
-@media (max-width: 768px) {
-    .game-tiles {
-        gap: 12px;
-    }
-    
-    .game-tile {
-        width: 100px;
-        height: 100px;
-        font-size: 13px;
-        padding: 10px;
-    }
-    
-    .iframe-window {
-        width: 95%;
-        height: 80%;
-    }
-    
-    .section-title {
-        font-size: 28px;
-        letter-spacing: 4px;
-    }
-    
-    .game-group-header {
-        padding: 12px 20px;
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 480px) {
-    .game-tiles {
-        gap: 10px;
-    }
-    
-    .game-tile {
-        width: 90px;
-        height: 90px;
-        font-size: 12px;
-        padding: 8px;
-    }
-    
-    .section-title {
-        font-size: 24px;
-        letter-spacing: 3px;
-    }
-    
-    .search-bar {
-        padding: 12px 12px 12px 40px;
-    }
-    
-    .search-container::before {
-        left: 15px;
-    }
-}
-html, body, .games-section, #fancy-loader {
-}
-  filter: grayscale(100%);
-}
-
-iframe {
-  filter: none !important;
-}
-
-  /* Fullscreen button CSS */
-.window-btn.fullscreen-btn {
-    background-color: rgba(66, 220, 255, 0.2);
-    margin-right: 5px;
-}
-
-.window-btn.fullscreen-btn:hover {
-    background-color: rgba(66, 220, 255, 0.5);
-}
-
-/* Fullscreen icon styles */
-.fullscreen-icon {
-    position: relative;
-    width: 12px;
-    height: 12px;
-    border: 1px solid white;
-    border-radius: 1px;
-    transition: all 0.3s;
-}
-
-.fullscreen-icon::before,
-.fullscreen-icon::after {
-    content: '';
-    position: absolute;
-    background: white;
-    transition: all 0.3s;
-}
-
-.fullscreen-icon::before {
-    width: 4px;
-    height: 1px;
-    top: -3px;
-    left: 4px;
-}
-
-.fullscreen-icon::after {
-    width: 1px;
-    height: 4px;
-    top: 4px;
-    left: -3px;
-}
-
-.exit-fullscreen-icon {
-    position: relative;
-    width: 10px;
-    height: 10px;
-}
-
-.exit-fullscreen-icon::before,
-.exit-fullscreen-icon::after {
-    content: '';
-    position: absolute;
-    width: 12px;
-    height: 1px;
-    background: white;
-    top: 50%;
-    left: 50%;
-}
-
-.exit-fullscreen-icon::before {
-    transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.exit-fullscreen-icon::after {
-    transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-/* Fullscreen mode styles */
-.iframe-window.fullscreen {
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 0 !important;
-}
-
-/* Pulse animation for fullscreen button */
-@keyframes pulse-button {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-.fullscreen-btn {
-    animation: pulse-button 2s infinite;
-}
-</style>
-      <script>
-function toggleFullscreen() {
-    const iframeWindow = document.getElementById('iframe-window');
-    const fullscreenBtn = document.querySelector('.fullscreen-btn');
-    const fullscreenIcon = fullscreenBtn.querySelector('div');
-    
-    if (iframeWindow.classList.contains('fullscreen')) {
-        // Exit fullscreen
-        iframeWindow.classList.remove('fullscreen');
-        fullscreenIcon.className = 'fullscreen-icon';
-    } else {
-        // Enter fullscreen
-        iframeWindow.classList.add('fullscreen');
-        fullscreenIcon.className = 'exit-fullscreen-icon';
-    }
-}
-
-// This function modifies the existing window controls to add the fullscreen button
-function addFullscreenButton() {
-    // Find the window controls div
-    const windowControls = document.querySelector('.window-controls');
-    
-    if (windowControls) {
-        // Create the fullscreen button
-        const fullscreenBtn = document.createElement('div');
-        fullscreenBtn.className = 'window-btn fullscreen-btn';
-        fullscreenBtn.setAttribute('onclick', 'toggleFullscreen()');
-        fullscreenBtn.setAttribute('title', 'Fullscreen');
-        
-        // Create the fullscreen icon
-        const fullscreenIcon = document.createElement('div');
-        fullscreenIcon.className = 'fullscreen-icon';
-        
-        // Append the icon to the button
-        fullscreenBtn.appendChild(fullscreenIcon);
-        
-        // Add the button before the close button
-        const closeBtn = windowControls.querySelector('.close-btn');
-        windowControls.insertBefore(fullscreenBtn, closeBtn);
-    }
-}
-        function openGame(url, title) {
-    const iframeContainer = document.getElementById('iframe-container');
-    const gameIframe = document.getElementById('game-iframe');
-    const windowTitle = document.getElementById('window-title');
-    gameIframe.src = url;
-    windowTitle.textContent = title;
-    iframeContainer.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    
-    // Make sure the fullscreen button is added
-    // Use setTimeout to ensure DOM is updated
-    setTimeout(addFullscreenButton, 100);
-}
-      </script>
-      <div class="window-titlebar" id="window-titlebar">
-    <div class="window-title" id="window-title">Game Title</div>
-    <div class="window-controls">
-        <div class="window-btn fullscreen-btn" onclick="toggleFullscreen()" title="Fullscreen">
-            <div class="fullscreen-icon"></div>
-        </div>
-        <div class="window-btn close-btn" onclick="closeGame()" title="Close">✕</div>
-    </div>
-</div>
-<style>
-html, body, .games-section, #fancy-loader {
-  filter: grayscale(100%);
-}
-
-iframe {
-  filter: none !important;
-}
-      </style>
 </body>
 </html>
