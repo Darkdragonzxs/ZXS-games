@@ -502,3 +502,4 @@ window.chemical.loaded = true;
 window.dispatchEvent(new Event("chemicalLoaded"));
 
 })();
+navigator.serviceWorker.register("/chemical.sw.js");
