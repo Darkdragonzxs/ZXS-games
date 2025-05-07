@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chemical Proxy</title>
+</head>
+<body>
+  <h1>Chemical Proxy Test</h1>
+  <input id="urlInput" placeholder="Enter URL" />
+  <button onclick="go()">Go</button>
+  <iframe id="browserFrame" style="width:100%; height:90vh;"></iframe>
+
+  <script src="chemical.js" data-transport="libcurl" async></script>
+  <script>
+    async function go() {
+      const url = document.getElementById("urlInput").value;
+      const encoded = await chemical.encode(url);
+      document.getElementById("browserFrame").src = encoded;
+    }
+
+    window.addEventListener("chemicalLoaded", () => {
+      console.log("Chemical loaded!");
+    });
+  </script>
+</body>
+</html>
