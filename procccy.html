@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toothpaste Proxy Browser</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+        }
+        button {
+            outline: none;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        async function proxyLoad(url, frame) {
+    const urlToLoad = url.includes('.') 
+        ? `https://${url}` 
+        : `https://html.duckduckgo.com/html?q=${encodeURIComponent(url)}`;
+
+    const proxyBase = "https://toothpaste.bekekes390.workers.dev/?url=";
+    const proxyUrl = proxyBase + encodeURIComponent(urlToLoad);
+
+    console.log('Proxy fetching:', proxyUrl);
+
+    try {
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const html = await response.text();
+        const baseUrl = new URL(urlToLoad).origin;
+
+        const processed = html
+            .replace(/<head>/i, `<head><base href="${baseUrl}/">`)
+            .replace(/<body([^>]*)>/i, `<body$1 style="margin:0;">`);
+
+        const blob = new Blob([processed], { type: 'text/html' });
+        const blobUrl = URL.createObjectURL(blob);
+
+        console.log('Blob URL ready:', blobUrl);
+
+        frame.src = blobUrl;
+
+        frame.onload = () => {
+            console.log('Frame loaded!');
+
+            try {
+                const links = frame.contentDocument.querySelectorAll('a');
+                links.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const newUrl = link.href;
+                        proxyLoad(newUrl, frame);
+                    });
+                });
+            } catch (e) {
+                console.warn('Frame access error:', e);
+            }
+        };
+
+    } catch (error) {
+        console.error('Proxy Load Error:', error);
+        frame.srcdoc = `
+            <div style="color:white;text-align:center;font-size:20px;font-family:sans-serif;padding:50px;">
+            Error loading content.<br>${error.message}</div>
+        `;
+    }
+}
+
+
+
+
+
+
+
+function proxy() {
+    const existingProxy = document.querySelector('.proxy-container');
+    if (existingProxy) existingProxy.remove();
+
+    const container = document.createElement('div');
+    container.className = 'proxy-container';
+    container.style.marginTop = '20px';
+
+    const tabBar = document.createElement('div');
+    tabBar.style.display = 'flex';
+    tabBar.style.gap = '10px';
+    tabBar.style.marginBottom = '10px';
+
+    const refreshButton = document.createElement('button');
+    refreshButton.textContent = 'Refresh Page';
+    refreshButton.style.padding = '5px 10px';
+    refreshButton.style.borderRadius = '5px';
+    refreshButton.style.cursor = 'pointer';
+    refreshButton.style.backgroundColor = '#fff';
+    refreshButton.style.color = '#000';
+
+    const newTabButton = document.createElement('button');
+    newTabButton.textContent = 'New Tab';
+    newTabButton.style.padding = '5px 10px';
+    newTabButton.style.borderRadius = '5px';
+    newTabButton.style.cursor = 'pointer';
+    newTabButton.style.backgroundColor = '#fff';
+    newTabButton.style.color = '#000';
+
+    const devOptionsButton = document.createElement('button');
+    devOptionsButton.textContent = 'Developer Options';
+    devOptionsButton.style.padding = '5px 10px';
+    devOptionsButton.style.borderRadius = '5px';
+    devOptionsButton.style.cursor = 'pointer';
+    devOptionsButton.style.backgroundColor = '#fff';
+    devOptionsButton.style.color = '#000';
+
+    const tabList = document.createElement('div');
+    tabList.style.display = 'flex';
+    tabList.style.gap = '5px';
+    tabList.style.flexGrow = '1';
+    tabList.style.overflowX = 'auto';
+
+    const contentArea = document.createElement('div');
+    contentArea.style.position = 'relative';
+    contentArea.style.height = '500px';
+
+    let currentTab = createTab('tp://newtab');
+    tabList.appendChild(currentTab.element);
+    contentArea.appendChild(currentTab.content);
+
+    newTabButton.addEventListener('click', () => {
+        const newTab = createTab('tp://newtab');
+        tabList.appendChild(newTab.element);
+        contentArea.appendChild(newTab.content);
+        switchTab(newTab);
+    });
+
+    refreshButton.addEventListener('click', () => {
+        if (currentTab) {
+            let webframe = currentTab.content.querySelector('iframe')
+            webframe.style.display = 'block';
+            webframe.contentWindow.location.reload();
+        }
+    });
+
+    devOptionsButton.addEventListener('click', () => {
+        toggleDevOptions();
+    });
+
+    tabBar.append(refreshButton, newTabButton, devOptionsButton, tabList);
+    container.append(tabBar, contentArea);
+    document.body.appendChild(container);
+
+    function createTab(titleText) {
+        const tab = document.createElement('div');
+        tab.style.display = 'flex';
+        tab.style.alignItems = 'center';
+        tab.style.padding = '5px 15px';
+        tab.style.borderRadius = '5px 5px 0 0';
+        tab.style.cursor = 'pointer';
+        tab.style.backgroundColor = '#333';
+        tab.style.transition = 'background-color 0.3s ease, transform 0.3s ease';
+        tab.style.transform = 'translateX(-100%)';
+
+        const title = document.createElement('span');
+        title.textContent = titleText === 'tp://newtab' ? 'New Tab' : titleText;
+        title.style.marginRight = '10px';
+        title.style.color = '#fff';
+
+        const closeButton = document.createElement('button');
+        closeButton.textContent = '×';
+        closeButton.style.color = 'white';
+        closeButton.style.padding = '0 5px';
+        closeButton.style.borderRadius = '50%';
+        closeButton.style.cursor = 'pointer';
+
+        const content = document.createElement('div');
+        content.style.position = 'absolute';
+        content.style.width = '100%';
+        content.style.height = '100%';
+        content.style.display = 'none';
+
+        const addressBar = document.createElement('div');
+        addressBar.style.display = 'flex';
+        addressBar.style.gap = '10px';
+        addressBar.style.marginBottom = '10px';
+
+        const urlInput = document.createElement('input');
+        urlInput.placeholder = 'Enter URL or search';
+        urlInput.style.flexGrow = '1';
+        urlInput.style.padding = '8px';
+        urlInput.style.borderRadius = '15px';
+        urlInput.style.border = ' 1px solid #444';
+        urlInput.style.backgroundColor = '#111';
+        urlInput.style.color = '#fff';
+
+        const goButton = document.createElement('button');
+        goButton.textContent = 'Go';
+        goButton.style.color = 'black';
+        goButton.style.padding = '8px 16px';
+        goButton.style.borderRadius = '15px';
+        goButton.style.backgroundColor = 'white';
+        goButton.style.cursor = 'pointer';
+
+        const frame = document.createElement('iframe');
+        frame.style.width = '100%';
+        frame.style.height = 'calc(100% - 40px)';
+        frame.style.border = '1px solid #333';
+        frame.style.borderRadius = '10px';
+        frame.style.backgroundColor = '#000';
+
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.style.position = 'absolute';
+        loadingOverlay.style.top = '0';
+        loadingOverlay.style.left = '0';
+        loadingOverlay.style.width = '100%';
+        loadingOverlay.style.height = '100%';
+        loadingOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        loadingOverlay.style.color = 'white';
+        loadingOverlay.style.display = 'flex';
+        loadingOverlay.style.alignItems = 'center';
+        loadingOverlay.style.justifyContent = 'center';
+        loadingOverlay.style.fontSize = '20px';
+        loadingOverlay.textContent = 'The proxy is in beta so this may not work / Loading...';
+        loadingOverlay.style.display = 'none'; 
+
+        addressBar.append(urlInput, goButton);
+        content.append(addressBar, frame, loadingOverlay);
+
+        const loadNewTabContent = () => {
+            if (titleText === 'tp://newtab') {
+                const newTabContent = `
+<div style="
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a, #000000);
+    overflow: hidden;
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+">
+    <div style="
+        animation: fadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: center;
+        position: relative;
+        z-index: 2;
+    ">
+        <h1 style="
+            font-size: 60px;
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(45deg, #00ffff, #70ffb8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 40px rgba(0, 255, 255, 0.7);
+            margin-bottom: 35px;
+            letter-spacing: -1.5px;
+            transition: transform 0.3s ease;
+            animation: float 4s ease-in-out infinite;
+        ">Toothpaste Internet</h1>
+
+        <div style="
+            position: relative;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            animation: pulse 3s infinite;
+        ">
+            <h1 style="
+                font-size: 24px;
+                font-weight: 400;
+                text-align: center;
+                background: linear-gradient(45deg, #ff4444, #ffaa00);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                text-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+                margin-bottom: 30px;
+                letter-spacing: -0.5px;
+                transition: transform 0.3s ease;
+                animation: pulseWarning 2s ease-in-out infinite;
+            ">⚠️ WARNING: Limited features in this proxy for now, better proxy service coming soon</h1>
+            
+            <div style="position: relative; margin: 0 auto; width: fit-content;">
+                <input type="text" 
+                    id="searchBox" 
+                    placeholder="Search DuckDuckGo" 
+                    style="
+                        padding: 18px 50px 18px 30px;
+                        width: 600px;
+                        border-radius: 50px;
+                        border: none;
+                        background: rgba(255,  255, 255, 0.1);
+                        color: #fff;
+                        font-size: 17px;
+                        backdrop-filter: blur(15px);
+                        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+                        position: relative;
+                        z-index: 2;
+                    "
+                    onfocus="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.boxShadow='0 0 35px rgba(0, 255, 255, 0.5)'; this.style.transform='scale(1.02)'"
+                    onblur="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.boxShadow='0 4px 30px rgba(0, 0, 0, 0.5)'; this.style.transform='scale(1)'"
+                />
+                <svg style="
+                    position: absolute;
+                    right: 25px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 24px;
+                    height: 24px;
+                    fill: rgba(255, 255, 255, 0.6);
+                    z-index: 3;
+                    pointer-events: none;
+                " viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 5 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+            </div>
+
+            <h1 style="
+                font-size: 20px;
+                font-weight: 300;
+                text-align: center;
+                color: rgba(255, 255, 255, 0.7);
+                margin: 25px 0 0 0;
+                letter-spacing: 0.5px;
+            ">Private Search • Encrypted Connection • No Tracking</h1>
+        </div>
+    </div>
+
+    <div style="
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    ">
+        <div style="
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0 , 255, 255, 0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: gradientPulse 8s infinite;
+        "></div>
+        <div style="
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+            animation: particleAnimation 10s linear infinite;
+        "></div>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+    @keyframes pulseWarning {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    @keyframes gradientPulse {
+        0% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+        50% { opacity: 0.1; transform: translate(-50%, -50%) scale(1.2); }
+        100% { opacity: 0.3; transform: translate(-50%, -50%) scale( 1); }
+    }
+    @keyframes particleAnimation {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 100% 100%; }
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+    
+    input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+    }
+    
+    input:focus::placeholder {
+        transform: translateX(15px);
+        opacity: 0.2;
+    }
+
+    h1:hover {
+        transform: scale(1.02);
+    }
+
+    body {
+        margin: 0;
+        overflow-x: hidden;
+    }
+</style>
+`;
+                frame.srcdoc = newTabContent;
+
+                frame.onload = () => {
+                    const searchBox = frame.contentWindow.document.getElementById('searchBox');
+                    if (searchBox) {
+                        searchBox.addEventListener('keypress', e => {
+                            if (e.key === 'Enter') {
+                                const query = searchBox.value;
+                                const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                                proxyLoad(googleUrl, frame);
+                            }
+                        });
+                    }
+                };
+            } else {
+                proxyLoad(urlInput.value, frame);
+            }
+        };
+
+        goButton.addEventListener('click', () => {
+            const oldFrame = content.querySelector('iframe');
+            if (oldFrame) oldFrame.remove(); 
+
+            const newFrame = document.createElement('iframe');
+            newFrame.style.width = '100%';
+            newFrame.style.height = 'calc(100% - 40px)';
+            newFrame.style.border = '1px solid #333';
+            newFrame.style.borderRadius = '10px';
+            newFrame.style.backgroundColor = '#000';
+
+            content.appendChild(newFrame); 
+
+            proxyLoad(urlInput.value, newFrame); 
+            title.textContent = urlInput.value;
+        });
+
+        urlInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') {
+                const oldFrame = content.querySelector('iframe');
+                if (oldFrame) oldFrame.remove();
+
+                const newFrame = document.createElement('iframe');
+                newFrame.style.width = '100%';
+                newFrame.style.height = 'calc(100% - 40px)';
+                newFrame.style.border = '1px solid #333';
+                newFrame.style.borderRadius = '10px';
+                newFrame.style.backgroundColor = '#000';
+
+                content.appendChild(newFrame);
+
+                proxyLoad(urlInput.value, newFrame);
+                title.textContent = urlInput.value;
+            }
+        });
+
+
+        tab.addEventListener('click', () => switchTab({ element: tab, content }));
+        closeButton.addEventListener('click', e => {
+            e.stopPropagation();
+            tab.style.transition = 'transform 0.3s ease';
+            tab.style.transform = 'translateX(-100%)';
+            setTimeout(() => {
+                tab.remove();
+                content.remove();
+            }, 300);
+        });
+
+        tab.append(title, closeButton);
+        loadNewTabContent();
+
+        setTimeout(() => {
+            tab.style.transform = 'translateX(0)';
+        }, 0);
+
+        return { element: tab, content };
+    }
+
+    function switchTab(newTab) {
+        currentTab.content.style.display = 'none';
+        currentTab = newTab;
+        currentTab.content.style.display = 'block';
+    }
+
+    function toggleDevOptions() {
+        const existing = document.querySelector('.dev-options-container');
+        if (existing) return existing.remove();
+
+        const container = Object.assign(document.createElement('div'), {
+            className: 'dev-options-container',
+            style: `
+                position: fixed;
+                top: 50px; right: 50px;
+                width: 320px;
+                height: auto;
+                background: #1a1a1a;
+                color: #eee;
+                padding: 0;
+                overflow: hidden;
+                z-index: 10000;
+                font-family: monospace;
+                border: 1px solid #333;
+                border-radius: 6px;
+            `
+        });
+
+        const header = Object.assign(document.createElement('div'), {
+            textContent: 'Developer Tools',
+            style: `
+                padding: 8px;
+                background: #333;
+                cursor: move;
+                user-select: none;
+                font-weight: bold;
+            `
+        });
+
+        const body = Object.assign(document.createElement('div'), {
+            style: 'padding: 12px;'
+        });
+
+        const label = Object.assign(document.createElement('div'), {
+            textContent: 'HTML Editor',
+            style: 'margin-bottom: 8px; font-weight: bold; font-size: 14px;'
+        });
+
+        const editor = Object.assign(document.createElement('textarea'), {
+            style: `
+                width: 100%;
+                height: 240px;
+                background: #0d0d0d;
+                color: #0f0;
+                border: 1px solid #333;
+                border-radius: 6px;
+                padding: 8px;
+                resize: vertical;
+            `,
+            placeholder: 'Edit iframe HTML...'
+        });
+
+        const frame = currentTab?.content?.querySelector('iframe');
+        if (frame) editor.value = frame.srcdoc || '';
+
+        const controls = Object.assign(document.createElement('div'), {
+            style: 'margin-top: 12px; display: flex; gap: 8px;'
+        });
+
+        const updateBtn = Object.assign(document.createElement('button'), {
+            textContent: 'Apply',
+            style: `
+                flex: 1;
+                background: #00ff00;
+                color: #000;
+                border: none;
+                padding: 6px;
+                border-radius: 4px;
+                cursor: pointer;
+            `
+        });
+
+        const closeBtn = Object.assign(document.createElement('button'), {
+            textContent: 'Close',
+            style: `
+                flex: 1;
+                background: #ff0000;
+                color: #000;
+                border: none;
+                padding: 6px;
+                border-radius: 4px;
+                cursor: pointer;
+            `
+        });
+
+        updateBtn.onclick = () => frame && (frame.srcdoc = editor.value);
+        closeBtn.onclick = () => container.remove();
+
+        controls.append(updateBtn, closeBtn);
+        body.append(label, editor, controls);
+        container.append(header, body);
+        document.body.appendChild(container);
+
+        let isDragging = false, offsetX = 0, offsetY = 0;
+
+        header.addEventListener('mousedown', e => {
+            isDragging = true;
+            offsetX = e.clientX - container.offsetLeft;
+            offsetY = e.clientY - container.offsetTop;
+            document.body.style.userSelect = 'none';
+        });
+
+        window.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            container.style.left = `${e.clientX - offsetX}px`;
+            container.style.top = `${e.clientY - offsetY}px`;
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.body.style.userSelect = '';
+        });
+    }
+
+
+    switchTab(currentTab);
+}
+    </script>
+</body>
+</html>
