@@ -29,3 +29,22 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<script>
+// Wait until the page fully loads
+window.addEventListener('load', () => {
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('uv/uv.sw.js', {
+      scope: '/s/internet/'
+    });
+  }
+
+  // Auto-redirect if URL has hash (e.g., #https://google.com)
+  const hash = window.location.hash;
+  if (hash) {
+    const url = decodeURIComponent(hash.slice(1)); // Remove '#' from hash
+    const encoded = __uv$config.prefix + __uv$config.encode(url);
+    window.location.replace(encoded);
+  }
+});
+</script>
