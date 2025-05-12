@@ -1,5 +1,5 @@
 self.__uv$config = {
-  prefix: '/s/proxy/',
+  prefix: '/s/internet/',
   bare: 'https://t.thecappuccino.site',
   encodeUrl: (input) => {
     try {
