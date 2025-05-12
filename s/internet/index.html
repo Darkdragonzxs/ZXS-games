@@ -9,21 +9,24 @@
   <!-- Load UV Core -->
   <script src="uv/uv.bundle.js"></script>
   <script src="uv/uv.config.js"></script>
-<script>
-  window.addEventListener('load', async () => {
-    // Register the service worker
-    if ('serviceWorker' in navigator) {
-      await navigator.serviceWorker.register('uv/uv.sw.js', {
-        scope: '/s/internet/'
-      });
-    }
 
-    // Proxy the URL in the hash using Ultraviolet's built-in encoder
-    const hash = window.location.hash;
-    if (hash) {
-      const url = decodeURIComponent(hash.slice(1));
-      const encoded = __uv$config.prefix + Ultraviolet.codec.encode(url);
-      window.location.replace(encoded);
-    }
-  });
-</script>
+  <script>
+    window.addEventListener('load', async () => {
+      // Register the service worker
+      if ('serviceWorker' in navigator) {
+        await navigator.serviceWorker.register('uv/uv.sw.js', {
+          scope: '/s/internet/'
+        });
+      }
+
+      // Read URL hash and proxy it
+      const hash = window.location.hash;
+      if (hash) {
+        const inputUrl = decodeURIComponent(hash.slice(1)); // Remove '#'
+        const encoded = __uv$config.prefix + Ultraviolet.codec.encode(inputUrl);
+        window.location.replace(encoded); // Redirect to the proxied URL
+      }
+    });
+  </script>
+</body>
+</html>
