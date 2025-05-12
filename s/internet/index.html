@@ -24,3 +24,13 @@
     }
   });
 </script>
+<script>
+  window.addEventListener('load', async () => {
+    const hash = window.location.hash;
+    if (hash) {
+      const inputUrl = decodeURIComponent(hash.slice(1)); // Remove '#'
+      const encoded = __uv$config.prefix + Ultraviolet.codec.encode(inputUrl);
+      window.location.replace(encoded);
+    }
+  });
+</script>
