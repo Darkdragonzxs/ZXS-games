@@ -1,30 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ZXS PROXY YAY</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-  </style>
+  <title>ZXS UV Frontend</title>
+  <script src="bundle.js"></script>
+  <script src="config.js"></script>
+  <script src="uv.sw.js"></script>
+  <!-- Optional styling -->
 </head>
 <body>
-  <iframe id="proxy-frame"></iframe>
-  <script src="u/bundle.js"></script>
-  <script src="u/config.js"></script>
+  <input id="urlInput" placeholder="Enter a URL" />
+  <button onclick="go()">Go</button>
+
   <script>
-    const url = decodeURIComponent(location.hash.slice(1));
-    const encodedUrl = __uv$config.encodeUrl(url);
-    const prefix = __uv$config.prefix;
-    document.getElementById("proxy-frame").src = prefix + encodedUrl;
+    const go = () => {
+      const input = document.getElementById('urlInput').value;
+      const encoded = __uv$config.prefix + __uv$config.encodeUrl(input);
+      window.location.href = encoded;
+    };
   </script>
 </body>
 </html>
