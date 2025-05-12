@@ -1,12 +1,12 @@
 self.__uv$config = {
   prefix: '/s/internet/',
-  bare: 'https://t.thecappuccino.site',
-  encodeUrl: (input) => {
+  bare: 'https://t.thecappuccino.site', 
+  encodeUrl: function(input) {
     try {
-      let url = new URL(input);
-      return __uv$config.prefix + __uv$config.encode(url.href);
+      const url = new URL(input);
+      return this.prefix + this.encode(url.href);
     } catch (e) {
-      return __uv$config.prefix + __uv$config.encode('http://' + input);
+      return this.prefix + this.encode('http://' + input);
     }
   },
   encode: (str) => btoa(unescape(encodeURIComponent(str))),
