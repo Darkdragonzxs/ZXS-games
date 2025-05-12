@@ -48,3 +48,25 @@ window.addEventListener('load', () => {
   }
 });
 </script>
+<!-- Load UV core scripts -->
+<script src="uv/uv.bundle.js"></script>
+<script src="uv/uv.config.js"></script>
+
+<script>
+window.addEventListener('load', () => {
+  // Register the service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('uv/uv.sw.js', {
+      scope: __uv$config.prefix
+    });
+  }
+
+  // Proxy site from # fragment using UV encoding
+  const hash = window.location.hash;
+  if (hash) {
+    const input = decodeURIComponent(hash.slice(1)); // remove '#'
+    const encodedUrl = __uv$config.prefix + Ultraviolet.codec.encode(input); // THIS is the key fix
+    window.location.replace(encodedUrl);
+  }
+});
+</script>
