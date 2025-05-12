@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ZXS UV Frontend</title>
+  <script src="uv/uv.bundle.js"></script>
+  <script src="uv/uv.config.js"></script>
+  <script src="uv/uv.sw.js"></script>
+  <!-- Optional styling -->
+</head>
+<body>
+  <input id="urlInput" placeholder="Enter a URL" />
+  <button onclick="go()">Go</button>
+
+  <script>
+    const go = () => {
+      const input = document.getElementById('urlInput').value;
+      const encoded = __uv$config.prefix + __uv$config.encodeUrl(input);
+      window.location.href = encoded;
+    };
+  </script>
+</body>
+</html>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('uv/uv.sw.js', {
+      scope: __uv$config.prefix
+    });
+  });
+}
+</script>
+<script>
+// Wait until the page fully loads
+window.addEventListener('load', () => {
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('uv/uv.sw.js', {
+      scope: '/s/internet/'
+    });
+  }
+
+  // Auto-redirect if URL has hash (e.g., #https://google.com)
+  const hash = window.location.hash;
+  if (hash) {
+    const url = decodeURIComponent(hash.slice(1)); // Remove '#' from hash
+    const encoded = __uv$config.prefix + __uv$config.encode(url);
+    window.location.replace(encoded);
+  }
+});
+</script>
