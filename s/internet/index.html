@@ -1,36 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ultraviolet Proxy</title>
+  <title>ZXS Proxy</title>
 </head>
 <body>
-  <h1>Loading...</h1>
+  <p>Loading...</p>
 
- <!-- Load UV Core -->
-<script src="uv/uv.bundle.js"></script>
-<script src="uv/uv.config.js"></script>
+  <script src="uv/uv.bundle.js"></script>
+  <script src="uv/uv.config.js"></script>
 
-<script>
-  window.addEventListener('load', async () => {
-    if ('serviceWorker' in navigator) {
-      try {
+  <script>
+    window.addEventListener('load', async () => {
+      if ('serviceWorker' in navigator) {
         await navigator.serviceWorker.register('uv/uv.sw.js', {
-          scope: '/s/internet/'
+          scope: '/s/internet/',
         });
-        console.log('Service Worker registered successfully.');
-      } catch (error) {
-        console.error('Service Worker registration failed:', error);
       }
-    }
-  });
-</script>
-<script>
-  window.addEventListener('load', async () => {
-    const hash = window.location.hash;
-    if (hash) {
-      const inputUrl = decodeURIComponent(hash.slice(1)); // Remove '#'
-      const encoded = __uv$config.prefix + Ultraviolet.codec.encode(inputUrl);
-      window.location.replace(encoded);
-    }
-  });
-</script>
+
+      const hash = window.location.hash;
+      if (hash) {
+        const url = decodeURIComponent(hash.slice(1));
+        const encodedUrl = __uv$config.prefix + Ultraviolet.codec.xor.encode(url);
+        window.location.replace(encodedUrl);
+      }
+    });
+  </script>
+</body>
+</html>
