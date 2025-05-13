@@ -24,5 +24,31 @@
       }
     });
   </script>
+<script>
+  window.addEventListener('load', async () => {
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    await navigator.serviceWorker.register('uv/uv.sw.js', {
+      scope: '/s/internet/',
+    });
+  }
+
+  // Wait until Ultraviolet is ready
+  const waitForUV = () => new Promise((resolve) => {
+    const check = () => (window.Ultraviolet ? resolve() : setTimeout(check, 50));
+    check();
+  });
+
+  await waitForUV();
+
+  const hash = window.location.hash;
+  if (hash.length > 1) {
+    const url = decodeURIComponent(hash.slice(1));
+    const encoded = __uv$config.prefix + Ultraviolet.codec.xor.encode(url);
+    window.location.replace(encoded);
+  }
+});
+
+</script>
 </body>
 </html>
