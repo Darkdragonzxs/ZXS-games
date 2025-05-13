@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ZXS Proxy</title>
+  <title>ZXS Ultraviolet Proxy</title>
 </head>
 <body>
-  <p>Loading...</p>
+  <p>Loading Ultraviolet...</p>
 
   <script src="uv/uv.bundle.js"></script>
   <script src="uv/uv.config.js"></script>
-
   <script>
     window.addEventListener('load', async () => {
       if ('serviceWorker' in navigator) {
@@ -18,10 +17,10 @@
       }
 
       const hash = window.location.hash;
-      if (hash) {
-        const url = decodeURIComponent(hash.slice(1));
-        const encodedUrl = __uv$config.prefix + Ultraviolet.codec.xor.encode(url);
-        window.location.replace(encodedUrl);
+      if (hash.length > 1) {
+        const target = decodeURIComponent(hash.slice(1));
+        const encoded = __uv$config.prefix + Ultraviolet.codec.xor.encode(target);
+        window.location.replace(encoded);
       }
     });
   </script>
