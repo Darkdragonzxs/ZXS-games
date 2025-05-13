@@ -1,54 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>ZXS Ultraviolet Proxy</title>
+  <meta charset="UTF-8">
+  <title>ZXS Proxy</title>
 </head>
 <body>
-  <p>Loading Ultraviolet...</p>
+  <p>Loading ZXS Ultraviolet...</p>
 
+  <!-- Load Ultraviolet core -->
   <script src="uv/uv.bundle.js"></script>
-  <script src="uv/uv.config.js"></script>
+
+  <!-- Wait until everything is ready -->
   <script>
     window.addEventListener('load', async () => {
+      // Wait for Ultraviolet to load
+      const waitForUV = () =>
+        new Promise((resolve) => {
+          const check = () => {
+            if (window.Ultraviolet) resolve();
+            else setTimeout(check, 50);
+          };
+          check();
+        });
+
+      await waitForUV();
+
+      // Set up UV config
+      self.__uv$config = {
+        prefix: '/s/internet/',
+        bare: 'https://t.thecappuccino.site',
+        encodeUrl: Ultraviolet.codec.xor.encode,
+        decodeUrl: Ultraviolet.codec.xor.decode,
+      };
+
+      // Register the service worker
       if ('serviceWorker' in navigator) {
         await navigator.serviceWorker.register('uv/uv.sw.js', {
           scope: '/s/internet/',
         });
       }
 
+      // Redirect based on hash
       const hash = window.location.hash;
       if (hash.length > 1) {
         const target = decodeURIComponent(hash.slice(1));
-        const encoded = __uv$config.prefix + Ultraviolet.codec.xor.encode(target);
+        const encoded = self.__uv$config.prefix + Ultraviolet.codec.xor.encode(target);
         window.location.replace(encoded);
       }
     });
   </script>
-<script>
-  window.addEventListener('load', async () => {
-  // Register service worker
-  if ('serviceWorker' in navigator) {
-    await navigator.serviceWorker.register('uv/uv.sw.js', {
-      scope: '/s/internet/',
-    });
-  }
-
-  // Wait until Ultraviolet is ready
-  const waitForUV = () => new Promise((resolve) => {
-    const check = () => (window.Ultraviolet ? resolve() : setTimeout(check, 50));
-    check();
-  });
-
-  await waitForUV();
-
-  const hash = window.location.hash;
-  if (hash.length > 1) {
-    const url = decodeURIComponent(hash.slice(1));
-    const encoded = __uv$config.prefix + Ultraviolet.codec.xor.encode(url);
-    window.location.replace(encoded);
-  }
-});
-
-</script>
 </body>
 </html>
