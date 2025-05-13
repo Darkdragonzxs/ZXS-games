@@ -1,10 +1,4 @@
 self.__uv$config = {
-    prefix: '/s/internet/',
-    bare:'https://t.thecappuccino.site',
-    encodeUrl: Ultraviolet.codec.xor.encode,
-    decodeUrl: Ultraviolet.codec.xor.decode,
-    handler: '/uv.handler.js',
-    bundle: '/uv.bundle.js',
-    config: '/uv.config.js',
-    sw: '/uv.sw.js',
+  prefix: '/s/internet/',
+  bare: 'https://t.thecappuccino.site',
 };
