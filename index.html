@@ -1,0 +1,851 @@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://i.postimg.cc/HW0yFYHF/Screenshot-2025-05-07-5-41-50-PM-removebg-preview.png" type="image/png">
+    <link rel="icon" href="https://i.postimg.cc/ydnq9QzB/Screenshot-2025-05-13-12-03-53-PM-removebg-preview.png" type="image/png">
+    <style>
+        body {
+            margin: 0;
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            background-color: black;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+        }
+
+        #title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.3s;
+            z-index: 2;
+        }
+
+        #title img {
+            max-width: 200px;  /* Doubled from 300px to 600px */
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 20px rgba(0, 0, 0, 0.8));
+        }
+
+        #title:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        #random-message {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            color: white;
+            z-index: 2;
+        }
+
+        #battery-percentage {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: white;
+            z-index: 2;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            z-index: 11;
+        }
+
+        .header-left .logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .centered-buttons {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 11;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-container button {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            padding: 8px 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        /* Homepage content */
+        .homepage-content {
+            position: absolute;
+            top: 70px;
+            width: 100%;
+            height: calc(100% - 70px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        /* Section iframes */
+        .section-iframe {
+            display: none;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 70px);
+            z-index: 5;
+            border: none;
+        }
+
+        /* Settings section */
+        .settings-section {
+            display: none;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            z-index: 10;
+            color: white;
+            overflow-y: auto;
+        }
+
+        .setting-option {
+            margin-bottom: 20px;
+        }
+
+        .setting-option input {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid white;
+            border-radius: 5px;
+            background-color: transparent;
+            color: white;
+        }
+
+        .setting-option button {
+            padding: 8px 12px;
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .setting-option button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        .key-display {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+
+        .panic-status {
+            display: inline-block;
+            font-style: italic;
+            margin-left: 10px;
+            color: #00ff00;
+        }
+
+        /* Popup style */
+        #announcement-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Orbitron', sans-serif;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #announcement-popup.popup-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(30, 30, 30, 0.8);
+        }
+
+        .popup-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2e2e2e;
+            padding: 30px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            max-width: 90%;
+            width: 400px;
+            font-family: 'Orbitron', sans-serif;
+            z-index: 10000;
+            transition: transform 0.3s ease, opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        #announcement-popup.popup-visible .popup-content {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .popup-content h2 {
+            margin: 0 0 10px;
+            font-size: 24px;
+        }
+
+        .popup-content p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .popup-content button {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .popup-content button:hover {
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <!-- Announcement Popup -->
+    <div id="announcement-popup" class="popup-hidden">
+        <div class="popup-overlay"></div>
+        <div class="popup-content">
+            <h1>🚀 Welcome to ZXS GAMES 1.7!</h1>
+            <h2>We added more stuff yay</h2>
+            <p>1. New UI</p>
+            <p>2. Removed proxy option</p>
+            <p>3. Self hosted games</p>
+            <p>4. new VM (placeholder for zxsvm)</p>
+            <p>5. New games including crazy cattle 3d, Bad Parenting, and more!</p>
+
+            <button id="close-popup-btn">Proceed</button>
+        </div>
+    </div>
+
+    <!-- Top navigation bar -->
+    <div class="top-bar">
+        <div class="header-left">
+            <img class="logo" src="https://i.postimg.cc/Cx3y6z0p/image.png" alt="Logo">
+        </div>
+        <div class="centered-buttons">
+            <div class="button-container">
+                <button id="home-button">Home</button>
+                <button id="games-button">Games</button>
+                <button id="apps-button">Apps</button>
+                <button id="proxy-button">VM</button>
+                <button id="hacks-button">Hacks</button>
+                <button id="links-button">Partners</button>
+                <button id="settings-button">Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Homepage content with particles -->
+    <div class="homepage-content">
+        <div id="particles-js"></div>
+        <div id="title">
+            <img src="https://i.postimg.cc/Cx3y6z0p/image.png" alt="ZXS Logo">
+        </div>
+        <div id="random-message">skibidi placeholder</div>
+        <div id="battery-percentage">Battery: 0%</div>
+    </div>
+
+    <!-- Section iframes -->
+    <iframe id="games-iframe" class="section-iframe" src="about:blank"></iframe>
+    <iframe id="apps-iframe" class="section-iframe" src="about:blank"></iframe>
+    <iframe id="vm-iframe" class="section-iframe" src="about:blank"></iframe>
+    <iframe id="hacks-iframe" class="section-iframe" src="about:blank"></iframe>
+    <iframe id="partners-iframe" class="section-iframe" src="about:blank"></iframe>
+
+    <!-- Settings section -->
+    <div class="settings-section">
+        <h2>Settings</h2>
+        <div class="setting-option"> 
+            <h3>Tab Cloak</h3>
+            <input type="text" id="tab-name" placeholder="Enter tab name">
+            <input type="text" id="favicon-url" placeholder="Enter favicon URL"> 
+            <button onclick="applyTabCloak()">Apply Tab Cloak</button> 
+        </div>
+        <div class="setting-option">
+            <h3>About:blank Launch</h3>
+            <button onclick="openAboutBlank()">Open ZXS Games in About:blank</button>
+        </div>
+        <div class="setting-option">
+            <h3>Panic Key</h3>
+            <p>Press a key to instantly redirect to another site when someone (teacher) approaches</p>
+            <div>
+                <span>Current Panic Key: </span>
+                <span id="current-panic-key" class="key-display">]</span>
+                <button id="change-panic-key-btn">Change Key</button>
+                <span id="listening-status" class="panic-status"></span>
+            </div>
+            <div style="margin-top: 10px;">
+                <span>Redirect URL: </span>
+                <input type="text" id="panic-url" placeholder="Enter URL (e.g., https://google.com)" value="https://google.com">
+                <button onclick="savePanicSettings()">Save Settings</button>
+            </div>
+            <div style="margin-top: 10px;">
+                <span id="panic-status" class="panic-status">Panic key is active</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": { "value": "#ffffff" },
+                "shape": {
+                    "type": "circle",
+                    "stroke": { "width": 0, "color": "#000000" },
+                    "polygon": { "nb_sides": 5 }
+                },
+                "opacity": { "value": 0.5, "random": false, },
+                "size": {
+                    "value": 3,
+                    "random": true
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "repulse" },
+                    "onclick": { "enable": true, "mode": "push" },
+                    "resize": true
+                }
+            },
+            "retina_detect": true
+        });
+
+        // Random messages
+        const messages = [
+            "Mahan!",
+            "Teacher",
+            "Ver. 1.6: removed herobrine",
+            "I wrote this in class",
+            "174.227.103.239",
+            "technonyte should answer his DMS",
+            "It's gooning time",
+            "Dedede computer happy",
+             "you were struck down by divine judgement",
+            "me when the: :suprised:",
+            "this isnt a rare message",
+            "you fool...",
+            "this is the 12th message just so you know",
+            "subscribe to craftys corner",
+            "chicken jockey",
+            "you certianly have a F in math",
+            "petition for unblocked cocomelon",
+        ];
+
+        function displayRandomMessage() {
+            const messageDiv = document.getElementById('random-message');
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            messageDiv.textContent = messages[randomIndex];
+        }
+
+        function updateBatteryStatus(battery) {
+            const batteryPercentageDiv = document.getElementById('battery-percentage');
+            batteryPercentageDiv.textContent = `Battery: ${Math.round(battery.level * 100)}%`;
+        }
+
+        displayRandomMessage();
+
+        if (navigator.getBattery) {
+            navigator.getBattery().then(function(battery) {
+                updateBatteryStatus(battery);
+                battery.addEventListener('levelchange', function() {
+                    updateBatteryStatus(battery);
+                });
+            });
+        }
+
+        // Hide all sections function
+        function hideAllSections() {
+            document.getElementById('games-iframe').style.display = 'none';
+            document.getElementById('apps-iframe').style.display = 'none';
+            document.getElementById('vm-iframe').style.display = 'none';
+            document.getElementById('hacks-iframe').style.display = 'none';
+            document.getElementById('partners-iframe').style.display = 'none';
+            document.querySelector('.settings-section').style.display = 'none';
+            document.querySelector('.homepage-content').style.display = 'flex';
+        }
+
+        // Button click handlers
+        document.getElementById('home-button').addEventListener('click', function() {
+            hideAllSections();
+        });
+
+        document.getElementById('games-button').addEventListener('click', function() {
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const gamesIframe = document.getElementById('games-iframe');
+            gamesIframe.src = "/Games.html";
+            gamesIframe.style.display = 'block';
+
+            // After loading iframe, setup listeners
+            setTimeout(setupIframeListeners, 500);
+        });
+
+        document.getElementById('apps-button').addEventListener('click', function() {
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const appsIframe = document.getElementById('apps-iframe');
+            appsIframe.src = "/apps.html";
+            appsIframe.style.display = 'block';
+
+            // After loading iframe, setup listeners
+            setTimeout(setupIframeListeners, 500);
+        });
+
+        document.getElementById('proxy-button').addEventListener('click', function() {
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const vmIframe = document.getElementById('vm-iframe');
+            vmIframe.src = "/Emulator.html";
+            vmIframe.style.display = 'block';
+
+            // After loading iframe, setup listeners
+            setTimeout(setupIframeListeners, 500);
+        });
+
+        document.getElementById('hacks-button').addEventListener('click', function() {
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const hacksIframe = document.getElementById('hacks-iframe');
+            hacksIframe.src = "/hax.html";
+            hacksIframe.style.display = 'block';
+
+            // After loading iframe, setup listeners
+            setTimeout(setupIframeListeners, 500);
+        });
+
+        document.getElementById('links-button').addEventListener('click', function() {
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            const partnersIframe = document.getElementById('partners-iframe');
+            partnersIframe.src = "/Partners.html";
+            partnersIframe.style.display = 'block';
+
+            // After loading iframe, setup listeners
+            setTimeout(setupIframeListeners, 500);
+        });
+
+        document.getElementById('settings-button').addEventListener('click', function() {
+            hideAllSections();
+            document.querySelector('.homepage-content').style.display = 'none';
+            document.querySelector('.settings-section').style.display = 'block';
+        });
+
+        // Tab cloak function
+        function applyTabCloak() {
+            const tabName = document.getElementById('tab-name').value;
+            const faviconUrl = document.getElementById('favicon-url').value;
+
+            if (tabName) {
+                document.title = tabName;
+            }
+
+            if (faviconUrl) {
+                const link = document.querySelector('link[rel="icon"]');
+                if (link) {
+                    link.href = faviconUrl;
+                } else {
+                    const newLink = document.createElement('link');
+                    newLink.rel = 'icon';
+                    newLink.href = faviconUrl;
+                    document.head.appendChild(newLink);
+                }
+            }
+
+            if (!tabName && !faviconUrl) {
+                alert('Please enter both a tab name and favicon URL for full cloaking.');
+            }
+        }
+
+        // About:blank function
+        function openAboutBlank() {
+            const gameUrl = window.location.href;
+            const newWindow = window.open('about:blank', '_blank');
+            if (newWindow) {
+                newWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>ZXS GAMES</title>
+                        <style>
+                            body, html {
+                                margin: 0;
+                                padding: 0;
+                                height: 100%;
+                                overflow: hidden;
+                            }
+                            iframe {
+                                width: 100%;
+                                height: 100%;
+                                border: none;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe src="${gameUrl}"></iframe>
+                    </body>
+                    </html>
+                `);
+                newWindow.document.close();
+            }
+        }
+
+        // ENHANCED PANIC KEY FUNCTIONALITY
+        // Variables for panic key
+        let panicKey = localStorage.getItem('panicKey') || ']';
+        let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
+        let panicKeyActive = true;
+
+        // Initialize panic key elements
+        document.getElementById('current-panic-key').textContent = panicKey;
+        document.getElementById('panic-url').value = panicURL;
+
+        // Function to handle panic key press
+        function handlePanicKey(e) {
+            if (panicKeyActive && e.key === panicKey) {
+                window.location.href = panicURL;
+            }
+        }
+
+        // Add event listener to the main document
+        document.addEventListener('keydown', handlePanicKey);
+
+        // Function to set up iframe listeners for panic key
+        function setupIframeListeners() {
+            // Get all iframes
+            const iframes = document.querySelectorAll('iframe');
+
+            iframes.forEach(iframe => {
+                try {
+                    // Check if iframe is accessible (same origin)
+                    if (iframe.contentWindow && iframe.contentDocument) {
+                        // Add keydown event listener to iframe's document
+                        iframe.contentDocument.addEventListener('keydown', handlePanicKey);
+
+                        // For iframes that might load other iframes
+                        iframe.contentWindow.addEventListener('load', function() {
+                            try {
+                                // After iframe content loads, recursively add listeners to nested iframes
+                                const nestedIframes = iframe.contentDocument.querySelectorAll('iframe');
+                                nestedIframes.forEach(nestedFrame => {
+                                    try {
+                                        if (nestedFrame.contentDocument) {
+                                            nestedFrame.contentDocument.addEventListener('keydown', handlePanicKey);
+                                        }
+                                    } catch (error) {
+                                        // Silently fail for cross-origin nested iframes
+                                    }
+                                });
+                            } catch (error) {
+                                // Silently fail if access is lost after load
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.log("Cannot access iframe - likely cross-origin.");
+
+                    // Alternative approach for cross-origin iframes
+                    // Set up message passing for cross-origin iframes
+                    iframe.addEventListener('load', function() {
+                        // Try to send a message to the iframe to set up its own keydown listener
+                        try {
+                            iframe.contentWindow.postMessage({
+                                type: 'SETUP_PANIC_KEY',
+                                key: panicKey,
+                                url: panicURL
+                            }, '*');  // Using * is less secure but needed for cross-origin
+                        } catch (e) {
+                            // Silently fail
+                        }
+                    });
+                }
+            });
+        }
+
+        // Set up listeners when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize panic key settings
+            if (localStorage.getItem('panicKey')) {
+                panicKey = localStorage.getItem('panicKey');
+                document.getElementById('current-panic-key').textContent = panicKey;
+            }
+
+            if (localStorage.getItem('panicURL')) {
+                panicURL = localStorage.getItem('panicURL');
+                document.getElementById('panic-url').value = panicURL;
+            }
+
+            // Initial setup of iframe listeners
+            setupIframeListeners();
+
+            // Set up listener for messages from iframes
+            window.addEventListener('message', function(event) {
+                // Handle messages from iframes (for cross-origin communication)
+                if (event.data && event.data.type === 'PANIC_KEY_PRESSED') {
+                    window.location.href = panicURL;
+                }
+            });
+        });
+
+        // Change Panic Key button
+        const changePanicKeyBtn = document.getElementById('change-panic-key-btn');
+        const listeningStatus = document.getElementById('listening-status');
+
+        changePanicKeyBtn.addEventListener('click', function() {
+            listeningStatus.textContent = "Listening for key press...";
+
+            // Function to handle key press for changing the panic key
+            const keyListener = function(e) {
+                panicKey = e.key;
+                document.getElementById('current-panic-key').textContent = panicKey;
+                listeningStatus.textContent = "Key set successfully!";
+
+                // Remove the listener after capturing a key
+                document.removeEventListener('keydown', keyListener);
+
+                // Clear the status message after 2 seconds
+                setTimeout(() => {
+                    listeningStatus.textContent = "";
+                }, 2000);
+            };
+
+            document.addEventListener('keydown', keyListener);
+        });
+
+        // Save panic settings
+        function savePanicSettings() {
+            panicURL = document.getElementById('panic-url').value;
+
+            // Ensure URL has http:// or https:// prefix
+            if (panicURL && !panicURL.startsWith('http://') && !panicURL.startsWith('https://')) {
+                panicURL = 'https://' + panicURL;
+                document.getElementById('panic-url').value = panicURL;
+            }
+
+            // Save settings to localStorage
+            localStorage.setItem('panicKey', panicKey);
+            localStorage.setItem('panicURL', panicURL);
+
+            // Update all iframes with new panic key settings
+            setupIframeListeners();
+
+            // Show saved confirmation
+            const panicStatus = document.getElementById('panic-status');
+            panicStatus.textContent = "Settings saved successfully!";
+
+            // Update status message after 2 seconds
+            setTimeout(() => {
+                panicStatus.textContent = "Panic key is active";
+            }, 2000);
+        }
+
+        // Announcement popup
+        document.addEventListener('DOMContentLoaded', function () {
+            const popup = document.getElementById('announcement-popup');
+            const closeBtn = document.getElementById('close-popup-btn');
+
+            // Show popup with animation
+            setTimeout(() => {
+                popup.classList.remove('popup-hidden');
+                popup.classList.add('popup-visible');
+            }, 200); // Delay for smoother entry
+
+            // Hide popup with fade-out effect
+            closeBtn.addEventListener('click', function () {
+                popup.classList.remove('popup-visible');
+                popup.classList.add('popup-hidden');
+            });
+        });
+    </script>
+</body>
+</html>
+<script>
+    // Global panic key settings
+let panicKey = localStorage.getItem('panicKey') || ']';
+let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
+
+// Listen for key events in the main window
+document.addEventListener('keydown', function(e) {
+    if (e.key === panicKey) {
+        window.location.href = panicURL;
+    }
+});
+
+// Function to instruct iframes to set up their own listeners
+function setupIframeListeners() {
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach(iframe => {
+        try {
+            // Send a message to each iframe to set up panic key listener
+            iframe.contentWindow.postMessage({
+                type: 'SETUP_PANIC_LISTENER',
+                key: panicKey
+            }, '*');
+        } catch (e) {
+            console.log("Cross-origin iframe, cannot inject script directly.");
+        }
+    });
+}
+
+// Handle messages from iframes
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'PANIC_KEY_PRESSED') {
+        window.location.href = panicURL;
+    }
+});
+
+// When page loads or panic key changes, set up listeners
+document.addEventListener('DOMContentLoaded', setupIframeListeners);
+</script>
+<script>
+    // Inside iframe HTML or script
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'SETUP_PANIC_LISTENER') {
+        const panicKey = event.data.key;
+        document.addEventListener('keydown', function(e) {
+            if (e.key === panicKey) {
+                // Notify parent window
+                window.parent.postMessage({ type: 'PANIC_KEY_PRESSED' }, '*');
+            }
+        });
+    }
+});
+</script>
+<script>
+    // 1. Main window: listen globally
+document.addEventListener('keydown', function(e) {
+    if (e.key === panicKey) {
+        window.location.href = panicURL;
+    }
+});
+
+// 2. Communicate with iframes
+function setupIframeListeners() {
+    document.querySelectorAll('iframe').forEach(iframe => {
+        try {
+            iframe.contentWindow.postMessage({ type: 'SETUP_PANIC_LISTENER', key: panicKey }, '*');
+        } catch (e) {
+            // Cross-origin, cannot inject
+        }
+    });
+}
+
+// 3. Handle messages from iframes
+window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'PANIC_KEY_PRESSED') {
+        window.location.href = panicURL;
+    }
+});
+
+// 4. Inside same-origin iframe (if possible)
+window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'SETUP_PANIC_LISTENER') {
+        document.addEventListener('keydown', function(e) {
+            if (e.key === e.data.key) {
+                window.parent.postMessage({ type: 'PANIC_KEY_PRESSED' }, '*');
+            }
+        });
+    }
+});
+</script>
