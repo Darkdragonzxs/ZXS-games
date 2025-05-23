@@ -1,76 +1,12 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
     <!-- Default favicon -->
     <link rel="icon" href="https://i.postimg.cc/ydnq9QzB/Screenshot-2025-05-13-12-03-53-PM-removebg-preview.png" type="image/png" id="favicon">
-<html lang="en">
-<head>
-     <div class="container">
-        <h2>Current Status</h2>
-        <p class="status">Tab is currently: <span id="tabStatus">Active</span></p>
-        <p>Title: <span id="currentTitle">ZXS GAMES</span></p>
-        <p>Favicon: <span id="currentFavicon">Custom Favicon</span></p>
-    </div>
-
-    <script>
-        // Store original and alternative titles and favicons
-        const titles = {
-            active: "ZXS GAMES",
-            inactive: "Dashboard"
-        };
-        
-        const favicons = {
-            active: "https://i.postimg.cc/Cx3y6z0p/image.png", // Custom ZXS logo
-            inactive: "https://i.postimg.cc/ydnq9QzB/Screenshot-2025-05-13-12-03-53-PM-removebg-preview.png" // Default favicon
-        };
-        
-        const faviconElement = document.getElementById('favicon');
-        const tabStatusElement = document.getElementById('tabStatus');
-        const currentTitleElement = document.getElementById('currentTitle');
-        const currentFaviconElement = document.getElementById('currentFavicon');
-        
-        // Function to update the tab title and favicon
-        function updateTabInfo(isActive) {
-            if (isActive) {
-                document.title = titles.active;
-                faviconElement.href = favicons.active;
-                tabStatusElement.textContent = "Active";
-                tabStatusElement.style.color = "green";
-                currentTitleElement.textContent = titles.active;
-                currentFaviconElement.textContent = "Custom Favicon";
-            } else {
-                document.title = titles.inactive;
-                faviconElement.href = favicons.inactive;
-                tabStatusElement.textContent = "Inactive";
-                tabStatusElement.style.color = "red";
-                currentTitleElement.textContent = titles.inactive;
-                currentFaviconElement.textContent = "Default Favicon";
-            }
-        }
-        
-        // Set initial state
-        updateTabInfo(true);
-        
-        // Listen for visibility change events
-        document.addEventListener('visibilitychange', function() {
-            updateTabInfo(!document.hidden);
-        });
-        
-        // Alternative approach using focus/blur events for better cross-browser support
-        window.addEventListener('focus', function() {
-            updateTabInfo(true);
-        });
-        
-        window.addEventListener('blur', function() {
-            updateTabInfo(false);
-        });
-    </script>
-</body>
-</html>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://i.postimg.cc/ydnq9QzB/Screenshot-2025-05-13-12-03-53-PM-removebg-preview.png" type="image/png">
     <style>
         /* Base Styles */
         :root {
@@ -600,6 +536,47 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
+        // Tab title and favicon switching functionality
+        const titles = {
+            active: "ZXS GAMES",
+            inactive: "Dashboard"
+        };
+        
+        const favicons = {
+            active: "https://i.postimg.cc/Cx3y6z0p/image.png", // Custom ZXS logo
+            inactive: "https://i.postimg.cc/ydnq9QzB/Screenshot-2025-05-13-12-03-53-PM-removebg-preview.png" // Default favicon
+        };
+        
+        const faviconElement = document.getElementById('favicon');
+        
+        // Function to update the tab title and favicon
+        function updateTabInfo(isActive) {
+            if (isActive) {
+                document.title = titles.active;
+                faviconElement.href = favicons.active;
+            } else {
+                document.title = titles.inactive;
+                faviconElement.href = favicons.inactive;
+            }
+        }
+        
+        // Set initial state
+        updateTabInfo(true);
+        
+        // Listen for visibility change events
+        document.addEventListener('visibilitychange', function() {
+            updateTabInfo(!document.hidden);
+        });
+        
+        // Alternative approach using focus/blur events for better cross-browser support
+        window.addEventListener('focus', function() {
+            updateTabInfo(true);
+        });
+        
+        window.addEventListener('blur', function() {
+            updateTabInfo(false);
+        });
+
         // Initialize particles.js
         particlesJS('particles-js', {
             "particles": {
@@ -758,19 +735,15 @@
             const faviconUrl = document.getElementById('favicon-url').value;
 
             if (tabName) {
+                titles.active = tabName;
+                titles.inactive = tabName;
                 document.title = tabName;
             }
 
             if (faviconUrl) {
-                const link = document.querySelector('link[rel="icon"]');
-                if (link) {
-                    link.href = faviconUrl;
-                } else {
-                    const newLink = document.createElement('link');
-                    newLink.rel = 'icon';
-                    newLink.href = faviconUrl;
-                    document.head.appendChild(newLink);
-                }
+                favicons.active = faviconUrl;
+                favicons.inactive = faviconUrl;
+                faviconElement.href = faviconUrl;
             }
 
             if (!tabName && !faviconUrl) {
