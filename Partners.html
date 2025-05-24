@@ -3,9 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>skibidi partners</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&display=swap" rel="stylesheet" />
+  <title>SKIBIDI PARTNERS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --primary-color: #00ff41;
+      --secondary-color: #39ff14;
+      --tertiary-color: #00ff00;
+      --background-dark: #000000;
+      --background-secondary: #000000;
+      --card-bg: rgba(0, 0, 0, 0.9);
+      --card-border: rgba(0, 255, 65, 0.3);
+      --card-hover: rgba(0, 0, 0, 0.95);
+      --text-color: #ffffff;
+      --text-secondary: #cccccc;
+      --glow-spread: 15px;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -13,80 +27,493 @@
     }
 
     body {
-      font-family: 'Orbitron', sans-serif;
-      background-color: #000; /* Black background behind buttons */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--background-dark);
+      color: var(--text-color);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    .button-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      max-width: 800px;
-      width: 100%;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
       text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
     }
 
-    .button {
-      display: inline-block;
-      background-color: #333; /* Black button background */
-      color: white; /* Text color white */
-      font-size: 18px;
-      padding: 20px;
-      border: 2px solid #333; /* Border same as button background */
-      border-radius: 8px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s ease-in-out;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    h1 {
       font-family: 'Orbitron', sans-serif;
-      text-decoration: none;
+      font-size: 3.5rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 
+        0 0 10px rgba(0, 255, 65, 0.5),
+        0 0 20px rgba(0, 255, 65, 0.3),
+        0 0 30px rgba(0, 255, 65, 0.1);
+      text-transform: uppercase;
+      animation: titleGlow 3s ease-in-out infinite alternate;
     }
 
-    .button:hover {
-      background-color: #555; /* Grey background on hover */
-      color: #fff;
-      border-color: #555; /* Grey border on hover */
+    @keyframes titleGlow {
+      from {
+        filter: drop-shadow(0 0 5px rgba(0, 255, 65, 0.3));
+      }
+      to {
+        filter: drop-shadow(0 0 15px rgba(0, 255, 65, 0.6));
+      }
     }
 
-    .button span {
-      z-index: 1;
+    .subtitle {
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      letter-spacing: 2px;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
       position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(5px);
+      box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(0, 255, 65, 0.1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent, rgba(0, 255, 65, 0.08), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 
+        0 12px 30px rgba(0, 0, 0, 0.9),
+        0 0 var(--glow-spread) rgba(0, 255, 65, 0.6),
+        inset 0 1px 0 rgba(0, 255, 65, 0.3);
+      border-color: rgba(0, 255, 65, 0.8);
+      background: var(--card-hover);
+    }
+
+    .card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .card a {
+      display: block;
+      padding: 1.5rem 1rem;
+      text-decoration: none;
+      color: var(--text-color);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 500;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .card:hover a {
+      color: var(--primary-color);
+      text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+      box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+    }
+
+    .card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      opacity: 0;
+      animation: float 15s infinite linear;
+      box-shadow: 0 0 6px var(--primary-color);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+
+    .scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, rgba(0, 255, 65, 0.04), transparent);
+      pointer-events: none;
+      animation: scanline 8s linear infinite;
+      opacity: 0.7;
+      z-index: 2;
+    }
+
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 255, 65, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.06) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .matrix-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.12;
+    }
+
+    .matrix-column {
+      position: absolute;
+      top: -100%;
+      color: var(--primary-color);
+      font-family: 'Orbitron', monospace;
+      font-size: 14px;
+      line-height: 1.2;
+      animation: matrixFall linear infinite;
+      text-shadow: 0 0 5px var(--primary-color);
+    }
+
+    @keyframes matrixFall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* Enhanced glow effects for better visibility on pure black */
+    .glow-border {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      pointer-events: none;
+      z-index: -1;
+      box-shadow: inset 0 0 50px rgba(0, 255, 65, 0.02);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+      }
+      
+      .card a {
+        padding: 1.2rem 0.8rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      }
+    }
+
+    /* Terminal cursor effect */
+    .subtitle::after {
+      content: '_';
+      color: var(--primary-color);
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Additional ambient lighting effects */
+    .ambient-glow {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(0, 255, 65, 0.03), transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: -1;
+      animation: ambientPulse 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientPulse {
+      from {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+      }
+      to {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.1;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="glow-border"></div>
+  <div class="ambient-glow"></div>
+  <div class="grid-overlay"></div>
+  <div class="scanline"></div>
+  <div class="particles" id="particles"></div>
+  <div class="matrix-rain" id="matrix-rain"></div>
 
-  <div class="button-container">
-    <a class="button" href="https://vapor.my" target="_blank" rel="noopener noreferrer"><span>VAPOR</span></a>
-    <a class="button" href="https://www.secured.wiki/" target="_blank" rel="noopener noreferrer"><span>Secured Web</span></a>
-    <a class="button" href="https://discord.gg/b2cExjsxYX" target="_blank" rel="noopener noreferrer"><span>Luminal Bypasses</span></a>
-    <a class="button" href="https://vortexos.net/" target="_blank" rel="noopener noreferrer"><span>Vortex</span></a>
-    <a class="button" href="https://lupine.red" target="_blank" rel="noopener noreferrer"><span>Lupine RED</span></a>
-    <a class="button" href="https://sites.google.com/view/ultimate-arcade" target="_blank" rel="noopener noreferrer"><span>Ultimate Arcade</span></a>
-    <a class="button" href="https://sites.google.com/view/prohomework2z" target="_blank" rel="noopener noreferrer"><span>ProGS2Z</span></a>
-    <a class="button" href="https://sites.google.com/view/dsgf-ttsd-45-bsd-7888-pot/home" target="_blank" rel="noopener noreferrer"><span>M3T4L</span></a>
-    <a class="button" href="https://sites.google.com/view/mathandschoolforlife/home?authuser=0" target="_blank" rel="noopener noreferrer"><span>C+ Games</span></a>
-    <a class="button" href="https://sites.google.com/view/gxming-zone-13-/" target="_blank" rel="noopener noreferrer"><span>Gaming Zone</span></a>
-    <a class="button" href="https://sites.google.com/view/dominumnetworkv1" target="_blank" rel="noopener noreferrer"><span>Dominium NETWORK</span></a>
-    <a class="button" href="https://docs.google.com/presentation/d/149GpUX0v2xNpwbUTv0Ra1bXSBJ8VImN3yQXMYA9ZhKA/edit#slide=id.g3390e1e779d_159_56" target="_blank" rel="noopener noreferrer"><span>Netflix Slides</span></a>
-    <a class="button" href="https://sites.google.com/view/lets-go-math123" target="_blank" rel="noopener noreferrer"><span>Chillzone</span></a>
-    <a class="button" href="https://sites.google.com/view/botulinum-/home" target="_blank" rel="noopener noreferrer"><span>Botulinum</span></a>
-    <a class="button" href="https://Catsploit.pages.dev" target="_blank" rel="noopener noreferrer"><span>Catsploit</span></a>
-    <a class="button" href="https://mjjjqimwxv.warhawkenterprises.com/asdjklhfskjafhakfhueoyraehfjkcnjkdscnsjakdreuoiwefh/index.html" target="_blank" rel="noopener noreferrer"><span>ThePegLeg</span></a>
-    <a class="button" href="https://discord.gg/wNUwKAdNKK" target="_blank" rel="noopener noreferrer"><span>Hydrogen</span></a>
-        <a class="button" href="https://sunnys.pro" target="_blank" rel="noopener noreferrer"><span>Sunny's Gym</span></a>
-        <a class="button" href="https://Sakuraon.top" target="_blank" rel="noopener noreferrer"><span>Sakura</span></a>
-            <a class="button" href="https://z-kit.net" target="_blank" rel="noopener noreferrer"><span>Z-KIT</span></a>
-            <a class="button" href="https://discord.gg/7d2572uuUD" target="_blank" rel="noopener noreferrer"><span>Chicken King's Vault</span></a>
+  <div class="container">
+    <header>
+      <h1>ZXS'S PARTNERS</h1>
+    </header>
 
-
+    <div class="grid-container">
+      <div class="card">
+        <a href="https://vapor.my" target="_blank" rel="noopener noreferrer">VAPOR</a>
+      </div>
+      <div class="card">
+        <a href="https://www.secured.wiki/" target="_blank" rel="noopener noreferrer">SECURED WEB</a>
+      </div>
+      <div class="card">
+        <a href="https://discord.gg/b2cExjsxYX" target="_blank" rel="noopener noreferrer">LUMINAL BYPASSES</a>
+      </div>
+      <div class="card">
+        <a href="https://vortexos.net/" target="_blank" rel="noopener noreferrer">VORTEX</a>
+      </div>
+      <div class="card">
+        <a href="https://lupine.red" target="_blank" rel="noopener noreferrer">LUPINE RED</a>
+      </div>
+      <div class="card">
+        <a href="https://sites.google.com/view/ultimate-arcade" target="_blank" rel="noopener noreferrer">ULTIMATE ARCADE</a>
+      </div>
+      <div class="card">
+        <a href="https://sites.google.com/view/prohomework2z" target="_blank" rel="noopener noreferrer">PROGS2Z</a>
+      </div>
+      <div class="card">
+        <a href="https://sites.google.com/view/dsgf-ttsd-45-bsd-7888-pot/home" target="_blank" rel="noopener noreferrer">M3T4L</a>
+      </div>
+      <div class="card">
+        <a href="https://sites.google.com/view/mathandschoolforlife/home?authuser=0" target="_blank" rel="noopener noreferrer">C+ GAMES</a>
+      </div>
+      <div class="card">
+        <a href="https://sites.google.com/view/gxming-zone-13-/" target="_blank" rel="noopener noreferrer">GAMING ZONE</a>
+      </div>
+      <div class="card">
+        <a href="https://sites.google.com/view/dominumnetworkv1" target="_blank" rel="noopener noreferrer">DOMINIUM NETWORK</a>
+      </div>
+      <div class="card">
+        <a href="https://docs.google.com/presentation/d/149GpUX0v2xNpwbUTv0Ra1bXSBJ8VImN3yQXMYA9ZhKA/edit#slide=id.g3390e1e779d_159_56" target="_blank" rel="noopener noreferrer">NETFLIX SLIDES</a>
+      </div>
+      <div class="card">
+        <a href="https://sites.google.com/view/lets-go-math123" target="_blank" rel="noopener noreferrer">CHILLZONE</a>
+      </div>
+      <div class="card">
+        <a href="https://sites.google.com/view/botulinum-/home" target="_blank" rel="noopener noreferrer">BOTULINUM</a>
+      </div>
+      <div class="card">
+        <a href="https://Catsploit.pages.dev" target="_blank" rel="noopener noreferrer">CATSPLOIT</a>
+      </div>
+      <div class="card">
+        <a href="https://mjjjqimwxv.warhawkenterprises.com/asdjklhfskjafhakfhueoyraehfjkcnjkdscnsjakdreuoiwefh/index.html" target="_blank" rel="noopener noreferrer">THEPEGLEG</a>
+      </div>
+      <div class="card">
+        <a href="https://discord.gg/wNUwKAdNKK" target="_blank" rel="noopener noreferrer">HYDROGEN</a>
+      </div>
+      <div class="card">
+        <a href="https://sunnys.pro" target="_blank" rel="noopener noreferrer">SUNNY'S GYM</a>
+      </div>
+      <div class="card">
+        <a href="https://Sakuraon.top" target="_blank" rel="noopener noreferrer">SAKURA</a>
+      </div>
+      <div class="card">
+        <a href="https://z-kit.net" target="_blank" rel="noopener noreferrer">Z-KIT</a>
+      </div>
+      <div class="card">
+        <a href="https://discord.gg/7d2572uuUD" target="_blank" rel="noopener noreferrer">CHICKEN KING'S VAULT</a>
+      </div>
+    </div>
   </div>
 
+  <script>
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 40;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      
+      // Random position
+      const posX = Math.random() * 100;
+      const posY = Math.random() * 100;
+      particle.style.left = `${posX}%`;
+      particle.style.top = `${posY}%`;
+      
+      // Random size
+      const size = Math.random() * 3 + 1;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // Green variations
+      const greenShades = ['#00ff41', '#39ff14', '#00ff00', '#32cd32'];
+      const color = greenShades[Math.floor(Math.random() * greenShades.length)];
+      particle.style.backgroundColor = color;
+      particle.style.boxShadow = `0 0 ${size * 3}px ${color}`;
+      
+      // Random animation duration and delay
+      const duration = Math.random() * 20 + 10;
+      const delay = Math.random() * 10;
+      particle.style.animation = `float ${duration}s ${delay}s infinite linear`;
+      
+      particlesContainer.appendChild(particle);
+    }
+
+    // Create Matrix rain effect
+    const matrixContainer = document.getElementById('matrix-rain');
+    const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    
+    function createMatrixColumn() {
+      const column = document.createElement('div');
+      column.classList.add('matrix-column');
+      
+      // Random position
+      column.style.left = Math.random() * 100 + '%';
+      
+      // Random characters
+      let text = '';
+      const length = Math.random() * 20 + 10;
+      for (let i = 0; i < length; i++) {
+        text += matrixChars[Math.floor(Math.random() * matrixChars.length)] + '<br>';
+      }
+      column.innerHTML = text;
+      
+      // Random animation duration
+      const duration = Math.random() * 10 + 5;
+      column.style.animationDuration = duration + 's';
+      
+      matrixContainer.appendChild(column);
+      
+      // Remove after animation
+      setTimeout(() => {
+        if (column.parentNode) {
+          column.parentNode.removeChild(column);
+        }
+      }, duration * 1000);
+    }
+
+    // Create matrix columns periodically
+    setInterval(createMatrixColumn, 300);
+
+    // Add hover effect to cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        const randomDelay = Math.random() * 0.2;
+        card.style.transitionDelay = `${randomDelay}s`;
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transitionDelay = '0s';
+      });
+    });
+  </script>
 </body>
 </html>
