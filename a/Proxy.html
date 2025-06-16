@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>procksi (green mode)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #000;
+      color: #0f0;
+    }
+    #controls {
+      padding: 1rem;
+      background: #001100;
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    input {
+      flex: 1;
+      background: #002200;
+      color: #0f0;
+      font-size: 1rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #0f0;
+      border-radius: 4px;
+    }
+    input::placeholder {
+      color: #0f0a;
+    }
+    button {
+      background: #003300;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #004400;
+    }
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <input id="urlInput" placeholder="Enter URL or search..." />
+    <button onclick="loadPage()">Go</button>
+  </div>
+  <iframe
+    id="viewer"
+    sandbox="allow-scripts allow-forms allow-same-origin"
+    srcdoc="<pre style='padding:2rem; color:#0f0;'>Enter a URL or search term to begin...</pre>"
+  ></iframe>
+
+  <script>
+    const proxyBase = "https://api.allorigins.win/raw?url=";
+    const input = document.getElementById("urlInput");
+    const iframe = document.getElementById("viewer");
+
+    function looksLikeUrl(str) {
+      return /\./.test(str) && !/\s/.test(str);
+    }
+
+    function prepareUrl(inputStr) {
+      inputStr = inputStr.trim();
+      if (!inputStr) return null;
+
+      if (looksLikeUrl(inputStr)) {
+        if (!/^https?:\/\//i.test(inputStr)) {
+          inputStr = "https://" + inputStr;
+        }
+        return inputStr;
+      } else {
+        const query = encodeURIComponent(inputStr);
+        return `https://www.startpage.com/sp/search?q=${query}`;
+      }
+    }
+
+    async function loadPage(url = null) {
+      let rawInput = input.value.trim();
+      let target = url || rawInput;
+      if (!target) {
+        alert("Enter a URL or search.");
+        return;
+      }
+      target = prepareUrl(target);
+      input.value = target;
+
+      // Block embedding Startpage search results
+      if (target.includes("startpage.com/sp/search")) {
+        iframe.srcdoc = `<pre style="padding:2rem; color:#0f0;">
+🚫 Cannot embed Startpage search results due to sandbox restrictions.
+
+🔗 <a href="${target}" target="_blank" style="color:#0f0;text-decoration:underline;">Click here to view search in a new tab</a>
+</pre>`;
+        return;
+      }
+
+      try {
+        iframe.srcdoc = `<pre style="padding:2rem; color:#0f0;">Loading ${target} ...</pre>`;
+        const response = await fetch(proxyBase + encodeURIComponent(target));
+        if (!response.ok) throw new Error("Failed to fetch");
+        const html = await response.text();
+        const modifiedHTML = injectProxyScript(html, target);
+        iframe.srcdoc = modifiedHTML;
+      } catch (err) {
+        iframe.srcdoc = `<pre style="padding:2rem; color:red;">Error: ${err.message}</pre>`;
+      }
+    }
+
+    function injectProxyScript(html, baseUrl) {
+      const baseTag = `<base href="${baseUrl}">`;
+      const interceptScript = `
+        <script>
+          document.addEventListener('click', e => {
+            const a = e.target.closest('a[href]');
+            if (a && a.href && a.target !== '_blank') {
+              e.preventDefault();
+              parent.postMessage({ type: 'navigate', href: a.href }, '*');
+            }
+          });
+        <\/script>
+      `;
+      if (/<head[^>]*>/i.test(html)) {
+        return html.replace(/<head[^>]*>/i, match => match + baseTag + interceptScript);
+      } else {
+        return baseTag + interceptScript + html;
+      }
+    }
+
+    window.addEventListener("message", e => {
+      if (e.data?.type === "navigate" && e.data.href) {
+        input.value = e.data.href;
+        loadPage(e.data.href);
+      }
+    });
+
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        loadPage();
+      }
+    });
+  </script>
+</body>
+</html>
