@@ -87,7 +87,7 @@
         return inputStr;
       } else {
         const query = encodeURIComponent(inputStr);
-        return `https://www.startpage.com/sp/search?q=${query}`;
+        return `https://www.webcrawler.com/serp?q=${query}`;
       }
     }
 
@@ -101,15 +101,7 @@
       target = prepareUrl(target);
       input.value = target;
 
-      // Block embedding Startpage search results
-      if (target.includes("startpage.com/sp/search")) {
-        iframe.srcdoc = `<pre style="padding:2rem; color:#0f0;">
-🚫 Cannot embed Startpage search results due to sandbox restrictions.
-
-🔗 <a href="${target}" target="_blank" style="color:#0f0;text-decoration:underline;">Click here to view search in a new tab</a>
-</pre>`;
-        return;
-      }
+      
 
       try {
         iframe.srcdoc = `<pre style="padding:2rem; color:#0f0;">Loading ${target} ...</pre>`;
