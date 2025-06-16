@@ -1,323 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZXS VM</title>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --main-green: #00ff7f;
-      --main-dark: #101014;
-      --sidebar: #171a1f;
-      --sidebar-hover: #22262c;
-      --border: #333;
-      --highlight: #4CAF50;
-      --error: #f44336;
-      --warning: #FF9800;
-      --silver: #c0c0c0;
-      --white: #fff;
-      --gray: #808080;
-      --background-gradient: radial-gradient(circle at bottom, #232834, #000 80%);
-      --font-head: 'Orbitron', 'Atkinson Hyperlegible Next', Arial, sans-serif;
-      --font-main: 'Atkinson Hyperlegible Next', Arial, sans-serif;
-    }
     html, body {
-      margin: 0;
-      height: 100%;
-      font-family: var(--font-main);
-      background: var(--background-gradient);
-      color: var(--white);
+      margin: 0; padding: 0; height: 100%; background: #000;
+      font-family: 'Orbitron', monospace;
+      color: #00ff00;
       overflow: hidden;
-      min-height: 100vh;
     }
-    body {
-      display: flex;
-      width: 100vw;
-      height: 100vh;
+    #particles-js {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
     }
-    /* Custom Cursor */
-    body.homepage {
-      cursor: none !important;
+    .content {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center; z-index: 10; width: 90%;
     }
-    .custom-cursor {
-      pointer-events: none;
-      position: fixed;
-      z-index: 10000;
-      left: 0;
-      top: 0;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 2px solid var(--main-green);
-      background: rgba(0,255,127,0.10);
-      mix-blend-mode: lighten;
-      transform: translate(-50%,-50%);
-      transition: background 0.15s, border-color 0.18s;
-      will-change: transform;
-      opacity: 1;
-      transition-property: background, border-color, opacity, transform;
-      transition-duration: 0.15s, 0.18s, 0.18s, 0.10s;
+    h1 {
+      font-size: 2.5rem;
+      text-shadow: 0 0 10px #00ff00;
+      margin-bottom: 20px;
     }
-    .custom-cursor.hidden {
-      opacity: 0 !important;
+    button {
+      background: transparent;
+      border: 2px solid #00ff00;
+      color: #00ff00;
+      font-size: 1rem;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin: 10px;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
     }
-    .custom-cursor.active {
-      background: rgba(0,255,127,0.22);
-      border-color: #fff;
+    button:hover {
+      background: #00ff00;
+      color: #000;
     }
-    /* Hide the cursor in VM iframe container */
-    #vm-container,
-    #vm-iframe,
-    #vm-controls-wrapper,
+    #vm-container {
+      margin-top: 20px;
+      display: none;
+    }
+    #vm-iframe {
+      width: 90vw;
+      height: 70vh;
+      border: 2px solid #00ff00;
+      border-radius: 6px;
+    }
+    #vm-controls-wrapper {
+      margin-top: 20px;
+      display: none;
+    }
     #vm-timer {
-      cursor: default !important;
-    }
-    /* (rest of your CSS as before) */
-    /* ...all the original CSS omitted for brevity... */
-    /* Responsive */
-    @media (max-width: 700px) {
-      main { width: 100vw;}
-      #start-vm-section-container {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-      }
-      .vm-button { width: 95vw; min-width: 0; }
-      #vm-controls-wrapper { left: 5vw; }
-      #vm-timer { right: 8vw;}
-      #notification-container { right: 8vw;}
-      .powered-by-footer {
-        font-size: 0.97rem;
-        margin-bottom: 7px;
-      }
+      font-size: 1.2rem;
+      margin-top: 10px;
+      display: none;
     }
   </style>
-  <!-- Analytics & Ads -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5297436329791319" crossorigin="anonymous"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FMS7B6C78C"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date()); gtag('config', 'G-FMS7B6C78C');
-  </script>
 </head>
-<body class="homepage">
-  <main>
-    <div id="start-vm-section-container" role="main">
-      <h1><span>ZXS</span> Virtual Machines</h1>
-      <div class="title-divider"></div>
-      <button class="vm-button" id="chrome-vm">
-        <span class="material-symbols-outlined">Google</span>
-        <div class="vm-name">Google Chrome</div>
-        <div class="vm-description">A virtual machine running Chrome. 15 minutes of unleashed browsing.</div>
-      </button>
+<body>
+
+  <div id="particles-js"></div>
+
+  <div class="content">
+    <h1>ZXS VM</h1>
+    <h2>Powered By Z-KIT</h2>
+    <div id="start-vm-section-container">
+      <button id="chrome-vm" title="Start a virtual machine">Start VM</button>
     </div>
-    <div id="vm-container">
-      <iframe id="vm-iframe" title="Virtual Machine"></iframe>
+
+    <div id="vm-container" data-session-id="">
+      <iframe id="vm-iframe" src="about:blank" title="ZXS Virtual Machine"></iframe>
     </div>
+
     <div id="vm-controls-wrapper">
-      <div id="vm-controls">
-        <button id="kill-vm-btn"><span class="material-symbols-outlined"></span>Turn off VM</button>
-      </div>
-      <div id="vm-timer"></div>
+      <button id="fullscreen-vm-btn" title="Enter Fullscreen Mode">Fullscreen</button>
+      <button id="kill-vm-btn" title="Terminate the Virtual Machine">Terminate VM</button>
     </div>
-    <div id="notification-container" aria-live="polite"></div>
-    <div class="stars" id="stars-bg"></div>
-    <div class="powered-by-footer">Powered by Z-Kit</div>
-    <div class="custom-cursor" id="custom-cursor" style="display:none"></div>
-  </main>
+
+    <div id="vm-timer" role="timer" aria-live="polite">14:50</div>
+  </div>
+
   <script>
-    // ==== Custom Minimalistic Cursor ====
-    (function(){
-      const cursor = document.getElementById('custom-cursor');
-      // Only show on homepage (when #start-vm-section-container is visible)
-      function isHomepage() {
-        const startVmSection = document.getElementById('start-vm-section-container');
-        return startVmSection && startVmSection.style.display !== 'none';
-      }
-      function showCursor() {
-        cursor.style.display = 'block';
-        cursor.classList.remove('hidden');
-      }
-      function hideCursor() {
-        cursor.style.display = 'none';
-      }
-      function moveCursor(e) {
-        if (!isHomepage()) {
-          hideCursor();
-          return;
-        }
-        showCursor();
-        cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-      }
-      function onActive(e) {
-        cursor.classList.add('active');
-      }
-      function onInactive(e) {
-        cursor.classList.remove('active');
-      }
-      function checkCursorVisibility() {
-        if (isHomepage()) showCursor(); else hideCursor();
-      }
-      document.addEventListener('mousemove', moveCursor);
-      document.addEventListener('mousedown', onActive);
-      document.addEventListener('mouseup', onInactive);
-      document.addEventListener('mouseenter', checkCursorVisibility);
-      document.addEventListener('mouseleave', () => cursor.classList.add('hidden'));
-
-      // Hide cursor when leaving homepage section
-      const observer = new MutationObserver(checkCursorVisibility);
-      observer.observe(document.getElementById('start-vm-section-container'), { attributes: true, attributeFilter: ['style'] });
-
-      // Initial state
-      if (isHomepage()) showCursor();
-    })();
-    // ==== END Custom Cursor ====
-
-    // STARFIELD BACKGROUND
-    function createStars(count = 80) {
-      const stars = document.getElementById('stars-bg');
-      for (let i = 0; i < count; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.top = `${Math.random() * 200}%`;
-        star.style.left = `${Math.random() * 200}%`;
-        star.style.animationDelay = `${Math.random() * 4.2}s`;
-        star.style.opacity = Math.random() * 0.6 + 0.2;
-        stars.appendChild(star);
-      }
-    }
-    createStars()
-
-    // NOTIFY SYSTEM
-    const Notify = {
-      _container: null,
-      _defaultOptions: {
-        type: 'info',
-        title: '',
-        message: '',
-        closable: true,
-        icon: null,
-        duration: 3200
-      },
-      _icons: {
-        success: '✓',
-        error: '✗',
-        warning: '!',
-        info: '?'
-      },
-      _init() {
-        if (this._container) return;
-        this._container = document.getElementById('notification-container');
-        if (!this._container) {
-          this._container = document.createElement('div');
-          this._container.id = 'notification-container';
-          document.body.appendChild(this._container);
-        }
-      },
-      show(options = {}) {
-        this._init();
-        const config = { ...this._defaultOptions, ...options };
-        const notification = document.createElement('div');
-        notification.classList.add('notification', config.type);
-
-        // Icon
-        const iconName = config.icon || this._icons[config.type] || this._icons.info;
-        if (iconName) {
-          const iconWrapper = document.createElement('div');
-          iconWrapper.classList.add('notification-icon');
-          const iconEl = document.createElement('span');
-          iconEl.classList.add('material-symbols-outlined');
-          iconEl.textContent = iconName;
-          iconWrapper.appendChild(iconEl);
-          notification.appendChild(iconWrapper);
-        }
-
-        // Content
-        const contentWrapper = document.createElement('div');
-        contentWrapper.style.flex = '1';
-        if (config.title) {
-          const titleEl = document.createElement('div');
-          titleEl.classList.add('notification-title');
-          titleEl.textContent = config.title;
-          contentWrapper.appendChild(titleEl);
-        }
-        const messageEl = document.createElement('div');
-        messageEl.classList.add('notification-message');
-        messageEl.innerHTML = config.message;
-        contentWrapper.appendChild(messageEl);
-        notification.appendChild(contentWrapper);
-
-        if (config.closable) {
-          const closeButton = document.createElement('button');
-          closeButton.classList.add('notification-close');
-          closeButton.innerHTML = '×';
-          closeButton.setAttribute('aria-label', 'Close notification');
-          closeButton.onclick = () => this._removeNotification(notification);
-          notification.appendChild(closeButton);
-        }
-
-        this._container.appendChild(notification);
-        requestAnimationFrame(() => setTimeout(() => notification.classList.add('show'), 10));
-        if (typeof config.duration === 'number' && config.duration > 0) {
-          notification._timerId = setTimeout(() => {
-            this._removeNotification(notification);
-          }, config.duration);
-        }
-        return notification;
-      },
-      _removeNotification(notificationElement) {
-        if (!notificationElement || !notificationElement.parentNode) return;
-        if (notificationElement._timerId) clearTimeout(notificationElement._timerId);
-        if (notificationElement._removing) return;
-        notificationElement._removing = true;
-        notificationElement.classList.remove('show');
-        const remove = () => {
-          if (notificationElement.parentNode === this._container) {
-            this._container.removeChild(notificationElement);
+    // Initialize particles.js with network effect config
+    particlesJS("particles-js", {
+      particles: {
+        number: {
+          value: 150,
+          density: {
+            enable: true,
+            value_area: 1000
           }
-        };
-        notificationElement.addEventListener('transitionend', remove, { once: true });
-        setTimeout(remove, 500);
+        },
+        color: { value: "#00ff00" },
+        shape: { type: "circle" },
+        opacity: { value: 0.4 },
+        size: { value: 2, random: true },
+        line_linked: {
+          enable: true,
+          distance: 120,
+          color: "#00ff00",
+          opacity: 0.5,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "none",
+          random: false,
+          straight: false,
+          out_mode: "out",
+          bounce: false
+        }
       },
-      success(msg, title = 'Success', duration) {
-        return this.show({ type: 'success', message: msg, title, duration });
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: { enable: false },
+          onclick: { enable: false },
+          resize: true
+        }
       },
-      error(msg, title = 'Error', duration) {
-        return this.show({ type: 'error', message: msg, title, duration });
-      },
-      info(msg, title = 'Info', duration) {
-        return this.show({ type: 'info', message: msg, title, duration });
-      },
-      warning(msg, title = 'Warning', duration) {
-        return this.show({ type: 'warning', message: msg, title, duration });
-      }
-    };
+      retina_detect: true
+    });
 
-    // VM FUNCTIONALITY
     document.addEventListener('DOMContentLoaded', () => {
       const chromeVmButton = document.getElementById('chrome-vm');
       const vmContainer = document.getElementById('vm-container');
       const vmIframe = document.getElementById('vm-iframe');
       const killVmButton = document.getElementById('kill-vm-btn');
+      const fullscreenVmButton = document.getElementById('fullscreen-vm-btn');
       const vmControlsWrapper = document.getElementById('vm-controls-wrapper');
       const vmTimerDisplay = document.getElementById('vm-timer');
       const startVmSectionContainer = document.getElementById('start-vm-section-container');
       let timerInterval;
 
-      function updateVmLayout() {
-        // responsive: handled by CSS now
-      }
-
       chromeVmButton.addEventListener('click', async () => {
         try {
           killVmButton.disabled = true;
-          const fetchOptions = { method: 'GET' };
-          const response = await fetch('https://zena-vm.underscorrmicro.workers.dev/start-vm', fetchOptions);
+          const response = await fetch('https://zena-vm.underscorrmicro.workers.dev/start-vm');
           const data = await response.json();
-          updateVmLayout();
+
+          if (!data || !data.embed_url || !data.session_id) {
+            alert("Failed to start VM: Invalid response.");
+            killVmButton.disabled = false;
+            return;
+          }
+
           vmIframe.src = data.embed_url;
           vmContainer.dataset.sessionId = data.session_id;
           vmContainer.style.display = 'block';
@@ -325,8 +158,10 @@
           vmTimerDisplay.style.display = 'block';
           startVmSectionContainer.style.display = 'none';
           vmTimerDisplay.textContent = '14:50';
+
           let timeLeft = 890;
           killVmButton.disabled = false;
+
           timerInterval = setInterval(() => {
             timeLeft -= 1;
             const minutes = Math.floor(timeLeft / 60);
@@ -339,16 +174,19 @@
               }
             }
           }, 1000);
-          Notify.success('The VM is starting.', 'VM started', 2500);
         } catch (error) {
-          if (!navigator.onLine) {
-            Notify.error('You appear to be offline. Please check your internet connection and try again.', 'Network error', 5000);
-          } else if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-            Notify.error('Failed to connect to the VM server. This may be due to network issues.', 'Connection error', 5000);
-          } else {
-            Notify.error(`An error occurred while starting the VM: ${error.message}`, 'Error starting VM', 5000);
-          }
+          alert("Failed to start VM. Please try again later.");
           killVmButton.disabled = false;
+        }
+      });
+
+      fullscreenVmButton.addEventListener('click', () => {
+        if (vmIframe.requestFullscreen) {
+          vmIframe.requestFullscreen();
+        } else if (vmIframe.webkitRequestFullscreen) {
+          vmIframe.webkitRequestFullscreen();
+        } else if (vmIframe.msRequestFullscreen) {
+          vmIframe.msRequestFullscreen();
         }
       });
 
@@ -356,377 +194,99 @@
         const sessionId = vmContainer.dataset.sessionId;
         if (!sessionId || killVmButton.disabled) return;
         killVmButton.disabled = true;
-        const resetUiToPreVmState = () => {
+
+        const resetUI = () => {
           clearInterval(timerInterval);
           vmContainer.style.display = 'none';
           vmControlsWrapper.style.display = 'none';
           vmTimerDisplay.style.display = 'none';
           vmIframe.src = 'about:blank';
-          // Restore vertical centering by removing inline styles and letting flexbox do its job
           startVmSectionContainer.style.display = '';
           delete vmContainer.dataset.sessionId;
           killVmButton.disabled = false;
         };
+
         try {
-          killVmButton.disabled = true;
-          const fetchOptions = { method: 'DELETE' };
-          const response = await fetch(`https://zena-vm.underscorrmicro.workers.dev/kill-vm/${encodeURIComponent(sessionId)}`, fetchOptions);
-          if (response.ok) {
-            await response.json().catch(() => ({}));
-            Notify.success('The VM has been successfully terminated.', 'Success', 3500);
-          } else {
-            let errorMessage = `Failed to terminate VM on server (status: ${response.status}).`;
-            try {
-              const data = await response.json();
-              errorMessage = data.message || errorMessage;
-            } catch (e) {}
-            Notify.warning(`${errorMessage} Assuming VM is killed and resetting UI.`, 'VM Termination', 4000);
-          }
-        } catch (error) {
-          Notify.info('Assuming VM is killed and resetting UI.', 'Network issue', 3200);
+          await fetch(`https://zena-vm.underscorrmicro.workers.dev/kill-vm/${encodeURIComponent(sessionId)}`, {
+            method: 'DELETE'
+          });
+        } catch (e) {
+          // fail silently
         } finally {
-          resetUiToPreVmState();
+          resetUI();
         }
       });
     });
-
-    // SETTINGS/PANIC/TOGGLES
-    function getSettingValue(key, defaultValue) {
-      return localStorage.getItem(key) || defaultValue;
-    }
-    function doesSettingExist(key) {
-      return localStorage.getItem(key) !== null;
-    }
-    if (getSettingValue("gatekeep") === "true") {
-      document.body.innerHTML = document.body.innerHTML.replace(/ok/um, "uuhhhhh");
-      document.querySelectorAll('img[src="https://img.icons8.com/ios_filled/512/40C057/chrome.png"]').forEach((img) => {
-        img.style.display = "none";
-      });
-    }
-    if (getSettingValue("particles-toggle") === "true") {
-      const particlesDiv = document.getElementById("stars-bg");
-      if (particlesDiv) { particlesDiv.style.display = "none"; }
-    }
-    if (doesSettingExist("panic-keybind")) {
-      if (!doesSettingExist("custom-url")) {
-        localStorage.setItem("custom-url", "google.com?igu=1");
-      }
-      const panicKeybind = JSON.parse(getSettingValue("panic-keybind", "[]"));
-      const pressedKeys = new Set();
-      window.addEventListener("keydown", (event) => {
-        pressedKeys.add(event.key);
-        if (panicKeybind.every((key) => pressedKeys.has(key))) {
-          const customUrl = getSettingValue("custom-url");
-          window.location.href = "https://" + customUrl;
-        }
-      });
-      window.addEventListener("keyup", (event) => {
-        pressedKeys.delete(event.key);
-      });
-    }
   </script>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZXS - Virtual Machines</title>
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-  <!-- Styles -->
-  <style>
-    :root {
-      --main-green: #00ff7f;
-      --main-dark: #101014;
-      --sidebar: #171a1f;
-      --sidebar-hover: #22262c;
-      --border: #333;
-      --highlight: #4CAF50;
-      --error: #f44336;
-      --warning: #FF9800;
-      --silver: #c0c0c0;
-      --white: #fff;
-      --gray: #808080;
-      --background-gradient: radial-gradient(circle at bottom, #232834, #000 80%);
-      --font-head: 'Orbitron', 'Atkinson Hyperlegible Next', Arial, sans-serif;
-      --font-main: 'Atkinson Hyperlegible Next', Arial, sans-serif;
-    }
-    html, body {
-      margin: 0;
-      height: 100%;
-      font-family: var(--font-main);
-      background: var(--background-gradient);
-      color: var(--white);
-      overflow: hidden;
-      min-height: 100vh;
-    }
-    body {
-      display: flex;
-      width: 100vw;
-      height: 100vh;
-    }
-    /* Content Area */
-    main {
-      flex: 1 1 0;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      position: relative;
-      margin-left: 0;
-    }
-    /* Stars BG */
-    .stars {
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      top: 0; left: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .star {
-      position: absolute;
-      width: 2px; height: 2px;
-      background: var(--white);
-      border-radius: 50%;
-      opacity: 0;
-      animation: twinkle 4.2s infinite;
-    }
-    @keyframes twinkle {
-      0%, 100% { opacity: 0; }
-      48%, 52% { opacity: 1; }
-    }
-    /* Section */
-    #start-vm-section-container {
-      /* Remove margin:auto and use flex layout for vertical centering */
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      /* Use full height and center content */
-    }
-    #start-vm-section-container[style*="display: none"] {
-      display: none !important;
-    }
-    #start-vm-section-container h1 {
-      font-size: 3rem;
-      margin-block: 0 6px;
-      font-family: var(--font-head);
-      color: var(--white);
-      text-shadow: 0 0 12px #00ff7f55;
-    }
-    #start-vm-section-container h1 span {
-      color: var(--main-green);
-      text-shadow: 0 0 16px var(--main-green), 0 0 40px var(--main-green);
-    }
-    .title-divider {
-      width: 300px; height: 2px;
-      background: linear-gradient(90deg, var(--main-green) 20%, transparent 100%);
-      margin: 18px auto 16px auto;
-      border-radius: 2px;
-    }
-    .vm-button {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      margin: 22px auto 0 auto;
-      width: 320px; height: 210px;
-      background: linear-gradient(135deg, #232834, #191a1c);
-      border: 2px solid var(--main-green);
-      border-radius: 18px;
-      color: var(--white);
-      font-family: var(--font-head);
-      font-size: 1rem;
-      box-shadow: 0 4px 23px #00ff7f24;
-      cursor: pointer;
-      transition: transform .22s, box-shadow .22s, background .18s;
-      position: relative;
-      overflow: hidden;
-    }
-    .vm-button:hover {
-      transform: scale(1.045);
-      box-shadow: 0 0 22px var(--main-green);
-      background: linear-gradient(135deg, #232834 65%, #155 100%);
-      opacity: 0.97;
-    }
-    .vm-button .material-symbols-outlined {
-      font-size: 5rem;
-      margin-bottom: 10px;
-      color: var(--main-green);
-      text-shadow: 0 0 8px #00ff7f60;
-    }
-    .vm-button .vm-name { font-weight: bold; margin-bottom: 5px; font-size: 1.19rem; }
-    .vm-button .vm-description { font-size: .97rem; text-align: center; color: #c0ffd6; }
-    #vm-container {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.97);
-      z-index: 30;
-      overflow: hidden;
-      transition: opacity .2s;
-    }
-    #vm-iframe {
-      width: 100%; height: 100%;
-      border: none; cursor: none;
-    }
-    #vm-controls-wrapper {
-      display: none;
-      position: fixed;
-      bottom: 20px; left: 70px;
-      z-index: 1201;
-      font-family: var(--font-head);
-    }
-    #vm-controls {
-      position: relative;
-      z-index: 2;
-    }
-    #kill-vm-btn {
-      display: flex;
-      align-items: center;
-      padding: 10px 20px;
-      background: #151d16;
-      color: #c0ffc0;
-      border: 1.6px solid var(--main-green);
-      border-radius: 9px;
-      font-size: 1rem;
-      font-family: var(--font-head);
-      cursor: pointer;
-      box-shadow: 0 2px 12px #00ff7f44;
-      transition: background .19s, color .19s, transform .18s;
-    }
-    #kill-vm-btn .material-symbols-outlined { margin-right: 7px; font-size: 1.14rem; }
-    #kill-vm-btn:disabled {
-      background: #222; color: #666;
-      cursor: not-allowed; box-shadow: none;
-    }
-    #kill-vm-btn:hover:not(:disabled) {
-      background: #194d2c;
-      color: #fff;
-      transform: scale(1.07);
-    }
-    #vm-timer {
-      position: fixed;
-      bottom: 22px; right: 32px;
-      display: none;
-      background: rgba(16,30,21,0.94);
-      color: #c0ffc0;
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-family: var(--font-head);
-      font-size: 1.07rem;
-      border: 2px solid var(--main-green);
-      z-index: 1004;
-      box-shadow: 0 0 10px #00ff7f33;
-    }
-    /* Notification System */
-    #notification-container {
-      position: fixed;
-      top: 20px; right: 32px;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-width: 370px; width: 95vw;
-    }
-    .notification {
-      background: #151d16;
-      color: #fff;
-      padding: 17px 17px 17px 11px;
-      border-radius: 7px;
-      border-left: 5px solid var(--main-green);
-      box-shadow: 0 2px 18px #00ff7f30;
-      display: flex; align-items: flex-start;
-      opacity: 0; transform: translateX(110%);
-      transition: opacity .35s cubic-bezier(.4,1,.55,1), transform .35s cubic-bezier(.4,1,.55,1);
-      overflow: hidden;
-      min-width: 120px;
-    }
-    .notification.show { opacity: 1; transform: translateX(0); }
-    .notification-icon {
-      margin-right: 13px; font-size: 26px; min-width: 30px; min-height: 26px;
-      color: var(--main-green);
-    }
-    .notification-title {
-      font-weight: bold; font-size: 1.13rem; margin-bottom: 4px;
-      font-family: var(--font-head);
-    }
-    .notification-message {
-      font-size: 1.01rem;
-      line-height: 1.5;
-      color: #c0ffd6;
-    }
-    .notification-close {
-      background: none; border: none;
-      color: #aaa; font-size: 20px;
-      cursor: pointer; margin-left: 13px;
-      margin-top: 2px;
-      transition: color .18s;
-    }
-    .notification-close:hover { color: var(--main-green); }
-    .notification.success { border-left-color: var(--highlight);}
-    .notification.success .notification-icon { color: var(--highlight);}
-    .notification.error { border-left-color: var(--error);}
-    .notification.error .notification-icon { color: var(--error);}
-    .notification.info { border-left-color: var(--main-green);}
-    .notification.info .notification-icon { color: var(--main-green);}
-    .notification.warning { border-left-color: var(--warning);}
-    .notification.warning .notification-icon { color: var(--warning);}
-    /* Powered by Z-Kit Footer */
-    .powered-by-footer {
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      width: 100vw;
-      text-align: center;
-      background: transparent;
-      color: var(--silver);
-      font-family: var(--font-head);
-      font-size: 1.1rem;
-      letter-spacing: 0.09em;
-      z-index: 10001;
-      margin-bottom: 12px;
-      user-select: none;
-      pointer-events: none;
-      text-shadow: 0 0 4px #000, 0 0 8px #00ff7f40;
-    }
-    /* Responsive */
-    @media (max-width: 700px) {
-      main { width: 100vw;}
-      #start-vm-section-container {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-      }
-      .vm-button { width: 95vw; min-width: 0; }
-      #vm-controls-wrapper { left: 5vw; }
-      #vm-timer { right: 8vw;}
-      #notification-container { right: 8vw;}
-      .powered-by-footer {
-        font-size: 0.97rem;
-        margin-bottom: 7px;
-      }
-    }
-body.homepage, body.homepage * {
-  cursor: none !important;
-}
-  </style>
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Particles.js Working</title>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; background: #000;
+      font-family: 'Orbitron', monospace;
+      color: #00ff00;
+      overflow: hidden;
+    }
+    #particles-js {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
 
+  <div id="particles-js"></div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      particlesJS('particles-js', {
+        particles: {
+          number: { value: 100, density: { enable: true, value_area: 800 } },
+          color: { value: '#00ff00' },
+          shape: { type: 'circle' },
+          opacity: { value: 0.5, random: false },
+          size: { value: 3, random: true },
+          line_linked: {
+            enable: true,
+            distance: 120,
+            color: '#00ff00',
+            opacity: 0.4,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: 'none',
+            random: false,
+            straight: false,
+            out_mode: 'out'
+          }
+        },
+        interactivity: {
+          detect_on: 'canvas',
+          events: {
+            onhover: { enable: true, mode: 'repulse' },
+            onclick: { enable: true, mode: 'push' },
+            resize: true
+          },
+          modes: {
+            repulse: { distance: 100 },
+            push: { particles_nb: 4 }
+          }
+        },
+        retina_detect: true
+      });
+    });
+  </script>
 
-   
 </body>
 </html>
