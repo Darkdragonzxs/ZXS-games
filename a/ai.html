@@ -3,285 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZXS AI</title>
+  <title>ZXS AI - Advanced AI Chat Assistant</title>
+  <meta name="description" content="Chat with ZXS AI, a powerful AI assistant created by ZXS." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            'bounce-dot': 'bounce 1.4s ease-in-out infinite both',
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-      color: #ffffff;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .chat-container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(26, 26, 26, 0.8);
-      backdrop-filter: blur(10px);
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .header {
-      padding: 20px 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.3);
-    }
-
-    .title {
-      font-size: 24px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #00ffb7, #00bfff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-align: center;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 14px;
-      margin-top: 4px;
-    }
-
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 24px;
-      scroll-behavior: smooth;
-    }
-
-    .chat-messages::-webkit-scrollbar {
+    .animate-bounce-dot:nth-child(1) { animation-delay: -0.32s; }
+    .animate-bounce-dot:nth-child(2) { animation-delay: -0.16s; }
+    .animate-bounce-dot:nth-child(3) { animation-delay: 0s; }
+    
+    /* Custom scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
     }
-
-    .chat-messages::-webkit-scrollbar-track {
+    .custom-scrollbar::-webkit-scrollbar-track {
       background: transparent;
     }
-
-    .chat-messages::-webkit-scrollbar-thumb {
+    .custom-scrollbar::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 3px;
     }
-
-    .message {
-      margin-bottom: 16px;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-
-    .message.user {
-      flex-direction: row-reverse;
-    }
-
-    .message-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-
-    .message.user .message-avatar {
-      background: linear-gradient(135deg, #00bfff, #0080ff);
-    }
-
-    .message.ai .message-avatar {
-      background: linear-gradient(135deg, #00ffb7, #00cc92);
-      color: #000;
-    }
-
-    .message-content {
-      max-width: 70%;
-      padding: 12px 16px;
-      border-radius: 18px;
-      line-height: 1.5;
-      word-wrap: break-word;
-    }
-
-    .message.user .message-content {
-      background: linear-gradient(135deg, #00bfff, #0080ff);
-      color: white;
-      border-bottom-right-radius: 4px;
-    }
-
-    .message.ai .message-content {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-bottom-left-radius: 4px;
-    }
-
-    .message.loading .message-content {
-      background: rgba(0, 255, 183, 0.1);
-      border: 1px solid rgba(0, 255, 183, 0.2);
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .input-area {
-      padding: 20px 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.3);
-    }
-
-    .input-container {
-      display: flex;
-      gap: 12px;
-      align-items: flex-end;
-    }
-
-    .input-wrapper {
-      flex: 1;
-      position: relative;
-    }
-
-    #user-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      color: white;
-      font-size: 16px;
-      outline: none;
-      transition: all 0.2s ease;
-      resize: none;
-      min-height: 48px;
-      max-height: 120px;
-    }
-
-    #user-input:focus {
-      border-color: #00ffb7;
-      box-shadow: 0 0 0 2px rgba(0, 255, 183, 0.2);
-    }
-
-    #user-input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .send-button {
-      padding: 12px 20px;
-      background: linear-gradient(135deg, #00ffb7, #00cc92);
-      color: #000;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 16px;
-      transition: all 0.2s ease;
-      height: 48px;
-    }
-
-    .send-button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 255, 183, 0.3);
-    }
-
-    .send-button:active {
-      transform: translateY(0);
-    }
-
-    .send-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .inline-code {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'SF Mono', Monaco, monospace;
-      font-size: 0.9em;
-    }
-
-    @media (max-width: 768px) {
-      .chat-container {
-        max-width: 100%;
-        border: none;
-      }
-      
-      .message-content {
-        max-width: 85%;
-      }
-      
-      .header {
-        padding: 16px 20px;
-      }
-      
-      .chat-messages {
-        padding: 16px 20px;
-      }
-      
-      .input-area {
-        padding: 16px 20px;
-      }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
     }
   </style>
 </head>
-<body>
-  <div class="chat-container">
-    <div class="header">
-      <div class="title">ZXS AI</div>
-      <div class="subtitle">Powered by advanced AI technology</div>
+<body class="bg-gradient-to-br from-gray-900 to-black text-white h-screen overflow-hidden">
+  <div class="flex flex-col h-screen">
+    <!-- Header -->
+    <div class="border-b border-white/10 bg-black/30 backdrop-blur-sm">
+      <div class="max-w-4xl mx-auto px-6 py-5">
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent text-center">
+          ZXS AI
+        </h1>
+        <p class="text-white/60 text-sm text-center mt-1">Powered by advanced AI technology</p>
+      </div>
     </div>
-    
-    <div class="chat-messages" id="chat-messages"></div>
-    
-    <div class="input-area">
-      <div class="input-container">
-        <div class="input-wrapper">
-          <textarea 
-            id="user-input" 
-            placeholder="Type your message..." 
-            rows="1"
-            onkeydown="handleKeyDown(event)"
-            oninput="autoResize(this)"
-          ></textarea>
+
+    <!-- Messages Container -->
+    <div id="messages-container" class="flex-1 overflow-y-auto custom-scrollbar">
+      <div class="max-w-4xl mx-auto px-6 py-5 space-y-4" id="messages">
+        <!-- Messages will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="border-t border-white/10 bg-black/30 backdrop-blur-sm">
+      <div class="max-w-4xl mx-auto px-6 py-5">
+        <div class="flex gap-3 items-end">
+          <div class="flex-1">
+            <textarea
+              id="user-input"
+              placeholder="Type your message..."
+              class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-400/50 transition-all disabled:opacity-50"
+              style="min-height: 48px; max-height: 120px;"
+              rows="1"
+              onkeydown="handleKeyDown(event)"
+              oninput="autoResize(this)"
+            ></textarea>
+          </div>
+          <button
+            id="send-button"
+            onclick="sendMessage()"
+            class="px-6 py-3 bg-gradient-to-r from-emerald-400 to-green-500 text-black font-semibold rounded-xl hover:from-emerald-500 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed h-12"
+          >
+            Send
+          </button>
         </div>
-        <button class="send-button" onclick="sendMessage()" id="send-button">
-          Send
-        </button>
       </div>
     </div>
   </div>
 
   <script>
-    const API_KEY = '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'; IF YOU STEAL THIS YOUR ACTUALLY PRIDE TRANS LIKE SERIOUSLY DONT
+    // ⚠️ SECURITY WARNING: API key is exposed in client-side code
+    // Anyone can view page source and see this key
+    // Consider using environment variables or server-side proxy for production
+    const API_KEY = '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';
     const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
     
-    const messages = [
-      { 
-        role: 'system', 
-        content: "You are ZXS AI, a helpful and intelligent assistant created by ZXS. You provide clear, concise, and helpful responses." 
+    let messages = [
+      {
+        role: 'system',
+        content: 'You are ZXS AI, a helpful and intelligent assistant created by ZXS. You provide clear, concise, and helpful responses.'
       }
     ];
-
+    
     let isLoading = false;
+    let messageIdCounter = 0;
 
-    // Initialize chat
+    // Initialize chat on page load
     window.addEventListener('load', () => {
       const welcomeMessage = "Welcome to ZXS AI! I'm here to help you with any questions or tasks. Join dsc.gg/zxsgames for updates!";
-      addMessage(welcomeMessage, 'ai');
+      addMessage(welcomeMessage, 'assistant');
       messages.push({ role: 'assistant', content: welcomeMessage });
     });
 
@@ -297,13 +124,15 @@
       addMessage(message, 'user');
       messages.push({ role: 'user', content: message });
       
-      // Clear input and show loading
+      // Clear input and reset height
       input.value = '';
       input.style.height = '48px';
+      
+      // Set loading state
       setLoading(true);
       
       // Add loading message
-      const loadingId = addMessage('Thinking...', 'ai', true);
+      const loadingId = addLoadingMessage();
 
       try {
         const response = await fetch(API_URL, {
@@ -329,46 +158,100 @@
         
         // Remove loading message and add AI response
         removeMessage(loadingId);
-        addMessage(reply, 'ai');
+        addMessage(reply, 'assistant');
         messages.push({ role: 'assistant', content: reply });
 
       } catch (error) {
         console.error('Error:', error);
         removeMessage(loadingId);
-        addMessage("I'm sorry, I encountered an error. Please try again.", 'ai');
+        
+        let errorMessage = "I'm sorry, I encountered an error. Please try again.";
+        if (error.message.includes('CORS')) {
+          errorMessage = "CORS error detected. This app needs to be served from a web server, not opened directly as a file.";
+        }
+        
+        addMessage(errorMessage, 'assistant');
       } finally {
         setLoading(false);
       }
     }
 
-    function addMessage(content, sender, isLoading = false) {
-      const chatMessages = document.getElementById('chat-messages');
-      const messageId = Date.now().toString();
+    function addMessage(content, role) {
+      const messagesContainer = document.getElementById('messages');
+      const messageId = `msg-${++messageIdCounter}`;
       
       const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${sender}${isLoading ? ' loading' : ''}`;
       messageDiv.id = messageId;
+      messageDiv.className = `flex items-start gap-3 ${role === 'user' ? 'flex-row-reverse' : ''}`;
       
+      // Create avatar
       const avatar = document.createElement('div');
-      avatar.className = 'message-avatar';
-      avatar.textContent = sender === 'user' ? 'U' : 'AI';
+      avatar.className = `w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 ${
+        role === 'user' 
+          ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white'
+          : 'bg-gradient-to-r from-emerald-400 to-green-500 text-black'
+      }`;
+      avatar.textContent = role === 'user' ? 'U' : 'AI';
       
+      // Create message content
       const contentDiv = document.createElement('div');
-      contentDiv.className = 'message-content';
+      contentDiv.className = `max-w-[70%] px-4 py-3 rounded-2xl leading-relaxed ${
+        role === 'user'
+          ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-br-sm'
+          : 'bg-white/10 border border-white/10 rounded-bl-sm'
+      }`;
       
       // Format content with inline code support
       const formattedContent = content
-        .replace(/`([^`]+)`/g, '<span class="inline-code">$1</span>')
+        .replace(/`([^`]+)`/g, '<span class="bg-white/10 px-2 py-1 rounded text-sm font-mono">$1</span>')
         .replace(/\n/g, '<br>');
       
       contentDiv.innerHTML = formattedContent;
       
+      // Append elements
       messageDiv.appendChild(avatar);
       messageDiv.appendChild(contentDiv);
-      chatMessages.appendChild(messageDiv);
+      messagesContainer.appendChild(messageDiv);
       
       // Scroll to bottom
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+      scrollToBottom();
+      
+      return messageId;
+    }
+
+    function addLoadingMessage() {
+      const messagesContainer = document.getElementById('messages');
+      const messageId = `loading-${++messageIdCounter}`;
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.id = messageId;
+      messageDiv.className = 'flex items-start gap-3';
+      
+      // Create avatar
+      const avatar = document.createElement('div');
+      avatar.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-emerald-400 to-green-500 flex items-center justify-center text-sm font-semibold text-black';
+      avatar.textContent = 'AI';
+      
+      // Create loading content
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 rounded-2xl rounded-bl-sm';
+      
+      const dotsContainer = document.createElement('div');
+      dotsContainer.className = 'flex items-center gap-1';
+      
+      for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'w-2 h-2 bg-emerald-400 rounded-full animate-bounce-dot';
+        dot.style.animationDelay = `${i * 0.1}s`;
+        dotsContainer.appendChild(dot);
+      }
+      
+      contentDiv.appendChild(dotsContainer);
+      messageDiv.appendChild(avatar);
+      messageDiv.appendChild(contentDiv);
+      messagesContainer.appendChild(messageDiv);
+      
+      scrollToBottom();
       
       return messageId;
     }
@@ -401,6 +284,18 @@
       textarea.style.height = '48px';
       textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
     }
+
+    function scrollToBottom() {
+      const container = document.getElementById('messages-container');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // Handle potential CORS issues with user-friendly error
+    window.addEventListener('unhandledrejection', event => {
+      if (event.reason && event.reason.message && event.reason.message.includes('fetch')) {
+        console.warn('Potential CORS issue detected. Make sure to serve this file from a web server.');
+      }
+    });
   </script>
 </body>
 </html>
