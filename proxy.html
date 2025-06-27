@@ -1,1111 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>zxs browser</title>
+  <meta charset="UTF-8" />
+  <title>procksi (green mode)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0f0f0f;
-      height: 100vh;
+      margin: 0;
+      font-family: monospace;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      height: 100vh;
+      background: #000;
+      color: #0f0;
     }
-
-    /* Tab Bar */
-    .tab-bar {
-      background: #dee1e6;
+    #controls {
+      padding: 0.5rem 1rem;
+      background: #001100;
       display: flex;
-      align-items: flex-end;
-      padding: 8px 8px 0 8px;
-      border-bottom: 1px solid #dadce0;
-      min-height: 40px;
-    }
-
-    .tab {
-      background: #f1f3f4;
-      border: 1px solid #dadce0;
-      border-bottom: none;
-      border-radius: 8px 8px 0 0;
-      padding: 8px 16px;
-      margin-right: 4px;
-      cursor: pointer;
-      display: flex;
+      gap: 0.75rem;
       align-items: center;
-      gap: 8px;
-      max-width: 240px;
-      min-width: 120px;
-      position: relative;
-      transition: background-color 0.2s;
     }
-
-    .tab:hover {
-      background: #e8eaed;
-    }
-
-    .tab.active {
-      background: white;
-      border-color: #dadce0;
-    }
-
-    .tab-favicon {
-      width: 16px;
-      height: 16px;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') center/contain no-repeat;
-    }
-
-    .tab-title {
+    input {
       flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 13px;
-      color: #3c4043;
+      background: #002200;
+      color: #0f0;
+      font-size: 1rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #0f0;
+      border-radius: 4px;
     }
-
-    .tab-close {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: #5f6368;
-      cursor: pointer;
-      transition: background-color 0.2s;
+    input::placeholder {
+      color: #0f0a;
     }
-
-    .tab-close:hover {
-      background: #dadce0;
-    }
-
-    .new-tab-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: #5f6368;
-      margin-left: 8px;
-      transition: background-color 0.2s;
-    }
-
-    .new-tab-btn:hover {
-      background: #e8eaed;
-    }
-
-    /* Navigation Bar */
-    .nav-bar {
-      background: white;
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid #e8eaed;
-    }
-
-    .nav-btn {
-      width: 32px;
-      height: 32px;
-      border: none;
-      background: transparent;
-      border-radius: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #5f6368;
-      font-size: 16px;
-      transition: background-color 0.2s;
-    }
-
-    .nav-btn:hover:not(:disabled) {
-      background: #f1f3f4;
-    }
-
-    .nav-btn:disabled {
-      color: #dadce0;
-      cursor: not-allowed;
-    }
-
-    .address-bar {
-      flex: 1;
-      height: 36px;
-      border: 1px solid #dadce0;
-      border-radius: 18px;
-      padding: 0 16px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .address-bar:focus {
-      border-color: #1a73e8;
-      box-shadow: 0 0 0 1px #1a73e8;
-    }
-
-    .menu-btn {
-      width: 32px;
-      height: 32px;
-      border: none;
-      background: transparent;
-      border-radius: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #5f6368;
-      font-size: 18px;
-      transition: background-color 0.2s;
-    }
-
-    .menu-btn:hover {
-      background: #f1f3f4;
-    }
-
-    /* Bookmarks Bar */
-    .bookmarks-bar {
-      background: white;
-      padding: 4px 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid #e8eaed;
-      min-height: 32px;
-    }
-
-    .bookmark {
-      padding: 4px 8px;
+    button {
+      background: #003300;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 12px;
-      color: #3c4043;
-      text-decoration: none;
-      transition: background-color 0.2s;
+    }
+    button:hover {
+      background: #004400;
+    }
+    #tab-bar {
+      display: flex;
+      background: #001100;
+      border-bottom: 1px solid #0f0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #0f0 #001100;
+    }
+    #tab-bar::-webkit-scrollbar {
+      height: 5px;
+    }
+    #tab-bar::-webkit-scrollbar-thumb {
+      background-color: #0f0;
+    }
+    #tab-bar::-webkit-scrollbar-track {
+      background-color: #001100;
+    }
+    .tab {
+      padding: 0.5rem 1rem;
+      background: #002200;
+      border-right: 1px solid #0f0;
+      cursor: pointer;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      max-width: 200px;
+      min-width: 100px;
     }
-
-    .bookmark:hover {
-      background: #f1f3f4;
+    .tab.active {
+      background: #003300;
     }
-
-    .bookmark-folder {
-      font-weight: 500;
-    }
-
-    /* Content Area */
-    .content {
+    .tab-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
       flex: 1;
-      position: relative;
-      background: white;
     }
-
+    .tab-close {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+    .tab-close:hover {
+      color: #0f0;
+      background: #004400;
+      border-radius: 50%;
+    }
+    #new-tab {
+      padding: 0.5rem 1rem;
+      background: #002200;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    #new-tab:hover {
+      background: #003300;
+    }
+    #content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
     .iframe-container {
-      width: 100%;
-      height: 100%;
+      flex: 1;
       display: none;
     }
-
     .iframe-container.active {
       display: block;
     }
-
     iframe {
       width: 100%;
       height: 100%;
       border: none;
+      background: black;
     }
-
-    .new-tab-page {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      background: white;
-      padding: 40px;
-    }
-
-    .chrome-logo {
-      width: 120px;
-      height: 120px;
-      background: linear-gradient(45deg, #ffffff, #0f0f0f, #39FF14, #000000);
-      border-radius: 50%;
-      margin-bottom: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 48px;
-      font-weight: bold;
-    }
-
-    .search-box {
-      width: 100%;
-      max-width: 584px;
-      height: 44px;
-      border: 1px solid #dfe1e5;
-      border-radius: 24px;
-      padding: 0 20px;
-      font-size: 16px;
-      outline: none;
-      transition: box-shadow 0.2s;
-    }
-
-    .search-box:focus {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .shortcuts {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
-      gap: 16px;
-      margin-top: 48px;
-      max-width: 672px;
-      width: 100%;
-    }
-
-    .shortcut {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      color: #3c4043;
-      transition: background-color 0.2s;
-    }
-
-    .shortcut:hover {
-      background: #f8f9fa;
-    }
-
-    .shortcut-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #f1f3f4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .shortcut-title {
-      font-size: 12px;
-      text-align: center;
-    }
-
-    /* Developer Tools */
-    .devtools {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+    #devtools {
       height: 0;
-      background: #f9f9f9;
-      border-top: 1px solid #dadce0;
+      background: #001100;
+      border-top: 1px solid #0f0;
       overflow: hidden;
-      transition: height 0.3s ease;
-      z-index: 1000;
-    }
-
-    .devtools.open {
-      height: 40%;
-    }
-
-    .devtools-header {
-      background: #f1f3f4;
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #dadce0;
-    }
-
-    .devtools-tabs {
-      display: flex;
-      gap: 16px;
-    }
-
-    .devtools-tab {
-      padding: 8px 12px;
-      cursor: pointer;
-      font-size: 13px;
-      color: #5f6368;
-      border-radius: 4px;
-      transition: background-color 0.2s;
-    }
-
-    .devtools-tab:hover {
-      background: #e8eaed;
-    }
-
-    .devtools-tab.active {
-      background: white;
-      color: #1a73e8;
-      font-weight: 500;
-    }
-
-    .devtools-content {
-      height: calc(100% - 48px);
+      transition: height 0.3s;
       display: flex;
       flex-direction: column;
     }
-
+    #devtools.open {
+      height: 30%;
+    }
+    #devtools-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem;
+      background: #002200;
+      border-bottom: 1px solid #0f0;
+    }
+    #devtools-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    #devtools-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .devtools-tab {
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+    }
+    .devtools-tab.active {
+      background: #003300;
+      border-radius: 4px;
+    }
+    #devtools-panels {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
     .devtools-panel {
       flex: 1;
-      padding: 16px;
       display: none;
-      flex-direction: column;
+      padding: 0.5rem;
       overflow: auto;
     }
-
     .devtools-panel.active {
       display: flex;
+      flex-direction: column;
     }
-
-    .console-output {
+    #console-input {
+      width: 100%;
+      background: #002200;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 0.5rem;
+      font-family: monospace;
+      margin-top: 0.5rem;
+    }
+    #console-output {
       flex: 1;
-      background: white;
-      border: 1px solid #dadce0;
-      border-radius: 4px;
-      padding: 8px;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      overflow-y: auto;
-      margin-bottom: 8px;
+      overflow: auto;
+      white-space: pre-wrap;
+      padding: 0.5rem;
+      background: #001100;
+      border: 1px solid #0f0;
+      margin-bottom: 0.5rem;
     }
-
-    .console-input {
-      width: 100%;
-      height: 32px;
-      border: 1px solid #dadce0;
-      border-radius: 4px;
-      padding: 0 8px;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      outline: none;
-    }
-
     .console-line {
-      margin-bottom: 4px;
-      padding: 2px 0;
+      margin-bottom: 0.25rem;
+      border-bottom: 1px solid #0f03;
+      padding-bottom: 0.25rem;
     }
-
-    .console-error { color: #d93025; }
-    .console-warn { color: #f9ab00; }
-    .console-info { color: #1a73e8; }
-
-    .js-inject-area {
+    .console-error {
+      color: #f00;
+    }
+    .console-warn {
+      color: #ff0;
+    }
+    .console-info {
+      color: #0ff;
+    }
+    #js-inject-area {
       width: 100%;
-      height: 200px;
-      border: 1px solid #dadce0;
-      border-radius: 4px;
-      padding: 8px;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
+      height: 150px;
+      background: #002200;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 0.5rem;
+      font-family: monospace;
       resize: vertical;
-      outline: none;
-      margin-bottom: 8px;
     }
-
     .action-buttons {
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
     }
-
-    .btn {
-      padding: 6px 12px;
-      border: 1px solid #dadce0;
-      border-radius: 4px;
-      background: white;
-      cursor: pointer;
-      font-size: 12px;
-      transition: background-color 0.2s;
+    .small-button {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.9rem;
     }
-
-    .btn:hover {
-      background: #f8f9fa;
-    }
-
-    .btn-primary {
-      background: #1a73e8;
-      color: white;
-      border-color: #1a73e8;
-    }
-
-    .btn-primary:hover {
-      background: #1557b0;
-    }
-
-    /* Extensions Panel */
-    .extensions-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    .extension-card {
-      background: white;
-      border: 1px solid #dadce0;
-      border-radius: 8px;
-      padding: 16px;
-      cursor: pointer;
-      transition: box-shadow 0.2s;
-    }
-
-    .extension-card:hover {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .extension-icon {
-      width: 48px;
-      height: 48px;
-      background: #f1f3f4;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin-bottom: 12px;
-    }
-
-    .extension-title {
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .extension-description {
-      font-size: 12px;
-      color: #5f6368;
-      margin-bottom: 12px;
-    }
-
-    .extension-toggle {
-      width: 40px;
-      height: 20px;
-      background: #dadce0;
-      border-radius: 10px;
-      position: relative;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .extension-toggle.active {
-      background: #1a73e8;
-    }
-
-    .extension-toggle::after {
-      content: '';
-      width: 16px;
-      height: 16px;
-      background: white;
-      border-radius: 50%;
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      transition: transform 0.2s;
-    }
-
-    .extension-toggle.active::after {
-      transform: translateX(20px);
-    }
-
-    /* Dropdown Menus */
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      top: 100%;
-      background: white;
-      min-width: 200px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      border-radius: 8px;
-      padding: 8px 0;
-      z-index: 1000;
-    }
-
-    .dropdown.active .dropdown-content {
-      display: block;
-    }
-
-    .dropdown-item {
-      padding: 8px 16px;
-      cursor: pointer;
-      font-size: 14px;
-      color: #3c4043;
-      transition: background-color 0.2s;
-    }
-
-    .dropdown-item:hover {
-      background: #f8f9fa;
-    }
-
-    .dropdown-separator {
-      height: 1px;
-      background: #e8eaed;
-      margin: 8px 0;
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 8px;
-      padding: 24px;
-      max-width: 500px;
-      width: 90%;
-      max-height: 80%;
-      overflow-y: auto;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .modal-title {
-      font-size: 18px;
-      font-weight: 500;
-    }
-
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #5f6368;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .form-input {
-      width: 100%;
-      height: 36px;
-      border: 1px solid #dadce0;
-      border-radius: 4px;
-      padding: 0 12px;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .form-input:focus {
-      border-color: #1a73e8;
-    }
-
-    .form-textarea {
-      width: 100%;
-      height: 100px;
-      border: 1px solid #dadce0;
-      border-radius: 4px;
-      padding: 8px 12px;
-      font-size: 14px;
-      resize: vertical;
-      outline: none;
-    }
-
-    .form-textarea:focus {
-      border-color: #1a73e8;
-    }
-
-    /* Status Bar */
     .status-bar {
-      background: #f8f9fa;
-      padding: 4px 16px;
-      font-size: 12px;
-      color: #5f6368;
-      border-top: 1px solid #e8eaed;
+      background: #001100;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .tab {
-        min-width: 80px;
-        max-width: 120px;
-      }
-      
-      .bookmarks-bar {
-        display: none;
-      }
-      
-      .shortcuts {
-        grid-template-columns: repeat(4, 1fr);
-      }
+      border-top: 1px solid #0f0;
     }
   </style>
 </head>
 <body>
-  <!-- Tab Bar -->
-  <div class="tab-bar">
-    <button class="new-tab-btn" id="newTabBtn">+</button>
+  <div id="tab-bar">
+    <div id="new-tab">+</div>
   </div>
-
-  <!-- Navigation Bar -->
-  <div class="nav-bar">
-    <button class="nav-btn" id="backBtn" disabled>←</button>
-    <button class="nav-btn" id="forwardBtn" disabled>→</button>
-    <button class="nav-btn" id="refreshBtn">↻</button>
-    <input type="text" class="address-bar" id="addressBar" placeholder="Search Google or type a URL">
-    <div class="dropdown">
-      <button class="menu-btn" id="menuBtn">⋮</button>
-      <div class="dropdown-content">
-        <div class="dropdown-item" onclick="openBookmarkManager()">Bookmarks</div>
-        <div class="dropdown-item" onclick="openExtensionsManager()">Extensions</div>
-        <div class="dropdown-separator"></div>
-        <div class="dropdown-item" onclick="toggleDevTools()">Developer tools</div>
-        <div class="dropdown-separator"></div>
-        <div class="dropdown-item" onclick="openSettings()">Settings</div>
-      </div>
-    </div>
+  
+  <div id="controls">
+    <button id="back-button">←</button>
+    <button id="forward-button">→</button>
+    <button id="refresh-button">↻</button>
+    <input id="urlInput" placeholder="Enter URL or search..." />
+    <button id="go-button">Go</button>
+    <button id="toggle-devtools">{ }</button>
   </div>
-
-  <!-- Bookmarks Bar -->
-  <div class="bookmarks-bar" id="bookmarksBar">
-    <a href="#" class="bookmark bookmark-folder" onclick="loadBookmark('https://www.google.com')">Google</a>
-    <a href="#" class="bookmark" onclick="loadBookmark('https://www.youtube.com')">YouTube</a>
-    <a href="#" class="bookmark" onclick="loadBookmark('https://www.github.com')">GitHub</a>
-    <a href="#" class="bookmark" onclick="executeBookmarklet('javascript:document.querySelectorAll(\'iframe\').forEach((iframe, i) => { const link = document.createElement(\'a\'); link.href = iframe.src; link.textContent = `Open iframe ${i+1} in new tab`; link.target = \'_blank\'; link.style.cssText = \'position:fixed;top:\'+(20+i*30)+\'px;left:20px;z-index:9999;background:yellow;padding:5px;border:1px solid black;\'; document.body.appendChild(link); });')">🔍 Find iFrames</a>
-    <a href="#" class="bookmark" onclick="executeBookmarklet('javascript:document.body.style.filter=document.body.style.filter?\"\":\"invert(1)\";')">🌙 Dark Mode</a>
+  
+  <div id="content">
+    <!-- Iframe containers will be added here dynamically -->
   </div>
-
-  <!-- Content Area -->
-  <div class="content" id="content">
-    <!-- Tab containers will be added here dynamically -->
-  </div>
-
-  <!-- Developer Tools -->
-  <div class="devtools" id="devtools">
-    <div class="devtools-header">
-      <div class="devtools-tabs">
+  
+  <div id="devtools">
+    <div id="devtools-header">
+      <div id="devtools-tabs">
         <div class="devtools-tab active" data-panel="console">Console</div>
-        <div class="devtools-tab" data-panel="elements">Elements</div>
+        <div class="devtools-tab" data-panel="js-inject">JS Inject</div>
         <div class="devtools-tab" data-panel="network">Network</div>
-        <div class="devtools-tab" data-panel="extensions">Extensions</div>
       </div>
-      <button class="nav-btn" onclick="toggleDevTools()">×</button>
+      <button id="close-devtools">×</button>
     </div>
-    <div class="devtools-content">
+    <div id="devtools-panels">
       <div class="devtools-panel active" id="console-panel">
-        <div class="console-output" id="consoleOutput"></div>
-        <input type="text" class="console-input" id="consoleInput" placeholder="Enter JavaScript command...">
+        <div id="console-output"></div>
+        <input id="console-input" placeholder="Enter JavaScript to execute in the active tab..." />
       </div>
-      <div class="devtools-panel" id="elements-panel">
-        <textarea class="js-inject-area" id="jsInjectArea" placeholder="Enter JavaScript code to inject..."></textarea>
+      <div class="devtools-panel" id="js-inject-panel">
+        <textarea id="js-inject-area" placeholder="Enter JavaScript code to inject into the active tab..."></textarea>
         <div class="action-buttons">
-          <button class="btn btn-primary" onclick="injectJavaScript()">Execute</button>
-          <button class="btn" onclick="clearJSArea()">Clear</button>
-          <select id="snippetSelect" onchange="loadSnippet()">
-            <option value="">Select snippet...</option>
-            <option value="document.querySelectorAll('*').forEach(el => el.style.border = '1px solid red')">Highlight all elements</option>
-            <option value="console.log(document.cookie)">Log cookies</option>
-            <option value="document.querySelectorAll('iframe').forEach((iframe, i) => console.log(`iframe ${i+1}:`, iframe.src))">List all iframes</option>
-            <option value="Array.from(document.querySelectorAll('a')).map(a => ({text: a.textContent, href: a.href}))">Extract all links</option>
+          <button id="inject-js-button">Inject JavaScript</button>
+          <button id="clear-js-button" class="small-button">Clear</button>
+          <button id="save-js-button" class="small-button">Save Snippet</button>
+          <select id="saved-snippets">
+            <option value="">-- Saved Snippets --</option>
+            <option value="document.querySelectorAll('*').forEach(el => el.style.border = '1px solid red')">
+              Highlight All Elements
+            </option>
+            <option value="console.log(document.cookie)">Log Cookies</option>
+            <option value="document.body.style.filter = 'invert(100%)'">Invert Colors</option>
           </select>
-          <button class="btn" onclick="saveSnippet()">Save Snippet</button>
         </div>
       </div>
       <div class="devtools-panel" id="network-panel">
-        <div class="console-output" id="networkLog">Network requests will appear here...</div>
+        <div id="network-log">Network monitoring will appear here...</div>
         <div class="action-buttons">
-          <button class="btn" onclick="clearNetworkLog()">Clear</button>
-        </div>
-      </div>
-      <div class="devtools-panel" id="extensions-panel">
-        <div class="extensions-grid" id="extensionsGrid">
-          <!-- Extensions will be populated here -->
+          <button id="clear-network-log">Clear Log</button>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Status Bar -->
+  
   <div class="status-bar">
-    <span id="statusText">Ready</span>
-    <span id="tabCount">1 tab</span>
-  </div>
-
-  <!-- Bookmark Manager Modal -->
-  <div class="modal" id="bookmarkModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Bookmark Manager</h2>
-        <button class="modal-close" onclick="closeModal('bookmarkModal')">×</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Name:</label>
-        <input type="text" class="form-input" id="bookmarkName" placeholder="Bookmark name">
-      </div>
-      <div class="form-group">
-        <label class="form-label">URL:</label>
-        <input type="text" class="form-input" id="bookmarkUrl" placeholder="https://example.com">
-      </div>
-      <div class="action-buttons">
-        <button class="btn btn-primary" onclick="addBookmark()">Add Bookmark</button>
-        <button class="btn" onclick="closeModal('bookmarkModal')">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Extensions Manager Modal -->
-  <div class="modal" id="extensionsModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Extensions Manager</h2>
-        <button class="modal-close" onclick="closeModal('extensionsModal')">×</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Extension Name:</label>
-        <input type="text" class="form-input" id="extensionName" placeholder="My Extension">
-      </div>
-      <div class="form-group">
-        <label class="form-label">JavaScript Code:</label>
-        <textarea class="form-textarea" id="extensionCode" placeholder="// Your extension code here"></textarea>
-      </div>
-      <div class="action-buttons">
-        <button class="btn btn-primary" onclick="addExtension()">Add Extension</button>
-        <button class="btn" onclick="closeModal('extensionsModal')">Cancel</button>
-      </div>
-    </div>
+    <span id="status-text">Ready</span>
+    <span id="tab-count">Tabs: 1</span>
   </div>
 
   <script>
-    // Browser state
-    let tabs = [];
+    const proxyBase = "https://api.allorigins.win/raw?url=";
+    const tabs = [];
     let activeTabId = null;
     let tabCounter = 0;
-    const proxyBase = "https://api.allorigins.win/raw?url=";
-
-    // Initialize browser
+    
+    // Initialize the browser with one tab
     document.addEventListener('DOMContentLoaded', () => {
       createNewTab();
-      setupEventListeners();
-      loadExtensions();
-      loadBookmarks();
-    });
-
-    function setupEventListeners() {
-      // Navigation
-      document.getElementById('backBtn').addEventListener('click', navigateBack);
-      document.getElementById('forwardBtn').addEventListener('click', navigateForward);
-      document.getElementById('refreshBtn').addEventListener('click', refreshPage);
-      document.getElementById('newTabBtn').addEventListener('click', createNewTab);
       
-      // Address bar
-      document.getElementById('addressBar').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') loadPage();
+      // Set up event listeners
+      document.getElementById('new-tab').addEventListener('click', createNewTab);
+      document.getElementById('go-button').addEventListener('click', loadPageInActiveTab);
+      document.getElementById('toggle-devtools').addEventListener('click', toggleDevTools);
+      document.getElementById('close-devtools').addEventListener('click', closeDevTools);
+      document.getElementById('console-input').addEventListener('keydown', handleConsoleInput);
+      document.getElementById('inject-js-button').addEventListener('click', injectJavaScript);
+      document.getElementById('clear-js-button').addEventListener('click', () => {
+        document.getElementById('js-inject-area').value = '';
       });
-
-      // Menu dropdown
-      document.getElementById('menuBtn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        document.querySelector('.dropdown').classList.toggle('active');
+      document.getElementById('save-js-button').addEventListener('click', saveJavaScriptSnippet);
+      document.getElementById('saved-snippets').addEventListener('change', loadSavedSnippet);
+      document.getElementById('clear-network-log').addEventListener('click', () => {
+        document.getElementById('network-log').innerHTML = 'Network log cleared...';
       });
-
-      document.addEventListener('click', () => {
-        document.querySelector('.dropdown').classList.remove('active');
-      });
-
-      // Console
-      document.getElementById('consoleInput').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') executeConsoleCommand();
-      });
-
-      // DevTools tabs
+      document.getElementById('back-button').addEventListener('click', navigateBack);
+      document.getElementById('forward-button').addEventListener('click', navigateForward);
+      document.getElementById('refresh-button').addEventListener('click', refreshPage);
+      
+      // Set up devtools tabs
       document.querySelectorAll('.devtools-tab').forEach(tab => {
         tab.addEventListener('click', (e) => {
           document.querySelectorAll('.devtools-tab').forEach(t => t.classList.remove('active'));
           document.querySelectorAll('.devtools-panel').forEach(p => p.classList.remove('active'));
           
           e.target.classList.add('active');
-          const panelId = e.target.dataset.panel + '-panel';
-          document.getElementById(panelId).classList.add('active');
+          const panelId = e.target.dataset.panel;
+          document.getElementById(`${panelId}-panel`).classList.add('active');
         });
       });
-
-      // Handle iframe messages
-      window.addEventListener('message', handleIframeMessage);
-    }
-
+      
+      // Load saved snippets from localStorage
+      loadSavedSnippetsFromStorage();
+    });
+    
     function createNewTab(url = null) {
       const tabId = `tab-${tabCounter++}`;
       
-      // Create tab element
+      // Create tab button
       const tabElement = document.createElement('div');
       tabElement.className = 'tab';
       tabElement.dataset.tabId = tabId;
       tabElement.innerHTML = `
-        <div class="tab-favicon"></div>
-        <div class="tab-title">New Tab</div>
-        <div class="tab-close">×</div>
+        <span class="tab-title">New Tab</span>
+        <span class="tab-close">×</span>
       `;
-
-      // Add event listeners
       tabElement.addEventListener('click', (e) => {
         if (!e.target.classList.contains('tab-close')) {
           activateTab(tabId);
         }
       });
-
-      tabElement.querySelector('.tab-close').addEventListener('click', (e) => {
+      
+      // Add close button functionality
+      const closeButton = tabElement.querySelector('.tab-close');
+      closeButton.addEventListener('click', (e) => {
         e.stopPropagation();
         closeTab(tabId);
       });
-
-      // Insert before new tab button
-      const tabBar = document.querySelector('.tab-bar');
-      tabBar.insertBefore(tabElement, document.getElementById('newTabBtn'));
-
-      // Create content container
-      const container = document.createElement('div');
-      container.className = 'iframe-container';
-      container.id = `container-${tabId}`;
-
-      if (url) {
-        const iframe = document.createElement('iframe');
-        iframe.id = `iframe-${tabId}`;
-        iframe.sandbox = "allow-scripts allow-forms allow-same-origin allow-popups";
-        container.appendChild(iframe);
-      } else {
-        // New tab page
-        container.innerHTML = `
-          <div class="new-tab-page">
-            <div class="chrome-logo">ZXS</div>
-            <input type="text" class="search-box" placeholder="Search Google or type a URL" onkeydown="if(event.key==='Enter') searchFromNewTab(this.value)">
-            <div class="shortcuts">
-              <a href="#" class="shortcut" onclick="loadBookmark('https://www.google.com')">
-                <div class="shortcut-icon">🔍</div>
-                <div class="shortcut-title">Google</div>
-              </a>
-              <a href="#" class="shortcut" onclick="loadBookmark('https://www.youtube.com')">
-                <div class="shortcut-icon">📺</div>
-                <div class="shortcut-title">YouTube</div>
-              </a>
-              <a href="#" class="shortcut" onclick="loadBookmark('https://www.github.com')">
-                <div class="shortcut-icon">💻</div>
-                <div class="shortcut-title">GitHub</div>
-              </a>
-              <a href="#" class="shortcut" onclick="loadBookmark('https://www.stackoverflow.com')">
-                <div class="shortcut-icon">❓</div>
-                <div class="shortcut-title">Stack Overflow</div>
-              </a>
-            </div>
-          </div>
-        `;
-      }
-
-      document.getElementById('content').appendChild(container);
-
+      
+      // Insert tab before the new tab button
+      document.getElementById('tab-bar').insertBefore(tabElement, document.getElementById('new-tab'));
+      
+      // Create iframe container
+      const iframeContainer = document.createElement('div');
+      iframeContainer.className = 'iframe-container';
+      iframeContainer.id = `container-${tabId}`;
+      
+      const iframe = document.createElement('iframe');
+      iframe.id = `iframe-${tabId}`;
+      iframe.sandbox = "allow-scripts allow-forms allow-same-origin";
+      iframe.srcdoc = `<pre style='padding:2rem; color:#0f0;'>Enter a URL or search term to begin...</pre>`;
+      
+      iframeContainer.appendChild(iframe);
+      document.getElementById('content').appendChild(iframeContainer);
+      
       // Add to tabs array
       tabs.push({
         id: tabId,
         title: 'New Tab',
-        url: url || '',
+        url: '',
         history: [],
         currentHistoryIndex: -1
       });
-
+      
+      // Activate the new tab
       activateTab(tabId);
-      updateTabCount();
-
+      
+      // If URL is provided, load it
       if (url) {
-        document.getElementById('addressBar').value = url;
-        loadPage();
+        document.getElementById('urlInput').value = url;
+        loadPageInActiveTab();
       }
+      
+      updateTabCount();
     }
-
+    
     function activateTab(tabId) {
       // Deactivate all tabs
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.iframe-container').forEach(container => container.classList.remove('active'));
-
+      
       // Activate selected tab
       document.querySelector(`.tab[data-tab-id="${tabId}"]`).classList.add('active');
       document.getElementById(`container-${tabId}`).classList.add('active');
-
+      
+      // Update active tab ID
       activeTabId = tabId;
-
-      // Update address bar
+      
+      // Update URL input with the active tab's URL
       const tab = tabs.find(t => t.id === tabId);
       if (tab && tab.url) {
-        document.getElementById('addressBar').value = tab.url;
+        document.getElementById('urlInput').value = tab.url;
       } else {
-        document.getElementById('addressBar').value = '';
+        document.getElementById('urlInput').value = '';
       }
-
+      
       updateNavigationButtons();
     }
-
+    
     function closeTab(tabId) {
-      if (tabs.length <= 1) return;
-
-      // Remove from DOM
-      document.querySelector(`.tab[data-tab-id="${tabId}"]`).remove();
-      document.getElementById(`container-${tabId}`).remove();
-
+      // Don't close if it's the last tab
+      if (tabs.length <= 1) {
+        return;
+      }
+      
+      // Remove tab from DOM
+      const tabElement = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
+      tabElement.remove();
+      
+      // Remove iframe container
+      const container = document.getElementById(`container-${tabId}`);
+      container.remove();
+      
       // Remove from tabs array
       const tabIndex = tabs.findIndex(t => t.id === tabId);
       tabs.splice(tabIndex, 1);
-
-      // Activate another tab if this was active
+      
+      // If closing the active tab, activate another one
       if (activeTabId === tabId) {
+        // Activate the tab to the left, or the first tab if there's none
         const newActiveTab = tabs[Math.max(0, tabIndex - 1)];
         activateTab(newActiveTab.id);
       }
-
+      
       updateTabCount();
     }
-
+    
     function updateTabTitle(tabId, title) {
       const tab = tabs.find(t => t.id === tabId);
       if (tab) {
         tab.title = title || 'Untitled';
         const tabElement = document.querySelector(`.tab[data-tab-id="${tabId}"] .tab-title`);
-        if (tabElement) {
-          tabElement.textContent = tab.title;
-        }
+        tabElement.textContent = tab.title;
       }
     }
+    
+    function looksLikeUrl(str) {
+      return /\./.test(str) && !/\s/.test(str);
+    }
 
-    function prepareUrl(input) {
-      input = input.trim();
-      if (!input) return null;
+    function prepareUrl(inputStr) {
+      inputStr = inputStr.trim();
+      if (!inputStr) return null;
 
-      // Check if it looks like a URL
-      if (input.includes('.') && !input.includes(' ')) {
-        if (!/^https?:\/\//i.test(input)) {
-          input = 'https://' + input;
+      if (looksLikeUrl(inputStr)) {
+        if (!/^https?:\/\//i.test(inputStr)) {
+          inputStr = "https://" + inputStr;
         }
-        return input;
+        return inputStr;
       } else {
-        // Search query
-        return `https://www.startpage.com/search?q=${encodeURIComponent(input)}`;
+        const query = encodeURIComponent(inputStr);
+        return `https://www.webcrawler.com/serp?q=${query}`;
       }
     }
-
-    async function loadPage() {
+    
+    async function loadPageInActiveTab() {
       if (!activeTabId) return;
-
-      const addressBar = document.getElementById('addressBar');
-      const input = addressBar.value.trim();
-      if (!input) return;
-
-      const url = prepareUrl(input);
-      addressBar.value = url;
-
+      
+      const input = document.getElementById('urlInput');
+      let rawInput = input.value.trim();
+      if (!rawInput) {
+        alert("Enter a URL or search.");
+        return;
+      }
+      
+      const target = prepareUrl(rawInput);
+      input.value = target;
+      
       const tab = tabs.find(t => t.id === activeTabId);
-      const container = document.getElementById(`container-${activeTabId}`);
-
+      const iframe = document.getElementById(`iframe-${activeTabId}`);
+      
       try {
-        updateStatus(`Loading ${url}...`);
-
-        // Create or get iframe
-        let iframe = document.getElementById(`iframe-${activeTabId}`);
-        if (!iframe) {
-          iframe = document.createElement('iframe');
-          iframe.id = `iframe-${activeTabId}`;
-          iframe.sandbox = "allow-scripts allow-forms allow-same-origin allow-popups";
-          container.innerHTML = '';
-          container.appendChild(iframe);
-        }
-
-        // Load through proxy
-        const response = await fetch(proxyBase + encodeURIComponent(url));
-        if (!response.ok) throw new Error('Failed to fetch');
-
-        const html = await response.text();
-        const modifiedHTML = injectProxyScript(html, url);
-
-        iframe.srcdoc = modifiedHTML;
-
-        // Update tab info
-        tab.url = url;
+        updateStatus(`Loading ${target}...`);
+        iframe.srcdoc = `<pre style="padding:2rem; color:#0f0;">Loading ${target} ...</pre>`;
         
-        // Extract title
+        const response = await fetch(proxyBase + encodeURIComponent(target));
+        if (!response.ok) throw new Error("Failed to fetch");
+        
+        const html = await response.text();
+        const modifiedHTML = injectProxyScript(html, target);
+        
+        iframe.srcdoc = modifiedHTML;
+        
+        // Update tab information
+        tab.url = target;
+        
+        // Extract title from HTML
         const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/i);
-        const pageTitle = titleMatch ? titleMatch[1] : new URL(url).hostname;
+        const pageTitle = titleMatch ? titleMatch[1] : target.replace(/^https?:\/\//i, '');
         updateTabTitle(activeTabId, pageTitle);
-
-        // Update history
+        
+        // Add to history
         if (tab.currentHistoryIndex < tab.history.length - 1) {
+          // If we navigated back and then to a new page, truncate the forward history
           tab.history = tab.history.slice(0, tab.currentHistoryIndex + 1);
         }
-        tab.history.push(url);
+        tab.history.push(target);
         tab.currentHistoryIndex = tab.history.length - 1;
-
+        
         updateNavigationButtons();
-        updateStatus(`Loaded: ${url}`);
-
-      } catch (error) {
-        const iframe = document.getElementById(`iframe-${activeTabId}`);
-        if (iframe) {
-          iframe.srcdoc = `<div style="padding: 40px; text-align: center; color: #d93025;">
-            <h2>This site can't be reached</h2>
-            <p>${error.message}</p>
-            <p>Try checking the connection or contact the site owner.</p>
-          </div>`;
-        }
-        updateStatus(`Error: ${error.message}`);
+        updateStatus(`Loaded: ${target}`);
+      } catch (err) {
+        iframe.srcdoc = `<pre style="padding:2rem; color:red;">Error: ${err.message}</pre>`;
+        updateStatus(`Error: ${err.message}`);
       }
     }
-
+    
     function injectProxyScript(html, baseUrl) {
       const baseTag = `<base href="${baseUrl}">`;
-      const script = `
+      const interceptScript = `
         <script>
-          // Intercept navigation
+          // Intercept link clicks
           document.addEventListener('click', e => {
             const a = e.target.closest('a[href]');
             if (a && a.href && a.target !== '_blank') {
@@ -1113,27 +545,52 @@
               parent.postMessage({ type: 'navigate', href: a.href }, '*');
             }
           });
-
-          // Intercept console
+          
+          // Intercept console methods
           const originalConsole = {
             log: console.log,
             error: console.error,
             warn: console.warn,
             info: console.info
           };
-
-          ['log', 'error', 'warn', 'info'].forEach(method => {
-            console[method] = function(...args) {
-              originalConsole[method](...args);
-              parent.postMessage({ 
-                type: 'console', 
-                method: method, 
-                args: args.map(arg => String(arg))
-              }, '*');
-            };
-          });
-
-          // Intercept network requests
+          
+          console.log = function(...args) {
+            originalConsole.log(...args);
+            parent.postMessage({ 
+              type: 'console', 
+              method: 'log', 
+              args: args.map(arg => String(arg))
+            }, '*');
+          };
+          
+          console.error = function(...args) {
+            originalConsole.error(...args);
+            parent.postMessage({ 
+              type: 'console', 
+              method: 'error', 
+              args: args.map(arg => String(arg))
+            }, '*');
+          };
+          
+          console.warn = function(...args) {
+            originalConsole.warn(...args);
+            parent.postMessage({ 
+              type: 'console', 
+              method: 'warn', 
+              args: args.map(arg => String(arg))
+            }, '*');
+          };
+          
+          console.info = function(...args) {
+            originalConsole.info(...args);
+            parent.postMessage({ 
+              type: 'console', 
+              method: 'info', 
+              args: args.map(arg => String(arg))
+            }, '*');
+          };
+          
+          // Intercept fetch requests for network panel
           const originalFetch = window.fetch;
           window.fetch = function(resource, init) {
             const url = typeof resource === 'string' ? resource : resource.url;
@@ -1144,339 +601,233 @@
             }, '*');
             return originalFetch.apply(this, arguments);
           };
-
-          // Run extensions
-          parent.postMessage({ type: 'runExtensions' }, '*');
+          
+          // Intercept XHR for network panel
+          const originalXHROpen = XMLHttpRequest.prototype.open;
+          XMLHttpRequest.prototype.open = function(method, url) {
+            this._method = method;
+            this._url = url;
+            return originalXHROpen.apply(this, arguments);
+          };
+          
+          const originalXHRSend = XMLHttpRequest.prototype.send;
+          XMLHttpRequest.prototype.send = function() {
+            parent.postMessage({ 
+              type: 'network', 
+              method: this._method,
+              url: this._url
+            }, '*');
+            return originalXHRSend.apply(this, arguments);
+          };
         <\/script>
       `;
-
-      if (/<head[^>]*>/i.test(html)) {
-        return html.replace(/<head[^>]*>/i, match => match + baseTag + script);
-      } else {
-        return baseTag + script + html;
-      }
-    }
-
-    function handleIframeMessage(e) {
-      if (e.data?.type === 'navigate' && e.data.href) {
-        document.getElementById('addressBar').value = e.data.href;
-        loadPage();
-      } else if (e.data?.type === 'console') {
-        appendToConsole(e.data.method, e.data.args.join(' '));
-      } else if (e.data?.type === 'network') {
-        logNetworkRequest(e.data.method, e.data.url);
-      } else if (e.data?.type === 'runExtensions') {
-        runActiveExtensions();
-      }
-    }
-
-    function navigateBack() {
-      if (!activeTabId) return;
-      const tab = tabs.find(t => t.id === activeTabId);
-      if (tab && tab.currentHistoryIndex > 0) {
-        tab.currentHistoryIndex--;
-        const url = tab.history[tab.currentHistoryIndex];
-        document.getElementById('addressBar').value = url;
-        loadPage();
-      }
-    }
-
-    function navigateForward() {
-      if (!activeTabId) return;
-      const tab = tabs.find(t => t.id === activeTabId);
-      if (tab && tab.currentHistoryIndex < tab.history.length - 1) {
-        tab.currentHistoryIndex++;
-        const url = tab.history[tab.currentHistoryIndex];
-        document.getElementById('addressBar').value = url;
-        loadPage();
-      }
-    }
-
-    function refreshPage() {
-      if (!activeTabId) return;
-      const tab = tabs.find(t => t.id === activeTabId);
-      if (tab && tab.url) {
-        document.getElementById('addressBar').value = tab.url;
-        loadPage();
-      }
-    }
-
-    function updateNavigationButtons() {
-      if (!activeTabId) return;
-      const tab = tabs.find(t => t.id === activeTabId);
-      document.getElementById('backBtn').disabled = !tab || tab.currentHistoryIndex <= 0;
-      document.getElementById('forwardBtn').disabled = !tab || tab.currentHistoryIndex >= tab.history.length - 1;
-    }
-
-    function searchFromNewTab(query) {
-      document.getElementById('addressBar').value = query;
-      loadPage();
-    }
-
-    function loadBookmark(url) {
-      document.getElementById('addressBar').value = url;
-      loadPage();
-    }
-
-    function executeBookmarklet(code) {
-      if (!activeTabId) return;
-      const iframe = document.getElementById(`iframe-${activeTabId}`);
-      if (iframe && iframe.contentWindow) {
-        try {
-          iframe.contentWindow.eval(code.replace('javascript:', ''));
-        } catch (e) {
-          console.error('Bookmarklet error:', e);
-        }
-      }
-    }
-
-    // Developer Tools
-    function toggleDevTools() {
-      document.getElementById('devtools').classList.toggle('open');
-    }
-
-    function executeConsoleCommand() {
-      const input = document.getElementById('consoleInput');
-      const command = input.value.trim();
-      if (!command) return;
-
-      appendToConsole('log', `> ${command}`);
       
-      if (!activeTabId) {
-        appendToConsole('error', 'No active tab');
+      const styleOverride = `
+        <style>
+          /* Optional: Add any style overrides here */
+        </style>
+      `;
+      
+      if (/<head[^>]*>/i.test(html)) {
+        return html.replace(/<head[^>]*>/i, match => match + baseTag + interceptScript + styleOverride);
+      } else {
+        return baseTag + interceptScript + styleOverride + html;
+      }
+    }
+    
+    function toggleDevTools() {
+      const devtools = document.getElementById('devtools');
+      devtools.classList.toggle('open');
+    }
+    
+    function closeDevTools() {
+      document.getElementById('devtools').classList.remove('open');
+    }
+    
+    function handleConsoleInput(e) {
+      if (e.key === 'Enter') {
+        const input = document.getElementById('console-input');
+        const code = input.value;
+        
+        if (!code.trim()) return;
+        
+        // Log the input to the console output
+        appendToConsole('log', `> ${code}`);
+        
+        // Execute in the active iframe
+        executeInActiveTab(code);
+        
+        // Clear the input
         input.value = '';
-        return;
       }
-
+    }
+    
+    function executeInActiveTab(code) {
+      if (!activeTabId) return;
+      
       const iframe = document.getElementById(`iframe-${activeTabId}`);
-      if (iframe && iframe.contentWindow) {
-        try {
-          const result = iframe.contentWindow.eval(command);
-          if (result !== undefined) {
-            appendToConsole('log', String(result));
+      try {
+        // Execute the code in the iframe and get the result
+        const result = iframe.contentWindow.eval(`
+          try {
+            const result = eval(${JSON.stringify(code)});
+            if (result !== undefined) {
+              console.log(result);
+            }
+            "SUCCESS";
+          } catch (e) {
+            console.error(e.message);
+            "ERROR: " + e.message;
           }
-        } catch (e) {
-          appendToConsole('error', e.message);
+        `);
+        
+        if (result && result.startsWith && result.startsWith('ERROR:')) {
+          appendToConsole('error', result);
         }
+      } catch (e) {
+        appendToConsole('error', `Failed to execute: ${e.message}`);
       }
-
-      input.value = '';
     }
-
+    
     function injectJavaScript() {
-      const code = document.getElementById('jsInjectArea').value.trim();
-      if (!code || !activeTabId) return;
-
-      const iframe = document.getElementById(`iframe-${activeTabId}`);
-      if (iframe && iframe.contentWindow) {
-        try {
-          iframe.contentWindow.eval(code);
-          updateStatus('JavaScript injected');
-        } catch (e) {
-          appendToConsole('error', `Injection error: ${e.message}`);
-        }
-      }
+      const code = document.getElementById('js-inject-area').value;
+      if (!code.trim()) return;
+      
+      executeInActiveTab(code);
+      updateStatus('JavaScript injected');
     }
-
-    function clearJSArea() {
-      document.getElementById('jsInjectArea').value = '';
-    }
-
-    function loadSnippet() {
-      const select = document.getElementById('snippetSelect');
-      const code = select.value;
-      if (code) {
-        document.getElementById('jsInjectArea').value = code;
-      }
-      select.selectedIndex = 0;
-    }
-
-    function saveSnippet() {
-      const code = document.getElementById('jsInjectArea').value.trim();
-      if (!code) return;
-
-      const name = prompt('Enter snippet name:');
-      if (!name) return;
-
-      let snippets = JSON.parse(localStorage.getItem('browserSnippets') || '{}');
-      snippets[name] = code;
-      localStorage.setItem('browserSnippets', JSON.stringify(snippets));
-
-      // Add to select
-      const select = document.getElementById('snippetSelect');
-      const option = document.createElement('option');
-      option.value = code;
-      option.textContent = name;
-      select.appendChild(option);
-
-      updateStatus(`Snippet "${name}" saved`);
-    }
-
+    
     function appendToConsole(type, message) {
-      const output = document.getElementById('consoleOutput');
+      const consoleOutput = document.getElementById('console-output');
       const line = document.createElement('div');
       line.className = `console-line console-${type}`;
       line.textContent = message;
-      output.appendChild(line);
-      output.scrollTop = output.scrollHeight;
+      consoleOutput.appendChild(line);
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
-
-    function logNetworkRequest(method, url) {
-      const networkLog = document.getElementById('networkLog');
-      const entry = document.createElement('div');
-      entry.className = 'console-line';
-      entry.textContent = `${method}: ${url}`;
-      networkLog.appendChild(entry);
-      networkLog.scrollTop = networkLog.scrollHeight;
-    }
-
-    function clearNetworkLog() {
-      document.getElementById('networkLog').innerHTML = 'Network log cleared...';
-    }
-
-    // Modals
-    function openBookmarkManager() {
-      document.getElementById('bookmarkModal').classList.add('active');
-    }
-
-    function openExtensionsManager() {
-      document.getElementById('extensionsModal').classList.add('active');
-    }
-
-    function openSettings() {
-      alert('Settings panel would open here');
-    }
-
-    function closeModal(modalId) {
-      document.getElementById(modalId).classList.remove('active');
-    }
-
-    function addBookmark() {
-      const name = document.getElementById('bookmarkName').value.trim();
-      const url = document.getElementById('bookmarkUrl').value.trim();
+    
+    function saveJavaScriptSnippet() {
+      const code = document.getElementById('js-inject-area').value;
+      if (!code.trim()) return;
       
-      if (!name || !url) {
-        alert('Please enter both name and URL');
-        return;
+      const snippetName = prompt('Enter a name for this snippet:');
+      if (!snippetName) return;
+      
+      // Get existing snippets
+      let savedSnippets = JSON.parse(localStorage.getItem('procksiSnippets') || '{}');
+      savedSnippets[snippetName] = code;
+      
+      // Save back to localStorage
+      localStorage.setItem('procksiSnippets', JSON.stringify(savedSnippets));
+      
+      // Update the dropdown
+      loadSavedSnippetsFromStorage();
+      updateStatus(`Snippet "${snippetName}" saved`);
+    }
+    
+    function loadSavedSnippetsFromStorage() {
+      const savedSnippets = JSON.parse(localStorage.getItem('procksiSnippets') || '{}');
+      const select = document.getElementById('saved-snippets');
+      
+      // Clear existing options except the first one
+      while (select.options.length > 1) {
+        select.remove(1);
       }
-
-      // Add to bookmarks bar
-      const bookmarksBar = document.getElementById('bookmarksBar');
-      const bookmark = document.createElement('a');
-      bookmark.href = '#';
-      bookmark.className = 'bookmark';
-      bookmark.textContent = name;
-      bookmark.onclick = () => loadBookmark(url);
-      bookmarksBar.appendChild(bookmark);
-
-      // Save to localStorage
-      let bookmarks = JSON.parse(localStorage.getItem('browserBookmarks') || '[]');
-      bookmarks.push({ name, url });
-      localStorage.setItem('browserBookmarks', JSON.stringify(bookmarks));
-
-      closeModal('bookmarkModal');
-      document.getElementById('bookmarkName').value = '';
-      document.getElementById('bookmarkUrl').value = '';
-    }
-
-    function loadBookmarks() {
-      const bookmarks = JSON.parse(localStorage.getItem('browserBookmarks') || '[]');
-      const bookmarksBar = document.getElementById('bookmarksBar');
       
-      bookmarks.forEach(bookmark => {
-        const element = document.createElement('a');
-        element.href = '#';
-        element.className = 'bookmark';
-        element.textContent = bookmark.name;
-        element.onclick = () => loadBookmark(bookmark.url);
-        bookmarksBar.appendChild(element);
-      });
-    }
-
-    // Extensions
-    function addExtension() {
-      const name = document.getElementById('extensionName').value.trim();
-      const code = document.getElementById('extensionCode').value.trim();
-      
-      if (!name || !code) {
-        alert('Please enter both name and code');
-        return;
-      }
-
-      let extensions = JSON.parse(localStorage.getItem('browserExtensions') || '[]');
-      extensions.push({ name, code, enabled: true });
-      localStorage.setItem('browserExtensions', JSON.stringify(extensions));
-
-      loadExtensions();
-      closeModal('extensionsModal');
-      document.getElementById('extensionName').value = '';
-      document.getElementById('extensionCode').value = '';
-    }
-
-    function loadExtensions() {
-      const extensions = JSON.parse(localStorage.getItem('browserExtensions') || '[]');
-      const grid = document.getElementById('extensionsGrid');
-      grid.innerHTML = '';
-
-      extensions.forEach((ext, index) => {
-        const card = document.createElement('div');
-        card.className = 'extension-card';
-        card.innerHTML = `
-          <div class="extension-icon">🧩</div>
-          <div class="extension-title">${ext.name}</div>
-          <div class="extension-description">Custom extension</div>
-          <div class="extension-toggle ${ext.enabled ? 'active' : ''}" onclick="toggleExtension(${index})"></div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function toggleExtension(index) {
-      let extensions = JSON.parse(localStorage.getItem('browserExtensions') || '[]');
-      extensions[index].enabled = !extensions[index].enabled;
-      localStorage.setItem('browserExtensions', JSON.stringify(extensions));
-      loadExtensions();
-    }
-
-    function runActiveExtensions() {
-      if (!activeTabId) return;
-      
-      const extensions = JSON.parse(localStorage.getItem('browserExtensions') || '[]');
-      const iframe = document.getElementById(`iframe-${activeTabId}`);
-      
-      if (iframe && iframe.contentWindow) {
-        extensions.forEach(ext => {
-          if (ext.enabled) {
-            try {
-              iframe.contentWindow.eval(ext.code);
-            } catch (e) {
-              console.error(`Extension "${ext.name}" error:`, e);
-            }
-          }
-        });
-      }
-    }
-
-    // Utility functions
-    function updateStatus(message) {
-      document.getElementById('statusText').textContent = message;
-    }
-
-    function updateTabCount() {
-      const count = tabs.length;
-      document.getElementById('tabCount').textContent = `${count} tab${count !== 1 ? 's' : ''}`;
-    }
-
-    // Load saved snippets on startup
-    document.addEventListener('DOMContentLoaded', () => {
-      const snippets = JSON.parse(localStorage.getItem('browserSnippets') || '{}');
-      const select = document.getElementById('snippetSelect');
-      
-      for (const [name, code] of Object.entries(snippets)) {
+      // Add snippets from storage
+      for (const [name, code] of Object.entries(savedSnippets)) {
         const option = document.createElement('option');
         option.value = code;
         option.textContent = name;
         select.appendChild(option);
+      }
+    }
+    
+    function loadSavedSnippet(e) {
+      const code = e.target.value;
+      if (code) {
+        document.getElementById('js-inject-area').value = code;
+      }
+      // Reset the select
+      setTimeout(() => {
+        e.target.selectedIndex = 0;
+      }, 100);
+    }
+    
+    function navigateBack() {
+      if (!activeTabId) return;
+      
+      const tab = tabs.find(t => t.id === activeTabId);
+      if (tab && tab.currentHistoryIndex > 0) {
+        tab.currentHistoryIndex--;
+        const url = tab.history[tab.currentHistoryIndex];
+        document.getElementById('urlInput').value = url;
+        loadPageInActiveTab();
+      }
+    }
+    
+    function navigateForward() {
+      if (!activeTabId) return;
+      
+      const tab = tabs.find(t => t.id === activeTabId);
+      if (tab && tab.currentHistoryIndex < tab.history.length - 1) {
+        tab.currentHistoryIndex++;
+        const url = tab.history[tab.currentHistoryIndex];
+        document.getElementById('urlInput').value = url;
+        loadPageInActiveTab();
+      }
+    }
+    
+    function refreshPage() {
+      if (!activeTabId) return;
+      
+      const tab = tabs.find(t => t.id === activeTabId);
+      if (tab && tab.url) {
+        document.getElementById('urlInput').value = tab.url;
+        loadPageInActiveTab();
+      }
+    }
+    
+    function updateNavigationButtons() {
+      if (!activeTabId) return;
+      
+      const tab = tabs.find(t => t.id === activeTabId);
+      const backButton = document.getElementById('back-button');
+      const forwardButton = document.getElementById('forward-button');
+      
+      backButton.disabled = !tab || tab.currentHistoryIndex <= 0;
+      forwardButton.disabled = !tab || tab.currentHistoryIndex >= tab.history.length - 1;
+    }
+    
+    function updateStatus(message) {
+      document.getElementById('status-text').textContent = message;
+    }
+    
+    function updateTabCount() {
+      document.getElementById('tab-count').textContent = `Tabs: ${tabs.length}`;
+    }
+    
+    // Handle messages from iframes
+    window.addEventListener("message", e => {
+      if (e.data?.type === "navigate" && e.data.href) {
+        document.getElementById('urlInput').value = e.data.href;
+        loadPageInActiveTab();
+      } else if (e.data?.type === "console") {
+        appendToConsole(e.data.method, e.data.args.join(' '));
+      } else if (e.data?.type === "network") {
+        const networkLog = document.getElementById('network-log');
+        const entry = document.createElement('div');
+        entry.className = 'console-line';
+        entry.textContent = `${e.data.method}: ${e.data.url}`;
+        networkLog.appendChild(entry);
+        networkLog.scrollTop = networkLog.scrollHeight;
+      }
+    });
+    
+    // URL input event
+    document.getElementById('urlInput').addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        loadPageInActiveTab();
       }
     });
   </script>
