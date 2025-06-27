@@ -1,13 +1,828 @@
-<script>
-    launch();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DELTARUNE tomorrowwwwwwwwwwwwwwwwwwwwww</title>
+    <link href="https://fonts.cdnfonts.com/css/determination-mono" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    function launch() {
-      try {
-        fetch("https://cdn.jsdelivr.net/gh/genizy/web-port@main/deltarune/index.html?t="+Date.now())
-          .then(response => response.text())
-          .then(html => {
+        :root {
+            --primary-black: #000000;
+            --secondary-black: #111111;
+            --dark-gray: #222222;
+            --medium-gray: #666666;
+            --light-gray: #cccccc;
+            --pure-white: #ffffff;
+            --terminal-green: #00ff00;
+        }
+
+        body {
+            font-family: 'Determination Mono', 'Courier New', monospace;
+            background: var(--primary-black);
+            color: var(--pure-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--pure-white);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+
+        .custom-cursor.clicking {
+            transform: scale(0.5);
+        }
+
+        /* Scanlines Effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.03) 2px,
+                rgba(255, 255, 255, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+            animation: scanlines 0.1s linear infinite;
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        /* Matrix Rain Effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            font-family: 'Determination Mono', monospace;
+            font-size: 14px;
+            color: var(--pure-white);
+            animation: matrix-fall linear infinite;
+            white-space: pre;
+        }
+
+        @keyframes matrix-fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Particle System */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--pure-white);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Terminal Window */
+        .terminal-window {
+            background: var(--secondary-black);
+            border: 2px solid var(--pure-white);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 
+                0 0 50px rgba(255, 255, 255, 0.1),
+                inset 0 0 50px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .terminal-window::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: var(--dark-gray);
+            border-bottom: 1px solid var(--pure-white);
+        }
+
+        .terminal-buttons {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid var(--pure-white);
+            background: var(--primary-black);
+        }
+
+        .terminal-title {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: var(--pure-white);
+        }
+
+        .logo {
+            max-width: 500px;
+            width: 100%;
+            height: auto;
+            margin: 3rem 0 2rem 0;
+            filter: 
+                contrast(1000%) 
+                brightness(0) 
+                invert(1)
+                drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
+            animation: logoGlitch 4s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            animation: logoGlitchIntense 0.5s ease-in-out infinite;
+        }
+
+        @keyframes logoGlitch {
+            0%, 90%, 100% { 
+                transform: translate(0);
+                filter: contrast(1000%) brightness(0) invert(1) drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
+            }
+            92% { 
+                transform: translate(-2px, 2px);
+                filter: contrast(1000%) brightness(0) invert(1) drop-shadow(0 0 30px rgba(255, 255, 255, 0.8));
+            }
+            94% { 
+                transform: translate(2px, -2px);
+                filter: contrast(1000%) brightness(0) invert(1) drop-shadow(0 0 30px rgba(255, 255, 255, 0.3));
+            }
+            96% { 
+                transform: translate(-1px, 1px);
+                filter: contrast(1000%) brightness(0) invert(1) drop-shadow(0 0 30px rgba(255, 255, 255, 0.9));
+            }
+        }
+
+        @keyframes logoGlitchIntense {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+        }
+
+        .desc {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .typing-text {
+            border-right: 2px solid var(--pure-white);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { border-color: var(--pure-white); }
+            51%, 100% { border-color: transparent; }
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .button {
+            background: var(--primary-black);
+            border: 2px solid var(--pure-white);
+            color: var(--pure-white);
+            font-family: 'Determination Mono', monospace;
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+            cursor: none;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .button:hover::before {
+            left: 100%;
+        }
+
+        .button:hover {
+            background: var(--pure-white);
+            color: var(--primary-black);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 30px rgba(255, 255, 255, 0.2),
+                0 0 50px rgba(255, 255, 255, 0.1);
+            animation: buttonGlitch 0.3s ease;
+        }
+
+        @keyframes buttonGlitch {
+            0%, 100% { transform: translateY(-2px); }
+            25% { transform: translateY(-2px) translateX(-1px); }
+            75% { transform: translateY(-2px) translateX(1px); }
+        }
+
+        .button:active {
+            transform: translateY(0);
+            animation: buttonPress 0.1s ease;
+        }
+
+        @keyframes buttonPress {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        .chapter-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            width: 100%;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+        }
+
+        .chapter-buttons.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .chapter-buttons .button {
+            animation: slideInUp 0.6s ease forwards;
+            animation-delay: calc(var(--delay) * 0.15s);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotateX(-90deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0deg);
+            }
+        }
+
+        .game-frame {
+            width: 100%;
+            max-width: 1000px;
+            height: 600px;
+            border: 2px solid var(--pure-white);
+            border-radius: 10px;
+            background: var(--primary-black);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transform: scale(0.9) rotateX(-10deg);
+            transition: all 0.8s ease;
+            perspective: 1000px;
+        }
+
+        .game-frame.show {
+            opacity: 1;
+            transform: scale(1) rotateX(0deg);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--medium-gray);
+            width: 100%;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--pure-white), transparent);
+            animation: footerLine 3s ease-in-out infinite;
+        }
+
+        @keyframes footerLine {
+            0%, 100% { width: 100px; opacity: 0.5; }
+            50% { width: 300px; opacity: 1; }
+        }
+
+        footer a {
+            color: var(--pure-white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--pure-white);
+            transition: width 0.3s ease;
+        }
+
+        footer a:hover::after {
+            width: 100%;
+        }
+
+        footer a:hover {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--pure-white);
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ascii-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Determination Mono', monospace;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+            z-index: -2;
+            overflow: hidden;
+            white-space: pre;
+            line-height: 1;
+        }
+
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-1 0.5s infinite;
+            color: var(--pure-white);
+            z-index: -1;
+        }
+
+        .glitch::after {
+            animation: glitch-2 0.5s infinite;
+            color: var(--light-gray);
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-2px, 2px); }
+            80% { transform: translate(-2px, -2px); }
+        }
+
+        /* Sound Visualizer */
+        .sound-visualizer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 2px;
+            z-index: 1000;
+        }
+
+        .sound-bar {
+            width: 3px;
+            background: var(--pure-white);
+            animation: soundWave 1s ease-in-out infinite;
+            animation-delay: calc(var(--delay) * 0.1s);
+        }
+
+        @keyframes soundWave {
+            0%, 100% { height: 5px; opacity: 0.3; }
+            50% { height: 20px; opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .terminal-window {
+                padding: 1rem;
+                margin-top: 2rem;
+            }
+
+            .logo {
+                max-width: 300px;
+            }
+
+            .desc {
+                font-size: 1.2rem;
+            }
+
+            .button {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+                min-width: 160px;
+            }
+
+            .chapter-buttons {
+                grid-template-columns: 1fr;
+                max-width: 300px;
+            }
+
+            .game-frame {
+                height: 400px;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            body::before {
+                display: none;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Matrix Rain Effect -->
+    <div class="matrix-rain" id="matrixRain"></div>
+
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- ASCII Background -->
+    <div class="ascii-bg" id="asciiBg"></div>
+
+    <!-- Sound Visualizer -->
+    <div class="sound-visualizer">
+        <div class="sound-bar" style="--delay: 1"></div>
+        <div class="sound-bar" style="--delay: 2"></div>
+        <div class="sound-bar" style="--delay: 3"></div>
+        <div class="sound-bar" style="--delay: 4"></div>
+        <div class="sound-bar" style="--delay: 5"></div>
+        <div class="sound-bar" style="--delay: 6"></div>
+        <div class="sound-bar" style="--delay: 7"></div>
+        <div class="sound-bar" style="--delay: 8"></div>
+    </div>
+
+    <div class="container">
+        <div class="terminal-window">
+            <div class="terminal-buttons">
+                <div class="terminal-button"></div>
+                <div class="terminal-button"></div>
+                <div class="terminal-button"></div>
+            </div>
+            <div class="terminal-title">DELTARUNE.EXE</div>
+
+            <img src="https://cdn.jsdelivr.net/gh/genizy/web-port@448b2f79992bfbe04435949cd3e03bb3b937267c/deltarune/deltarune_logo.png" 
+                 alt="DELTARUNE Logo" 
+                 class="logo" />
+            
+            <p class="desc">
+                <span class="glitch typing-text" data-text="Choose your chapter." id="typingText"></span>
+            </p>
+
+            <div class="button-group">
+                <button class="button" id="toggleChaptersBtn" aria-expanded="false" aria-controls="chapterButtons">
+                    > Chapters
+                </button>
+                
+                <div id="chapterButtons" class="chapter-buttons hidden" role="menu" aria-label="Chapter selection">
+                    <button onclick="loadChapter(1)" class="button" style="--delay: 1" role="menuitem">
+                        > Chapter 1
+                    </button>
+                    <button onclick="loadChapter(2)" class="button" style="--delay: 2" role="menuitem">
+                        > Chapter 2
+                    </button>
+                    <button onclick="loadChapter(3)" class="button" style="--delay: 3" role="menuitem">
+                        > Chapter 3
+                    </button>
+                    <button onclick="loadChapter(4)" class="button" style="--delay: 4" role="menuitem">
+                        > Chapter 4
+                    </button>
+                </div>
+            </div>
+
+            <div id="gameFrame" class="game-frame hidden" role="main" aria-label="Game content"></div>
+        </div>
+
+        <footer>
+            <a href="https://zxsgames.vip" target="_blank" rel="noopener noreferrer">
+                > Website made by zxs/zxsgames
+            </a>
+            <br><br>
+            <a href="https://gn-math.github.io" target="_blank" rel="noopener noreferrer">
+                > Game port by bread/gn-math
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        // Enhanced JavaScript with cool effects
+        const toggleBtn = document.getElementById('toggleChaptersBtn');
+        const chapterButtons = document.getElementById('chapterButtons');
+        const gameFrame = document.getElementById('gameFrame');
+        const cursor = document.querySelector('.custom-cursor');
+        const typingText = document.getElementById('typingText');
+
+        let isChaptersVisible = false;
+
+        // Custom cursor movement
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mousedown', () => {
+            cursor.classList.add('clicking');
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursor.classList.remove('clicking');
+        });
+
+        // Typing effect
+        function typeText(element, text, speed = 100) {
+            element.textContent = '';
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, speed);
+        }
+
+        // Initialize typing effect
+        setTimeout(() => {
+            typeText(typingText, 'Choose your chapter.', 80);
+        }, 1000);
+
+        // Matrix rain effect
+        function createMatrixRain() {
+            const matrixContainer = document.getElementById('matrixRain');
+            const chars = '01DELTARUNE';
+            
+            for (let i = 0; i < 50; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = Math.random() * 100 + '%';
+                column.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                column.style.animationDelay = Math.random() * 2 + 's';
+                
+                let text = '';
+                for (let j = 0; j < 20; j++) {
+                    text += chars[Math.floor(Math.random() * chars.length)] + '\n';
+                }
+                column.textContent = text;
+                
+                matrixContainer.appendChild(column);
+            }
+        }
+
+        // Particle system
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // ASCII background
+        function createASCIIBackground() {
+            const asciiContainer = document.getElementById('asciiBg');
+            const chars = '░▒▓█▄▀■□▪▫';
+            let asciiText = '';
+            
+            for (let i = 0; i < 2000; i++) {
+                asciiText += chars[Math.floor(Math.random() * chars.length)];
+                if (i % 100 === 0) asciiText += '\n';
+            }
+            
+            asciiContainer.textContent = asciiText;
+        }
+
+        // Button interactions
+        toggleBtn.addEventListener('click', () => {
+            isChaptersVisible = !isChaptersVisible;
+            
+            if (isChaptersVisible) {
+                chapterButtons.classList.remove('hidden');
+                setTimeout(() => {
+                    chapterButtons.classList.add('show');
+                }, 10);
+                toggleBtn.textContent = '> Hide Chapters';
+                toggleBtn.setAttribute('aria-expanded', 'true');
+            } else {
+                chapterButtons.classList.remove('show');
+                setTimeout(() => {
+                    chapterButtons.classList.add('hidden');
+                }, 800);
+                toggleBtn.textContent = '> Chapters';
+                toggleBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Enhanced chapter loading
+        async function loadChapter(chapter) {
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            // Glitch effect on button
+            button.style.animation = 'buttonGlitch 0.5s ease infinite';
+            button.innerHTML = `> Loading... <span class="loading"></span>`;
+            button.disabled = true;
+            
+            try {
+                const baseUrl = 'https://cdn.jsdelivr.net/gh/genizy/web-port@448b2f79992bfbe04435949cd3e03bb3b937267c/deltarune/';
+                const response = await fetch(`${baseUrl}chapter${chapter}/index.html`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const html = await response.text();
+                
+                // Show game frame with cool animation
+                gameFrame.classList.remove('hidden');
+                setTimeout(() => {
+                    gameFrame.classList.add('show');
+                }, 10);
+                
+                // Load the chapter content
                 document.documentElement.innerHTML = html;
-
+                
+                // Re-execute scripts
                 document.documentElement.querySelectorAll('script').forEach(oldScript => {
                     const newScript = document.createElement('script');
                     if (oldScript.src) {
@@ -17,9 +832,92 @@
                     }
                     document.body.appendChild(newScript);
                 });
-          });
-      } catch (error) {
-        console.error('error:', error);
-      }
-    }
-  </script>
+                
+            } catch (error) {
+                console.error('Error loading chapter:', error);
+                
+                // Error glitch effect
+                button.style.animation = 'glitch-1 0.5s ease infinite';
+                button.textContent = '> ERROR - RETRY';
+                
+                setTimeout(() => {
+                    button.style.animation = '';
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 2000);
+            }
+        }
+
+        // Keyboard shortcuts and easter eggs
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.code);
+            if (konamiCode.length > konamiSequence.length) {
+                konamiCode.shift();
+            }
+            
+            if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+                // Easter egg: Matrix mode
+                document.body.style.background = 'linear-gradient(45deg, #000, #001100)';
+                document.querySelectorAll('.matrix-column').forEach(col => {
+                    col.style.color = '#00ff00';
+                    col.style.opacity = '0.8';
+                });
+                konamiCode = [];
+            }
+            
+            // Other shortcuts
+            if (e.key === 'Escape' && isChaptersVisible) {
+                toggleBtn.click();
+            }
+            
+            if (e.key === ' ') {
+                e.preventDefault();
+                toggleBtn.click();
+            }
+        });
+
+        chapterButtons.addEventListener('keydown', (e) => {
+            const buttons = chapterButtons.querySelectorAll('.button');
+            const currentIndex = Array.from(buttons).indexOf(document.activeElement);
+            
+            switch(e.key) {
+                case 'ArrowDown':
+                case 'ArrowRight':
+                    e.preventDefault();
+                    const nextIndex = (currentIndex + 1) % buttons.length;
+                    buttons[nextIndex].focus();
+                    break;
+                case 'ArrowUp':
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    const prevIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+                    buttons[prevIndex].focus();
+                    break;
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createMatrixRain();
+            createParticles();
+            createASCIIBackground();
+            
+            setInterval(() => {
+                if (Math.random() < 0.1) {
+                    document.body.style.filter = 'hue-rotate(180deg)';
+                    setTimeout(() => {
+                        document.body.style.filter = '';
+                    }, 100);
+                }
+            }, 5000);
+        });
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-WLTG1S4STB');
+    </script>
+</body>
+</html>
