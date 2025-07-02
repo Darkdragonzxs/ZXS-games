@@ -2,291 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ZXS VM</title>
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     html, body {
-      margin: 0; padding: 0; height: 100%; background: #000;
-      font-family: 'Orbitron', monospace;
-      color: #00ff00;
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
       overflow: hidden;
+      background: #000;
     }
-    #particles-js {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-    }
-    .content {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center; z-index: 10; width: 90%;
-    }
-    h1 {
-      font-size: 2.5rem;
-      text-shadow: 0 0 10px #00ff00;
-      margin-bottom: 20px;
-    }
-    button {
-      background: transparent;
-      border: 2px solid #00ff00;
-      color: #00ff00;
-      font-size: 1rem;
-      padding: 10px 20px;
-      cursor: pointer;
-      margin: 10px;
-      border-radius: 6px;
-      transition: background 0.2s, color 0.2s;
-    }
-    button:hover {
-      background: #00ff00;
-      color: #000;
-    }
-    #vm-container {
-      margin-top: 20px;
-      display: none;
-    }
-    #vm-iframe {
-      width: 90vw;
-      height: 70vh;
-      border: 2px solid #00ff00;
-      border-radius: 6px;
-    }
-    #vm-controls-wrapper {
-      margin-top: 20px;
-      display: none;
-    }
-    #vm-timer {
-      font-size: 1.2rem;
-      margin-top: 10px;
-      display: none;
-    }
-  </style>
-</head>
-<body>
-
-  <div id="particles-js"></div>
-
-  <div class="content">
-    <h1>ZXS VM</h1>
-    <h2>Powered By Z-KIT</h2>
-    <div id="start-vm-section-container">
-      <button id="chrome-vm" title="Start a virtual machine">Start VM</button>
-    </div>
-
-    <div id="vm-container" data-session-id="">
-      <iframe id="vm-iframe" src="about:blank" title="ZXS Virtual Machine"></iframe>
-    </div>
-
-    <div id="vm-controls-wrapper">
-      <button id="fullscreen-vm-btn" title="Enter Fullscreen Mode">Fullscreen</button>
-      <button id="kill-vm-btn" title="Terminate the Virtual Machine">Terminate VM</button>
-    </div>
-
-    <div id="vm-timer" role="timer" aria-live="polite">14:50</div>
-  </div>
-
-  <script>
-    // Initialize particles.js with network effect config
-    particlesJS("particles-js", {
-      particles: {
-        number: {
-          value: 150,
-          density: {
-            enable: true,
-            value_area: 1000
-          }
-        },
-        color: { value: "#00ff00" },
-        shape: { type: "circle" },
-        opacity: { value: 0.4 },
-        size: { value: 2, random: true },
-        line_linked: {
-          enable: true,
-          distance: 120,
-          color: "#00ff00",
-          opacity: 0.5,
-          width: 1
-        },
-        move: {
-          enable: true,
-          speed: 1,
-          direction: "none",
-          random: false,
-          straight: false,
-          out_mode: "out",
-          bounce: false
-        }
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: {
-          onhover: { enable: false },
-          onclick: { enable: false },
-          resize: true
-        }
-      },
-      retina_detect: true
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const chromeVmButton = document.getElementById('chrome-vm');
-      const vmContainer = document.getElementById('vm-container');
-      const vmIframe = document.getElementById('vm-iframe');
-      const killVmButton = document.getElementById('kill-vm-btn');
-      const fullscreenVmButton = document.getElementById('fullscreen-vm-btn');
-      const vmControlsWrapper = document.getElementById('vm-controls-wrapper');
-      const vmTimerDisplay = document.getElementById('vm-timer');
-      const startVmSectionContainer = document.getElementById('start-vm-section-container');
-      let timerInterval;
-
-      chromeVmButton.addEventListener('click', async () => {
-        try {
-          killVmButton.disabled = true;
-          const response = await fetch('https://zena-vm.underscorrmicro.workers.dev/start-vm');
-          const data = await response.json();
-
-          if (!data || !data.embed_url || !data.session_id) {
-            alert("Failed to start VM: Invalid response.");
-            killVmButton.disabled = false;
-            return;
-          }
-
-          vmIframe.src = data.embed_url;
-          vmContainer.dataset.sessionId = data.session_id;
-          vmContainer.style.display = 'block';
-          vmControlsWrapper.style.display = 'block';
-          vmTimerDisplay.style.display = 'block';
-          startVmSectionContainer.style.display = 'none';
-          vmTimerDisplay.textContent = '14:50';
-
-          let timeLeft = 890;
-          killVmButton.disabled = false;
-
-          timerInterval = setInterval(() => {
-            timeLeft -= 1;
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            vmTimerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            if (timeLeft <= 0) {
-              clearInterval(timerInterval);
-              if (!killVmButton.disabled) {
-                killVmButton.click();
-              }
-            }
-          }, 1000);
-        } catch (error) {
-          alert("Failed to start VM. Please try again later.");
-          killVmButton.disabled = false;
-        }
-      });
-
-      fullscreenVmButton.addEventListener('click', () => {
-        if (vmIframe.requestFullscreen) {
-          vmIframe.requestFullscreen();
-        } else if (vmIframe.webkitRequestFullscreen) {
-          vmIframe.webkitRequestFullscreen();
-        } else if (vmIframe.msRequestFullscreen) {
-          vmIframe.msRequestFullscreen();
-        }
-      });
-
-      killVmButton.addEventListener('click', async () => {
-        const sessionId = vmContainer.dataset.sessionId;
-        if (!sessionId || killVmButton.disabled) return;
-        killVmButton.disabled = true;
-
-        const resetUI = () => {
-          clearInterval(timerInterval);
-          vmContainer.style.display = 'none';
-          vmControlsWrapper.style.display = 'none';
-          vmTimerDisplay.style.display = 'none';
-          vmIframe.src = 'about:blank';
-          startVmSectionContainer.style.display = '';
-          delete vmContainer.dataset.sessionId;
-          killVmButton.disabled = false;
-        };
-
-        try {
-          await fetch(`https://zena-vm.underscorrmicro.workers.dev/kill-vm/${encodeURIComponent(sessionId)}`, {
-            method: 'DELETE'
-          });
-        } catch (e) {
-          // fail silently
-        } finally {
-          resetUI();
-        }
-      });
-    });
-  </script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Particles.js Working</title>
-  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
-  <style>
-    html, body {
-      margin: 0; padding: 0; height: 100%; background: #000;
-      font-family: 'Orbitron', monospace;
-      color: #00ff00;
-      overflow: hidden;
-    }
-    #particles-js {
+    #vmframe {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -1;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      background: #000;
+      z-index: 1;
+    }
+    #loading {
+      color: #fff;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: sans-serif;
+      font-size: 1.5em;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
-
-  <div id="particles-js"></div>
-
+  <div id="loading">Loading...</div>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      particlesJS('particles-js', {
-        particles: {
-          number: { value: 100, density: { enable: true, value_area: 800 } },
-          color: { value: '#00ff00' },
-          shape: { type: 'circle' },
-          opacity: { value: 0.5, random: false },
-          size: { value: 3, random: true },
-          line_linked: {
-            enable: true,
-            distance: 120,
-            color: '#00ff00',
-            opacity: 0.4,
-            width: 1
-          },
-          move: {
-            enable: true,
-            speed: 2,
-            direction: 'none',
-            random: false,
-            straight: false,
-            out_mode: 'out'
-          }
-        },
-        interactivity: {
-          detect_on: 'canvas',
-          events: {
-            onhover: { enable: true, mode: 'repulse' },
-            onclick: { enable: true, mode: 'push' },
-            resize: true
-          },
-          modes: {
-            repulse: { distance: 100 },
-            push: { particles_nb: 4 }
-          }
-        },
-        retina_detect: true
-      });
-    });
-  </script>
+    async function embedVM() {
+      try {
+        const res = await fetch('https://demo-api.tutturu.workers.dev/');
+        const data = await res.json();
+        const vmUrl = data.vmurl || data.url || data.vmUrl || data.vmURL; 
 
+        if (vmUrl) {
+          // Remove loading
+          document.getElementById('loading').remove();
+          // Create iframe
+          const iframe = document.createElement('iframe');
+          iframe.id = 'vmframe';
+          iframe.src = vmUrl;
+          iframe.allow = "fullscreen";
+          document.body.appendChild(iframe);
+        } else {
+          document.getElementById('loading').textContent = 'Error: VM URL not found in API response.';
+        }
+      } catch (e) {
+        document.getElementById('loading').textContent = 'Error fetching VM URL.';
+      }
+    }
+    embedVM();
+  </script>
 </body>
 </html>
