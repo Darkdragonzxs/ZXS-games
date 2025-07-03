@@ -1,6 +1,6 @@
 self.__uv$config = {
-	prefix: "/s/internet/",
-	bare: "https://bare.securedweb.ultimatearca.de",
+	prefix: "/s/kibidi/",
+	bare: "https://skibiditoi.lat/bare/",
 	encodeUrl: Ultraviolet.codec.xor.encode,
 	decodeUrl: Ultraviolet.codec.xor.decode,
 	handler: "/s/uv/uv.handler.js",
