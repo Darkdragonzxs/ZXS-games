@@ -6,6 +6,55 @@
   <title>SKIBIDI PARTNERS</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    * {
+      cursor: none !important;
+    }
+
+    iframe {
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <script type="module">
+    import { initCursor } from "https://unpkg.com/ipad-cursor@latest";
+
+    const cursor = initCursor();
+
+    function setCursorVisible(visible) {
+      const cursorEl = document.querySelector(".ipad-cursor");
+      if (cursorEl) {
+        cursorEl.style.opacity = visible ? "1" : "0";
+      }
+    }
+
+    document.addEventListener("mouseleave", () => {
+      setCursorVisible(false);
+    });
+
+    document.addEventListener("mouseenter", () => {
+      setCursorVisible(true);
+    });
+
+    const iframes = document.querySelectorAll("iframe");
+    iframes.forEach((iframe) => {
+      iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+      iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+    });
+
+    const observer = new MutationObserver(() => {
+      const newIframes = document.querySelectorAll("iframe:not([data-processed])");
+      newIframes.forEach((iframe) => {
+        iframe.dataset.processed = "true";
+        iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+        iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  </script>
+  <style>
     :root {
       --primary-color: #00ff41;
       --secondary-color: #39ff14;
