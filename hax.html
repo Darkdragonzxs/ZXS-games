@@ -7,6 +7,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
+    * {
+      cursor: none !important;
+    }
+
+    iframe {
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <script type="module">
+    import { initCursor } from "https://unpkg.com/ipad-cursor@latest";
+
+    const cursor = initCursor();
+
+    function setCursorVisible(visible) {
+      const cursorEl = document.querySelector(".ipad-cursor");
+      if (cursorEl) {
+        cursorEl.style.opacity = visible ? "1" : "0";
+      }
+    }
+
+    document.addEventListener("mouseleave", () => {
+      setCursorVisible(false);
+    });
+
+    document.addEventListener("mouseenter", () => {
+      setCursorVisible(true);
+    });
+
+    const iframes = document.querySelectorAll("iframe");
+    iframes.forEach((iframe) => {
+      iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+      iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+    });
+
+    const observer = new MutationObserver(() => {
+      const newIframes = document.querySelectorAll("iframe:not([data-processed])");
+      newIframes.forEach((iframe) => {
+        iframe.dataset.processed = "true";
+        iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+        iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  </script>
+    <style>
         :root {
             --bg-color: #000000;
             --text-color: #ffffff;
