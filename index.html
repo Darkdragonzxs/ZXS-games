@@ -12,6 +12,57 @@
     <meta name="description" content="A Gaming Site with everything you need.">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="icon" href="https://i.postimg.cc/ydnq9QzB/Screenshot-2025-05-13-12-03-53-PM-removebg-preview.png" type="image/png" id="favicon">
+  <style>
+    * {
+      cursor: none !important;
+    }
+
+    iframe {
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <script type="module">
+    import { initCursor } from "https://unpkg.com/ipad-cursor@latest";
+
+    // Initialize the iPad-style cursor
+    const cursor = initCursor();
+
+    // Helper: hide or show the custom cursor
+    function setCursorVisible(visible) {
+      const cursorEl = document.querySelector(".ipad-cursor");
+      if (cursorEl) {
+        cursorEl.style.opacity = visible ? "1" : "0";
+      }
+    }
+
+    document.addEventListener("mouseleave", () => {
+      setCursorVisible(false);
+    });
+
+    document.addEventListener("mouseenter", () => {
+      setCursorVisible(true);
+    });
+
+    const iframes = document.querySelectorAll("iframe");
+    iframes.forEach((iframe) => {
+      iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+      iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+    });
+
+    const observer = new MutationObserver(() => {
+      const newIframes = document.querySelectorAll("iframe:not([data-processed])");
+      newIframes.forEach((iframe) => {
+        iframe.dataset.processed = "true";
+        iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+        iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  </script>
     <style>
         /* tuff UI */
         :root {
