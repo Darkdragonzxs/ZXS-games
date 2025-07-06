@@ -1,19 +1,20 @@
 (function () {
-  const getPanicKey = () => localStorage.getItem("panicKey") || "]";
-  const getPanicURL = () => localStorage.getItem("panicURL") || "https://google.com";
+  let panicKey = localStorage.getItem('panicKey') || ']';
+  let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
 
-  const listener = (e) => {
-    try {
-      const key = e.key;
-      const panicKey = getPanicKey();
-      if (key === panicKey) {
-        window.top.location.href = getPanicURL(); 
+  window.addEventListener('storage', () => {
+    panicKey = localStorage.getItem('panicKey') || ']';
+    panicURL = localStorage.getItem('panicURL') || 'https://google.com';
+  });
+
+  // Listen for key presses inside iframe
+  document.addEventListener('keydown', (e) => {
+    if (e.key === panicKey) {
+      try {
+        window.top.location.href = panicURL;
+      } catch (err) {
+        console.error('Cannot redirect top window:', err);
       }
-    } catch (err) {
-      // in sandboxed iframes, top access might fail
-      console.error("Panic redirect failed:", err);
     }
-  };
-
-  window.addEventListener("keydown", listener, true); 
+  }, true); // capture phase
 })();
