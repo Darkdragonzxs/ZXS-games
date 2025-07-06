@@ -1285,5 +1285,55 @@
             }
         });
     </script>
+<script>
+// Panic Script Injector for Same-Origin Iframes
+function injectPanicScriptIntoIframe(iframe) {
+    try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+        if (!iframeDoc) return;
+
+        const alreadyInjected = iframeDoc.querySelector('script[data-panic-injected]');
+        if (alreadyInjected) return;
+
+        const script = iframeDoc.createElement('script');
+        script.src = '/assets/js/panic-core.js'; 
+        script.defer = true;
+        script.setAttribute('data-panic-injected', 'true');
+        iframeDoc.head.appendChild(script);
+    } catch (err) {
+        // Cross-origin iframe — can't inject
+        console.warn("Skipped cross-origin iframe:", iframe, err);
+    }
+}
+
+function injectIntoAllIframes() {
+    document.querySelectorAll('iframe').forEach((iframe) => {
+        if (iframe.contentWindow) {
+            if (iframe.contentDocument?.readyState === 'complete') {
+                injectPanicScriptIntoIframe(iframe);
+            } else {
+                iframe.addEventListener('load', () => injectPanicScriptIntoIframe(iframe));
+            }
+        }
+    });
+}
+
+// Run once after DOM is ready
+document.addEventListener('DOMContentLoaded', injectIntoAllIframes);
+
+// Watch for new iframes dynamically added later
+const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+        mutation.addedNodes.forEach((node) => {
+            if (node.tagName === 'IFRAME') {
+                node.addEventListener('load', () => injectPanicScriptIntoIframe(node));
+            }
+        });
+    }
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+</script>
 </body>
 </html>
