@@ -99,26 +99,26 @@
   </div>
 
   <script>
-    const input = document.getElementById('search');
-    input.addEventListener('keydown', (e) => {
-      if (e.key === "Enter") {
-        const val = input.value.trim();
-        const url = normalize(val);
-        go(url);
-      }
-    });
-
-    function normalize(input) {
-      const hasProtocol = /^(https?|file|ftp):\/\//i.test(input);
-      const looksLikeDomain = /^[\w-]+(\.[\w-]+)+.*$/i.test(input);
-      if (!hasProtocol && looksLikeDomain) return "https://" + input;
-      if (!hasProtocol) return "https://www.startpage.com/search?q=" + encodeURIComponent(input);
-      return input;
+  const input = document.getElementById('search');
+  input.addEventListener('keydown', (e) => {
+    if (e.key === "Enter") {
+      const val = input.value.trim();
+      const url = normalize(val);
+      go(url);
     }
+  });
 
-    function go(url) {
-      location.href = `/s/embed.html#${encodeURIComponent(url)}`;
-    }
-  </script>
+  function normalize(input) {
+    const hasProtocol = /^(https?|file|ftp):\/\//i.test(input);
+    const looksLikeDomain = /^[\w-]+(\.[\w-]+)+.*$/i.test(input);
+    if (!hasProtocol && looksLikeDomain) return "https://" + input;
+    if (!hasProtocol) return "https://www.startpage.com/search?q=" + encodeURIComponent(input);
+    return input;
+  }
+
+  function go(url) {
+    location.href = `/s/embed.html#${url}`; 
+  }
+</script>
 </body>
 </html>
