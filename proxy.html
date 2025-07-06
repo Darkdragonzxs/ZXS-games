@@ -2,403 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>beep boop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZXS Proxy Start</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000;
-      --tab-bg: #002200;
-      --tab-inactive: #001100;
-      --tab-active: #005500;
       --text: #00ff00;
-      --bar: #001100;
-      --border: #00ff00;
       --accent: #00ff88;
+      --card: #001100;
     }
+
     body {
       margin: 0;
       font-family: 'Share Tech Mono', monospace;
       background: var(--bg);
       color: var(--text);
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       height: 100vh;
       overflow: hidden;
     }
-    #top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--bar);
-      height: 36px;
-      padding: 0 10px;
-      border-bottom: 1px solid var(--border);
+
+    .container {
+      text-align: center;
+      animation: fadeIn 1s ease;
     }
-    #tabs {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--accent) transparent;
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
     }
-    #tabs::-webkit-scrollbar {
-      height: 6px;
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
     }
-    #tabs::-webkit-scrollbar-thumb {
-      background-color: var(--accent);
-      border-radius: 3px;
-    }
-    .tab {
-      background: var(--tab-inactive);
-      padding: 5px 12px;
-      border-radius: 8px 8px 0 0;
-      font-size: 14px;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-bottom: none;
-      cursor: pointer;
-      user-select: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
-    .tab.active {
-      background: var(--tab-active);
-      font-weight: bold;
-      box-shadow: 0 -2px 0 var(--accent) inset;
-    }
-    .tab .close {
-      font-weight: bold;
-      color: var(--text);
-      cursor: pointer;
-      user-select: none;
-    }
-    .tab .close:hover {
-      color: red;
-    }
-    .new-tab-btn {
-      font-size: 20px;
-      color: var(--accent);
-      background: none;
-      border: none;
-      cursor: pointer;
-      user-select: none;
-      padding: 0 8px;
-    }
-    #toolbar {
-      display: flex;
-      align-items: center;
-      padding: 6px 10px;
-      background: var(--bar);
-      border-bottom: 1px solid var(--border);
-      gap: 6px;
-    }
-    #nav-controls button {
-      background: transparent;
-      border: 1px solid var(--border);
-      font-size: 16px;
-      color: var(--accent);
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 6px;
-      user-select: none;
-    }
-    #address {
-      flex: 1;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 20px;
-      font-size: 14px;
+
+    #search {
+      padding: 0.6rem 1rem;
+      width: 300px;
+      max-width: 90vw;
+      font-size: 1rem;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
       background: #000;
       color: var(--text);
-      border: 1px solid var(--border);
-      outline-offset: 2px;
-      outline-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 8px var(--accent);
+      margin-bottom: 1.5rem;
     }
-    #viewer {
-      flex: 1;
-      position: relative;
-      background: black;
-      overflow: hidden;
-    }
-    iframe, .start-screen {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0; left: 0;
-      border: none;
-      display: none;
-      animation: fadeZoomIn 0.3s ease forwards;
-      background: black;
-    }
-    .start-screen {
+
+    .quicklinks {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
       justify-content: center;
-      gap: 1rem;
-      color: var(--text);
     }
-    .start-screen li {
-      background: var(--tab-inactive);
-      padding: 0.7rem 1.5rem;
+
+    .quicklinks button {
+      background: var(--card);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 0.5rem 1.2rem;
       border-radius: 8px;
-      border: 1px solid var(--border);
       cursor: pointer;
-      list-style: none;
-      user-select: none;
-      transition: background 0.2s, color 0.2s;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
     }
-    .start-screen li:hover {
-      background: var(--tab-active);
-      color: var(--accent);
+
+    .quicklinks button:hover {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 6px var(--accent);
     }
-    @keyframes fadeZoomIn {
+
+    @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.95); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-    #devtools-toggle {
-      margin-left: auto;
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: var(--tab-inactive);
-      color: var(--text);
-      cursor: pointer;
-      user-select: none;
-    }
-    #devtools-panel {
-      background: #001a00;
-      color: var(--text);
-      border-top: 1px solid var(--border);
-      height: 200px;
-      display: none;
-    }
-    #devtools-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
 <body>
-
-  <div id="top-bar">
-    <div id="tabs"></div>
-    <button class="new-tab-btn" id="new-tab">+</button>
-    <button id="devtools-toggle">DevTools</button>
-  </div>
-
-  <div id="toolbar">
-    <div id="nav-controls">
-      <button id="back">←</button>
-      <button id="forward">→</button>
-      <button id="reload">⟳</button>
+  <div class="container">
+    <h1>> Welcome to ZXS Proxy</h1>
+    <p>Type a URL or search query below:</p>
+    <input type="text" id="search" placeholder="Search or URL...">
+    <div class="quicklinks">
+      <button onclick="go('https://google.com')">Google</button>
+      <button onclick="go('https://youtube.com')">YouTube</button>
+      <button onclick="go('https://easyfun.gg/embed/roblox')">Roblox</button>
+      <button onclick="go('https://github.com')">GitHub</button>
+      <button onclick="go('https://discord.com')">Discord</button>
     </div>
-    <input type="text" id="address" placeholder="Search or URL..." autocomplete="off" spellcheck="false" />
-  </div>
-
-  <div id="viewer">
-    <div class="start-screen" id="start-screen">
-      <h2>&gt; ZXS Proxy</h2>
-      <ul>
-        <li onclick="quickLaunch('https://google.com')">Google</li>
-        <li onclick="quickLaunch('https://youtube.com')">YouTube</li>
-        <li onclick="quickLaunch('https://easyfun.gg/embed/roblox')">Roblox</li>
-      </ul>
-    </div>
-  </div>
-
-  <div id="devtools-panel">
-    <iframe id="devtools-iframe" src=""></iframe>
   </div>
 
   <script>
-    const tabs = document.getElementById('tabs');
-    const viewer = document.getElementById('viewer');
-    const addressBar = document.getElementById('address');
-    const newTabBtn = document.getElementById('new-tab');
-    const startScreen = document.getElementById('start-screen');
-    const backBtn = document.getElementById('back');
-    const forwardBtn = document.getElementById('forward');
-    const reloadBtn = document.getElementById('reload');
-    const devtoolsToggle = document.getElementById('devtools-toggle');
-    const devtoolsPanel = document.getElementById('devtools-panel');
-    const devtoolsIframe = document.getElementById('devtools-iframe');
-
-    let currentTab = null;
-    let tabCounter = 0;
-
-    function normalizeInput(input) {
-      input = input.trim();
-      const hasProtocol = /^(https?|file|ftp|ws|wss):\/\//i.test(input);
-      const looksLikeDomain = /^[\w-]+(\.[\w-]+)+.*$/i.test(input);
-      if (!hasProtocol && looksLikeDomain) return "https://" + input;
-      if (!hasProtocol) return "https://www.startpage.com/search?q=" + encodeURIComponent(input);
-      return input;
+  const input = document.getElementById('search');
+  input.addEventListener('keydown', (e) => {
+    if (e.key === "Enter") {
+      const val = input.value.trim();
+      const url = normalize(val);
+      go(url);
     }
+  });
 
-    // Create new tab: if url is empty => startpage tab; else if useUV true => encoded UV embed; else normal embed no encoding
-    function createTab(url, label, useUV = false) {
-      const tabId = `tab-${++tabCounter}`;
-      const tab = document.createElement('div');
-      tab.className = 'tab';
-      tab.id = tabId;
-      tab.innerHTML = `${label} <span class="close">×</span>`;
-      tabs.appendChild(tab);
+  function normalize(input) {
+    const hasProtocol = /^(https?|file|ftp):\/\//i.test(input);
+    const looksLikeDomain = /^[\w-]+(\.[\w-]+)+.*$/i.test(input);
+    if (!hasProtocol && looksLikeDomain) return "https://" + input;
+    if (!hasProtocol) return "https://www.startpage.com/search?q=" + encodeURIComponent(input);
+    return input;
+  }
 
-      const iframe = document.createElement('iframe');
-      iframe.id = `frame-${tabId}`;
-
-      if (!url) {
-        // Empty URL loads your startpage normally
-        iframe.src = `/proxy/startpage.html`;
-      } else if (useUV) {
-        // UV proxy embed with encoded URL
-        iframe.src = `/s/uv/embed.html#${encodeURIComponent(url)}`;
-      } else {
-        // Normal proxy embed with raw URL (no encoding)
-        iframe.src = `/s/embed.html#${url}`;
-      }
-
-      viewer.appendChild(iframe);
-
-      tab.addEventListener('click', (e) => {
-        if (e.target.classList.contains('close')) {
-          removeTab(tabId);
-        } else {
-          switchTab(tabId);
-        }
-      });
-
-      switchTab(tabId);
-    }
-
-    // Switch active tab
-    function switchTab(tabId) {
-      viewer.querySelectorAll('iframe').forEach(f => f.style.display = 'none');
-      tabs.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-
-      const iframe = document.getElementById(`frame-${tabId}`);
-      const tab = document.getElementById(tabId);
-
-      if (iframe && tab) {
-        iframe.style.display = 'block';
-        tab.classList.add('active');
-        currentTab = tabId;
-
-        // Show URL in address bar (decode URI for clarity)
-        const src = iframe.src;
-        let urlHash = '';
-        try {
-          urlHash = src.split('#')[1] || '';
-          urlHash = decodeURIComponent(urlHash);
-        } catch {
-          urlHash = src.split('#')[1] || '';
-        }
-
-        // If startpage, show its normal path
-        if (!urlHash && src.includes('/proxy/startpage.html')) {
-          addressBar.value = window.location.origin + '/proxy/startpage.html';
-          startScreen.style.display = 'none';
-        } else if (urlHash) {
-          addressBar.value = urlHash;
-          startScreen.style.display = 'none';
-        } else {
-          addressBar.value = '';
-          startScreen.style.display = 'flex';
-        }
-      }
-    }
-
-    // Remove tab and iframe
-    function removeTab(tabId) {
-      const tab = document.getElementById(tabId);
-      const iframe = document.getElementById(`frame-${tabId}`);
-      if (tab) tab.remove();
-      if (iframe) iframe.remove();
-
-      if (currentTab === tabId) {
-        currentTab = null;
-        startScreen.style.display = 'flex';
-        addressBar.value = '';
-        // Switch to last tab if exists
-        const remainingTabs = tabs.querySelectorAll('.tab');
-        if (remainingTabs.length > 0) {
-          switchTab(remainingTabs[remainingTabs.length - 1].id);
-        }
-      }
-    }
-
-    // Quick launch URLs: if it's your startpage, no UV encoding, else UV encode
-    function quickLaunch(url) {
-      if (url.includes('/proxy/startpage.html')) {
-        createTab(url, url, false);
-      } else {
-        createTab(url, url, true);
-      }
-    }
-
-    // Open a blank tab (startpage)
-    function openBlankTab() {
-      createTab('', 'New Tab', false);
-    }
-
-    addressBar.addEventListener('keydown', (e) => {
-      if (e.key === "Enter" && currentTab) {
-        let url = normalizeInput(addressBar.value);
-        const iframe = document.getElementById(`frame-${currentTab}`);
-
-        if (url.includes('/proxy/startpage.html')) {
-          // No encoding for startpage URL
-          iframe.src = `/s/embed.html#${url}`;
-        } else {
-          // UV embed with encoded URL for everything else
-          iframe.src = `/s/uv/embed.html#${encodeURIComponent(url)}`;
-        }
-      }
-    });
-
-    backBtn.onclick = () => {
-      const iframe = document.getElementById(`frame-${currentTab}`);
-      if (iframe && iframe.contentWindow.history.length > 1) {
-        iframe.contentWindow.history.back();
-      }
-    };
-
-    forwardBtn.onclick = () => {
-      const iframe = document.getElementById(`frame-${currentTab}`);
-      if (iframe) {
-        iframe.contentWindow.history.forward();
-      }
-    };
-
-    reloadBtn.onclick = () => {
-      const iframe = document.getElementById(`frame-${currentTab}`);
-      if (iframe) {
-        iframe.contentWindow.location.reload();
-      }
-    };
-
-    devtoolsToggle.onclick = () => {
-      if (devtoolsPanel.style.display === 'none') {
-        devtoolsPanel.style.display = 'block';
-        devtoolsIframe.src = 'javascript:(function()%7B(function()%7Bvar%20x%20%3D%20document.createElement("script")%3Bx.src%20%3D%20"https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSnowLord7%2Fdevconsole%40master%2Fmain.js"%3Bx.onload%20%3D%20alert("Loaded%20Developer%20Console!")%3Bdocument.head.appendChild(x)%3B%7D)()%7D)()';
-      } else {
-        devtoolsPanel.style.display = 'none';
-        devtoolsIframe.src = '';
-      }
-    };
-
-    newTabBtn.onclick = openBlankTab;
-
-    // On load open the startpage tab
-    openBlankTab();
-
-  </script>
+  function go(url) {
+    location.href = `/s/embed.html#${url}`; 
+  }
+</script>
 </body>
 </html>
