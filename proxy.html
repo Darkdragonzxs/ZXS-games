@@ -2,66 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>beep boop browerser</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZXS Proxy (DevTools Enabled)</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <style>
-    * {
-      cursor: none !important;
-    }
-
-    iframe {
-      pointer-events: auto;
-    }
-  </style>
-</head>
-<body>
-
-  <script type="module">
-    import { initCursor } from "https://unpkg.com/ipad-cursor@latest";
-
-    const cursor = initCursor();
-
-    function setCursorVisible(visible) {
-      const cursorEl = document.querySelector(".ipad-cursor");
-      if (cursorEl) {
-        cursorEl.style.opacity = visible ? "1" : "0";
-      }
-    }
-
-    document.addEventListener("mouseleave", () => {
-      setCursorVisible(false);
-    });
-
-    document.addEventListener("mouseenter", () => {
-      setCursorVisible(true);
-    });
-
-    const iframes = document.querySelectorAll("iframe");
-    iframes.forEach((iframe) => {
-      iframe.addEventListener("mouseenter", () => setCursorVisible(false));
-      iframe.addEventListener("mouseleave", () => setCursorVisible(true));
-    });
-
-    const observer = new MutationObserver(() => {
-      const newIframes = document.querySelectorAll("iframe:not([data-processed])");
-      newIframes.forEach((iframe) => {
-        iframe.dataset.processed = "true";
-        iframe.addEventListener("mouseenter", () => setCursorVisible(false));
-        iframe.addEventListener("mouseleave", () => setCursorVisible(true));
-      });
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-  </script>
   <style>
     :root {
       --bg: #000;
-      --fg: #00ff00;
-      --bar: #002200;
-      --tab-active: #005500;
+      --tab-bg: #002200;
       --tab-inactive: #001100;
-      --input-bg: #000;
+      --tab-active: #005500;
+      --text: #00ff00;
+      --bar: #001100;
+      --border: #00ff00;
       --accent: #00ff88;
     }
 
@@ -69,71 +21,50 @@
       margin: 0;
       font-family: 'Share Tech Mono', monospace;
       background: var(--bg);
-      color: var(--fg);
+      color: var(--text);
       display: flex;
       flex-direction: column;
       height: 100vh;
+      overflow: hidden;
     }
 
-    #toolbar {
+    #top-bar {
       display: flex;
-      padding: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
       background: var(--bar);
-      border-bottom: 1px solid var(--fg);
-    }
-
-    #address {
-      flex: 1;
-      padding: 0.6rem 1rem;
-      background: var(--input-bg);
-      color: var(--fg);
-      border: 1px solid var(--fg);
-      font-size: 1rem;
-      border-radius: 8px;
-      transition: box-shadow 0.3s ease;
-    }
-
-    #address:focus {
-      outline: none;
-      box-shadow: 0 0 8px var(--accent);
+      height: 36px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--border);
     }
 
     #tabs {
       display: flex;
-      background: var(--bar);
-      overflow-x: auto;
-      padding: 0.3rem;
-      gap: 0.5rem;
-    }
-
-    .tab, .new-tab-btn {
-      padding: 0.4rem 0.9rem;
-      cursor: pointer;
-      background: var(--tab-inactive);
-      border: 1px solid var(--fg);
-      border-radius: 10px;
-      transition: background 0.3s ease, transform 0.2s ease, opacity 0.2s ease;
-      display: flex;
+      gap: 6px;
       align-items: center;
-      gap: 0.5rem;
-      white-space: nowrap;
-      color: var(--fg);
     }
 
-    .tab:hover, .new-tab-btn:hover {
-      background: var(--tab-active);
+    .tab {
+      background: var(--tab-inactive);
+      padding: 5px 12px;
+      border-radius: 8px 8px 0 0;
+      font-size: 14px;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      cursor: pointer;
     }
 
     .tab.active {
       background: var(--tab-active);
       font-weight: bold;
-      box-shadow: 0 0 6px var(--accent);
+      box-shadow: 0 -2px 0 var(--accent) inset;
     }
 
     .tab .close {
-      color: var(--fg);
-      cursor: pointer;
       font-weight: bold;
+      color: var(--text);
+      cursor: pointer;
     }
 
     .tab .close:hover {
@@ -141,20 +72,47 @@
     }
 
     .new-tab-btn {
-      font-size: 1.3rem;
-      justify-content: center;
-      font-weight: bold;
-      min-width: 2.2rem;
-      text-align: center;
+      font-size: 20px;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    #toolbar {
+      display: flex;
+      align-items: center;
+      padding: 6px 10px;
+      background: var(--bar);
+      border-bottom: 1px solid var(--border);
+      gap: 6px;
+    }
+
+    #nav-controls button {
       background: transparent;
-      border: 2px dashed var(--fg);
+      border: 1px solid var(--border);
+      font-size: 16px;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    #address {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      background: #000;
+      color: var(--text);
+      border: 1px solid var(--border);
     }
 
     #viewer {
       flex: 1;
       position: relative;
-      background: var(--bg);
-      overflow: hidden;
+      background: black;
     }
 
     iframe, .start-screen {
@@ -164,7 +122,7 @@
       top: 0; left: 0;
       border: none;
       display: none;
-      animation: fadeZoomIn 0.4s ease forwards;
+      animation: fadeZoomIn 0.3s ease forwards;
     }
 
     .start-screen {
@@ -172,84 +130,101 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
-      color: var(--fg);
-    }
-
-    .start-screen h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .start-screen ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      width: 100%;
-      max-width: 300px;
+      gap: 1rem;
+      color: var(--text);
     }
 
     .start-screen li {
       background: var(--tab-inactive);
-      padding: 0.75rem 1rem;
-      margin-bottom: 0.5rem;
-      border: 1px solid var(--fg);
-      border-radius: 10px;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
       cursor: pointer;
-      text-align: center;
-      transition: all 0.25s ease;
+      list-style: none;
     }
 
     .start-screen li:hover {
       background: var(--tab-active);
       color: var(--accent);
-      transform: scale(1.03);
-      box-shadow: 0 0 8px var(--accent);
     }
 
     @keyframes fadeZoomIn {
-      from { opacity: 0; transform: scale(0.96); }
+      from { opacity: 0; transform: scale(0.95); }
       to   { opacity: 1; transform: scale(1); }
+    }
+
+    #devtools-toggle {
+      margin-left: auto;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--tab-inactive);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    #devtools-panel {
+      background: #001a00;
+      color: var(--text);
+      border-top: 1px solid var(--border);
+      height: 200px;
+      display: none;
+    }
+
+    #devtools-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
   </style>
 </head>
 <body>
 
-  <div id="toolbar">
-    <input type="text" id="address" placeholder="Enter URL or search..." />
+  <div id="top-bar">
+    <div id="tabs"></div>
+    <button class="new-tab-btn" id="new-tab">+</button>
+    <button id="devtools-toggle">DevTools</button>
   </div>
 
-  <div id="tabs">
-    <div class="new-tab-btn" id="new-tab" title="New Tab">+</div>
+  <div id="toolbar">
+    <div id="nav-controls">
+      <button id="back">←</button>
+      <button id="forward">→</button>
+      <button id="reload">⟳</button>
+    </div>
+    <input type="text" id="address" placeholder="Search or URL...">
   </div>
 
   <div id="viewer">
     <div class="start-screen" id="start-screen">
-      <h2>> Welcome to ZXS Proxy</h2>
+      <h2>> ZXS Proxy</h2>
       <ul>
-        <li onclick="quickLaunch('https://Google.com')">Google</li>
-        <li onclick="quickLaunch('https://a.co.com')">Amazon</li>
+        <li onclick="quickLaunch('https://google.com')">Google</li>
+        <li onclick="quickLaunch('https://youtube.com')">YouTube</li>
         <li onclick="quickLaunch('https://easyfun.gg/embed/roblox')">Roblox</li>
       </ul>
     </div>
   </div>
 
+  <div id="devtools-panel">
+    <iframe id="devtools-iframe" src=""></iframe>
+  </div>
+
   <script>
-    const addressBar = document.getElementById('address');
     const tabs = document.getElementById('tabs');
     const viewer = document.getElementById('viewer');
-    const startScreen = document.getElementById('start-screen');
+    const addressBar = document.getElementById('address');
     const newTabBtn = document.getElementById('new-tab');
-    let tabCounter = 0;
+    const startScreen = document.getElementById('start-screen');
+    const backBtn = document.getElementById('back');
+    const forwardBtn = document.getElementById('forward');
+    const reloadBtn = document.getElementById('reload');
+    const devtoolsToggle = document.getElementById('devtools-toggle');
+    const devtoolsPanel = document.getElementById('devtools-panel');
+    const devtoolsIframe = document.getElementById('devtools-iframe');
+
     let currentTab = null;
-
-    newTabBtn.addEventListener('click', () => {
-      openBlankTab();
-    });
-
-    function quickLaunch(url) {
-      createTab(url, url);
-    }
+    let tabCounter = 0;
 
     function normalizeInput(input) {
       input = input.trim();
@@ -260,14 +235,9 @@
       return input;
     }
 
-    addressBar.addEventListener('keydown', (e) => {
-      if (e.key === "Enter") {
-        const input = addressBar.value;
-        const finalUrl = normalizeInput(input);
-        createTab(finalUrl, input);
-        addressBar.value = "";
-      }
-    });
+    function quickLaunch(url) {
+      createTab(url, url);
+    }
 
     function createTab(url, label) {
       const tabId = `tab-${++tabCounter}`;
@@ -275,12 +245,11 @@
       tab.className = 'tab';
       tab.id = tabId;
       tab.innerHTML = `${label} <span class="close">×</span>`;
-      tabs.insertBefore(tab, newTabBtn);
+      tabs.appendChild(tab);
 
       const iframe = document.createElement('iframe');
       iframe.id = `frame-${tabId}`;
-      iframe.src = `/s/embed.html#${url}`;
-      iframe.style.display = 'none';
+      iframe.src = `/s/embed.html#${encodeURIComponent(url)}`;
       viewer.appendChild(iframe);
 
       tab.addEventListener('click', (e) => {
@@ -294,44 +263,18 @@
       switchTab(tabId);
     }
 
-    function openBlankTab() {
-      const blankId = `tab-${++tabCounter}`;
-      const tab = document.createElement('div');
-      tab.className = 'tab';
-      tab.id = blankId;
-      tab.innerHTML = `New Tab <span class="close">×</span>`;
-      tabs.insertBefore(tab, newTabBtn);
-
-      const iframe = document.createElement('iframe');
-      iframe.id = `frame-${blankId}`;
-      iframe.style.display = 'none';
-      viewer.appendChild(iframe);
-
-      tab.addEventListener('click', (e) => {
-        if (e.target.classList.contains('close')) {
-          removeTab(blankId);
-        } else {
-          switchTab(blankId);
-        }
-      });
-
-      switchTab(blankId);
-      startScreen.style.display = 'flex';
-      addressBar.focus();
-    }
-
     function switchTab(tabId) {
       viewer.querySelectorAll('iframe').forEach(f => f.style.display = 'none');
       tabs.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      startScreen.style.display = 'none';
-
       const iframe = document.getElementById(`frame-${tabId}`);
       const tab = document.getElementById(tabId);
-
       if (iframe && tab) {
         iframe.style.display = 'block';
         tab.classList.add('active');
         currentTab = tabId;
+        const hash = iframe.src.split('#')[1];
+        addressBar.value = decodeURIComponent(hash || '');
+        startScreen.style.display = 'none';
       }
     }
 
@@ -341,17 +284,50 @@
       if (tab) tab.remove();
       if (iframe) iframe.remove();
       if (currentTab === tabId) {
-        const remaining = tabs.querySelectorAll('.tab');
-        if (remaining.length > 0) {
-          switchTab(remaining[0].id);
-        } else {
-          currentTab = null;
-          startScreen.style.display = 'flex';
-        }
+        currentTab = null;
+        startScreen.style.display = 'flex';
       }
     }
 
-    // Start with blank tab
+    function openBlankTab() {
+      createTab('', 'New Tab');
+    }
+
+    addressBar.addEventListener('keydown', (e) => {
+      if (e.key === "Enter" && currentTab) {
+        const url = normalizeInput(addressBar.value);
+        const iframe = document.getElementById(`frame-${currentTab}`);
+        iframe.src = `/s/embed.html#${encodeURIComponent(url)}`;
+      }
+    });
+
+    backBtn.onclick = () => {
+      const iframe = document.getElementById(`frame-${currentTab}`);
+      iframe.contentWindow.history.back();
+    };
+
+    forwardBtn.onclick = () => {
+      const iframe = document.getElementById(`frame-${currentTab}`);
+      iframe.contentWindow.history.forward();
+    };
+
+    reloadBtn.onclick = () => {
+      const iframe = document.getElementById(`frame-${currentTab}`);
+      iframe.contentWindow.location.reload();
+    };
+
+    devtoolsToggle.onclick = () => {
+      if (devtoolsPanel.style.display === 'none') {
+        devtoolsPanel.style.display = 'block';
+        devtoolsIframe.src = 'javascript:(function()%7B(function()%7Bvar%20x%20%3D%20document.createElement("script")%3Bx.src%20%3D%20"https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSnowLord7%2Fdevconsole%40master%2Fmain.js"%3Bx.onload%20%3D%20alert("Loaded%20Developer%20Console!")%3Bdocument.head.appendChild(x)%3B%7D)()%7D)()';
+      } else {
+        devtoolsPanel.style.display = 'none';
+        devtoolsIframe.src = '';
+      }
+    };
+
+    newTabBtn.onclick = () => openBlankTab();
+
     openBlankTab();
   </script>
 
