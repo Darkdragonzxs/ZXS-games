@@ -1,17 +1,19 @@
 (function () {
-  let panicKey = localStorage.getItem('panicKey') || ']';
-  let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
-  let panicKeyActive = true;
+  const getPanicKey = () => localStorage.getItem("panicKey") || "]";
+  const getPanicURL = () => localStorage.getItem("panicURL") || "https://google.com";
 
-
-  window.addEventListener('storage', () => {
-    panicKey = localStorage.getItem('panicKey') || ']';
-    panicURL = localStorage.getItem('panicURL') || 'https://google.com';
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (panicKeyActive && e.key === panicKey) {
-      window.location.href = panicURL;
+  const listener = (e) => {
+    try {
+      const key = e.key;
+      const panicKey = getPanicKey();
+      if (key === panicKey) {
+        window.top.location.href = getPanicURL(); 
+      }
+    } catch (err) {
+      // in sandboxed iframes, top access might fail
+      console.error("Panic redirect failed:", err);
     }
-  });
+  };
+
+  window.addEventListener("keydown", listener, true); 
 })();
