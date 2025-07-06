@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>secured embed - loading content...</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+      --bg-gradient-start: #0a0e17;
+      --bg-gradient-end: #1a1a2e;
+      --text-gradient: linear-gradient(90deg, #fff, #e0e0e0);
+      --progress-gradient: linear-gradient(90deg, rgba(138,180,248,0.2), rgba(138,180,248,0.8));
+      --star-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(145deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      font-family: 'Google Sans', sans-serif;
+      color: #ffffff;
+      overflow: hidden;
+      animation: pageFadeIn 1s ease-out;
+    }
+
+    .starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    
+    .star {
+      position: absolute;
+      background-color: var(--star-color);
+      border-radius: 50%;
+      animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+      animation-delay: var(--twinkle-delay);
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+    
+    .loading-container {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      padding: 0 2rem;
+      max-width: 90%;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      background: var(--text-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: 
+        fadeIn 1s ease-out forwards,
+        float 3s ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+
+    .progress-container {
+      width: min(60%, 250px);
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      margin: 2rem auto 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: var(--progress-gradient);
+      border-radius: 4px;
+      animation: progressLoad 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      will-change: transform;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes progressLoad {
+      0% { width: 0%; transform: translateX(0); }
+      50% { width: 100%; transform: translateX(0); }
+      100% { width: 0%; transform: translateX(100%); }
+    }
+
+    @keyframes pageFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .progress-container {
+        width: min(80%, 200px);
+      }
+      
+      h1 {
+        margin-bottom: 1rem;
+      }
+    }
+    </style>
+</head>
+
+<body>
+    <div class="starfield" id="starfield"></div>
+    
+    <div class="loading-container">
+        <h1>loading content</h1>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+    const starfield = document.getElementById('starfield');
+    const starCount = 150;
+    
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      
+      const xPos = Math.random() * 100;
+      const yPos = Math.random() * 100;
+      const size = Math.random() * 1.5 + 0.5;
+      const twinkleDuration = Math.random() * 3 + 2;
+      const twinkleDelay = Math.random() * 5;
+      
+      star.style.left = `${xPos}%`;
+      star.style.top = `${yPos}%`;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.setProperty('--twinkle-duration', `${twinkleDuration}s`);
+      star.style.setProperty('--twinkle-delay', `${twinkleDelay}s`);
+      
+      starfield.appendChild(star);
+    }
+    </script>
+
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
+    <script src="register-sw.js" defer></script>
+    <script src="embed.js" defer></script>
+</body>
+
+</html>
