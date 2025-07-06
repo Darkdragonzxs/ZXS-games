@@ -2,19 +2,20 @@
   let panicKey = localStorage.getItem('panicKey') || ']';
   let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
 
+  // Update values when localStorage changes (e.g. in index.html)
   window.addEventListener('storage', () => {
     panicKey = localStorage.getItem('panicKey') || ']';
     panicURL = localStorage.getItem('panicURL') || 'https://google.com';
   });
 
-  // Listen for key presses inside iframe
+  // Key listener for panic
   document.addEventListener('keydown', (e) => {
     if (e.key === panicKey) {
       try {
         window.top.location.href = panicURL;
       } catch (err) {
-        console.error('Cannot redirect top window:', err);
+        console.error('Panic redirect failed:', err);
       }
     }
-  }, true); // capture phase
+  }, true); // Capture phase for deep focus
 })();
