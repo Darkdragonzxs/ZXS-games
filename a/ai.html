@@ -2,139 +2,115 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZXS AI - Advanced AI Chat Assistant</title>
-  <meta name="description" content="Chat with ZXS AI, a powerful AI assistant created by ZXS." />
-  <script src="/assets/js/panic-core.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZXS AI</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          animation: {
-            'bounce-dot': 'bounce 1.4s ease-in-out infinite both',
-          }
-        }
-      }
-    }
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js" defer></script>
   <style>
-    @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0); }
-      40% { transform: scale(1); }
+    body {
+      background: radial-gradient(ellipse at top left, #0f172a, #000);
+      color: #e0f2f1;
+      font-family: 'Segoe UI', sans-serif;
     }
-    .animate-bounce-dot:nth-child(1) { animation-delay: -0.32s; }
-    .animate-bounce-dot:nth-child(2) { animation-delay: -0.16s; }
-    .animate-bounce-dot:nth-child(3) { animation-delay: 0s; }
-    
-    /* Custom scrollbar */
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
+
+    .glassy {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: transparent;
+
+    .message {
+      animation: fadeInUp 0.3s ease-out;
     }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 3px;
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.3);
+
+    /* Markdown support */
+    .markdown p {
+      margin-bottom: 0.5rem;
+    }
+
+    .markdown pre {
+      background: #1e293b;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .markdown code {
+      background: #1e293b;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .markdown h1, .markdown h2, .markdown h3 {
+      font-weight: bold;
+      margin-top: 1rem;
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-black text-white h-screen overflow-hidden">
-  <div class="flex flex-col h-screen">
-    <!-- Header -->
-    <div class="border-b border-white/10 bg-black/30 backdrop-blur-sm">
-      <div class="max-w-4xl mx-auto px-6 py-5">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent text-center">
-          ZXS AI
-        </h1>
-        <p class="text-white/60 text-sm text-center mt-1">Powered by advanced AI technology</p>
-      </div>
-    </div>
+<body class="h-screen flex flex-col">
+  <header class="text-center py-4 text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+    ZXS AI
+  </header>
 
-    <!-- Messages Container -->
-    <div id="messages-container" class="flex-1 overflow-y-auto custom-scrollbar">
-      <div class="max-w-4xl mx-auto px-6 py-5 space-y-4" id="messages">
-        <!-- Messages will be inserted here -->
-      </div>
-    </div>
+  <main id="messages-container" class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+    <!-- Messages appear here -->
+  </main>
 
-    <!-- Input Area -->
-    <div class="border-t border-white/10 bg-black/30 backdrop-blur-sm">
-      <div class="max-w-4xl mx-auto px-6 py-5">
-        <div class="flex gap-3 items-end">
-          <div class="flex-1">
-            <textarea
-              id="user-input"
-              placeholder="Type your message..."
-              class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-400/50 transition-all disabled:opacity-50"
-              style="min-height: 48px; max-height: 120px;"
-              rows="1"
-              onkeydown="handleKeyDown(event)"
-              oninput="autoResize(this)"
-            ></textarea>
-          </div>
-          <button
-            id="send-button"
-            onclick="sendMessage()"
-            class="px-6 py-3 bg-gradient-to-r from-emerald-400 to-green-500 text-black font-semibold rounded-xl hover:from-emerald-500 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed h-12"
-          >
-            Send
-          </button>
-        </div>
-      </div>
+  <footer class="p-4 glassy">
+    <div class="flex gap-2">
+      <textarea
+        id="user-input"
+        placeholder="Type something..."
+        rows="1"
+        class="flex-1 resize-none p-3 bg-transparent border border-emerald-500 text-white rounded-xl focus:outline-none"
+        oninput="autoResize(this)"
+        onkeydown="handleKeyDown(event)"
+      ></textarea>
+      <button
+        id="send-button"
+        onclick="sendMessage()"
+        class="bg-emerald-500 hover:bg-emerald-600 text-black font-bold px-5 py-3 rounded-xl"
+      >
+        Send
+      </button>
     </div>
-  </div>
+  </footer>
 
   <script>
-    // Boiiiii this is tuff 
-    const API_KEY = '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';
+    const API_KEY = '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';
     const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-    
-    let messages = [
+
+    const messages = [
       {
         role: 'system',
-        content: 'You are ZXS AI, a helpful assistant created by a person called ZXS. You provide clear, concise, and helpful responses. when you respond, use shortened language, incorrect punctuation, and make it sound like tou dont want to type that much letters. for example, if you wanna say: Hello! How can I assist you today? (instead say) wsp cuh; and make it more humanlike like your talking to a person online. Dont use emojis but be kinda goofy.'
+        content: `You are ZXS AI, a helpful assistant created by a person called ZXS. You provide clear, concise, and helpful responses. when you respond, use shortened language, incorrect punctuation, and make it sound like tou dont want to type that much letters. for example, if you wanna say: Hello! How can I assist you today? (instead say) wsp cuh; and make it more humanlike like your talking to a person online. Dont use emojis but be kinda goofy. You support *Markdown*, so use **bold**, *italic*, \`code\`, and links when needed. Don't crash when returning HTML.`
       }
     ];
-    
-    let isLoading = false;
-    let messageIdCounter = 0;
 
-    // Initialize chat on page load
-    window.addEventListener('load', () => {
-      const welcomeMessage = "Welcome to ZXS AI! I'm here to help you with any questions or tasks. Join dsc.gg/zxsgames for updates!";
-      addMessage(welcomeMessage, 'assistant');
-      messages.push({ role: 'assistant', content: welcomeMessage });
-    });
+    let loading = false;
 
     async function sendMessage() {
-      if (isLoading) return;
-      
+      if (loading) return;
       const input = document.getElementById('user-input');
       const message = input.value.trim();
-      
       if (!message) return;
 
-      // Add user message
-      addMessage(message, 'user');
+      addMessage('user', message);
       messages.push({ role: 'user', content: message });
-      
-      // Clear input and reset height
       input.value = '';
-      input.style.height = '48px';
-      
-      // Set loading state
+      input.style.height = 'auto';
       setLoading(true);
-      
-      // Add loading message
-      const loadingId = addLoadingMessage();
+
+      addMessage('assistant', '...', true); // Loading placeholder
+      const loadingEl = document.querySelector('#messages-container .assistant:last-child');
 
       try {
-        const response = await fetch(API_URL, {
+        const res = await fetch(API_URL, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${API_KEY}`,
@@ -142,159 +118,63 @@
           },
           body: JSON.stringify({
             model: 'gemma2-9b-it',
-            messages: messages,
+            messages,
             temperature: 0.7,
             max_tokens: 1000
           })
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const data = await res.json();
+        const reply = data.choices?.[0]?.message?.content || "huh... i froze or sum idk 💀";
 
-        const data = await response.json();
-        const reply = data.choices?.[0]?.message?.content || "I apologize, but I couldn't generate a response.";
-        
-        // Remove loading message and add AI response
-        removeMessage(loadingId);
-        addMessage(reply, 'assistant');
+        // Replace loading with actual message
+        loadingEl.remove();
+        addMessage('assistant', reply);
         messages.push({ role: 'assistant', content: reply });
 
-      } catch (error) {
-        console.error('Error:', error);
-        removeMessage(loadingId);
-        
-        let errorMessage = "I'm sorry, I encountered an error. Please try again.";
-        if (error.message.includes('CORS')) {
-          errorMessage = "CORS error detected. This app needs to be served from a web server, not opened directly as a file.";
-        }
-        
-        addMessage(errorMessage, 'assistant');
-      } finally {
-        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        loadingEl.remove();
+        addMessage('assistant', `**Error:** Couldn't connect. Maybe try again?`);
       }
+
+      setLoading(false);
     }
 
-    function addMessage(content, role) {
-      const messagesContainer = document.getElementById('messages');
-      const messageId = `msg-${++messageIdCounter}`;
-      
-      const messageDiv = document.createElement('div');
-      messageDiv.id = messageId;
-      messageDiv.className = `flex items-start gap-3 ${role === 'user' ? 'flex-row-reverse' : ''}`;
-      
-      // Create avatar
-      const avatar = document.createElement('div');
-      avatar.className = `w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 ${
-        role === 'user' 
-          ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white'
-          : 'bg-gradient-to-r from-emerald-400 to-green-500 text-black'
-      }`;
-      avatar.textContent = role === 'user' ? 'U' : 'AI';
-      
-      // Create message content
-      const contentDiv = document.createElement('div');
-      contentDiv.className = `max-w-[70%] px-4 py-3 rounded-2xl leading-relaxed ${
-        role === 'user'
-          ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-br-sm'
-          : 'bg-white/10 border border-white/10 rounded-bl-sm'
-      }`;
-      
-      // Format content with inline code support
-      const formattedContent = content
-        .replace(/`([^`]+)`/g, '<span class="bg-white/10 px-2 py-1 rounded text-sm font-mono">$1</span>')
-        .replace(/\n/g, '<br>');
-      
-      contentDiv.innerHTML = formattedContent;
-      
-      // Append elements
-      messageDiv.appendChild(avatar);
-      messageDiv.appendChild(contentDiv);
-      messagesContainer.appendChild(messageDiv);
-      
-      // Scroll to bottom
-      scrollToBottom();
-      
-      return messageId;
-    }
-
-    function addLoadingMessage() {
-      const messagesContainer = document.getElementById('messages');
-      const messageId = `loading-${++messageIdCounter}`;
-      
-      const messageDiv = document.createElement('div');
-      messageDiv.id = messageId;
-      messageDiv.className = 'flex items-start gap-3';
-      
-      // Create avatar
-      const avatar = document.createElement('div');
-      avatar.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-emerald-400 to-green-500 flex items-center justify-center text-sm font-semibold text-black';
-      avatar.textContent = 'AI';
-      
-      // Create loading content
-      const contentDiv = document.createElement('div');
-      contentDiv.className = 'bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 rounded-2xl rounded-bl-sm';
-      
-      const dotsContainer = document.createElement('div');
-      dotsContainer.className = 'flex items-center gap-1';
-      
-      for (let i = 0; i < 3; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'w-2 h-2 bg-emerald-400 rounded-full animate-bounce-dot';
-        dot.style.animationDelay = `${i * 0.1}s`;
-        dotsContainer.appendChild(dot);
+    function addMessage(role, text, isLoading = false) {
+      const container = document.getElementById('messages-container');
+      const messageEl = document.createElement('div');
+      messageEl.className = `message ${role} markdown px-4 py-3 rounded-xl max-w-xl ${role === 'user' ? 'self-end bg-emerald-700 text-white' : 'self-start bg-white/10 border border-white/10'}`;
+      if (isLoading) {
+        messageEl.innerHTML = `<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>`;
+      } else {
+        messageEl.innerHTML = marked.parse(text);
       }
-      
-      contentDiv.appendChild(dotsContainer);
-      messageDiv.appendChild(avatar);
-      messageDiv.appendChild(contentDiv);
-      messagesContainer.appendChild(messageDiv);
-      
-      scrollToBottom();
-      
-      return messageId;
+      container.appendChild(messageEl);
+      container.scrollTop = container.scrollHeight;
     }
 
-    function removeMessage(messageId) {
-      const message = document.getElementById(messageId);
-      if (message) {
-        message.remove();
-      }
+    function setLoading(val) {
+      loading = val;
+      document.getElementById('send-button').disabled = val;
+      document.getElementById('user-input').disabled = val;
     }
 
-    function setLoading(loading) {
-      isLoading = loading;
-      const sendButton = document.getElementById('send-button');
-      const input = document.getElementById('user-input');
-      
-      sendButton.disabled = loading;
-      input.disabled = loading;
-      sendButton.textContent = loading ? 'Sending...' : 'Send';
-    }
-
-    function handleKeyDown(event) {
-      if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
+    function handleKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
         sendMessage();
       }
     }
 
     function autoResize(textarea) {
-      textarea.style.height = '48px';
-      textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
     }
 
-    function scrollToBottom() {
-      const container = document.getElementById('messages-container');
-      container.scrollTop = container.scrollHeight;
-    }
-
-    // Handle potential CORS issues with user-friendly error
-    window.addEventListener('unhandledrejection', event => {
-      if (event.reason && event.reason.message && event.reason.message.includes('fetch')) {
-        console.warn('Potential CORS issue detected. Make sure to serve this file from a web server.');
-      }
-    });
+    window.onload = () => {
+      addMessage('assistant', `**yo** welcome to *ZXS AI* — ask me anything fr`);
+    };
   </script>
 </body>
 </html>
