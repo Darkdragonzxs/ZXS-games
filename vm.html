@@ -3,33 +3,67 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ZXS Games VM Selector</title>
+<title>VM Selector</title>
 <style>
   html, body {
-    margin: 0; padding: 0; height: 100%;
-    background-color: #000;  /* black */
-    color: #0f0;             /* green */
-    font-family: 'Consolas', monospace, monospace;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #000;
+    color: #0f0;
+    font-family: 'Consolas', monospace;
+    overflow: hidden;
+  }
+
+  body {
     display: flex;
     flex-direction: column;
   }
-  body {
-    overflow: hidden;
+
+  .selector-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.6s ease-in-out;
+    z-index: 2;
   }
-  header {
-    padding: 20px;
-    text-align: center;
-    flex: 0 0 auto;
+
+  .selector-overlay.shrunk {
+    height: 60px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 0 10px;
   }
-  h1 {
-    margin: 0 0 10px 0;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px #0f0;
+    transition: font-size 0.3s ease, margin 0.3s ease;
   }
+
+  .selector-overlay.shrunk h2 {
+    font-size: 1rem;
+    margin: 0;
+  }
+
   .vm-buttons {
     display: flex;
-    justify-content: center;
     gap: 20px;
-    margin-bottom: 10px;
+    transition: gap 0.3s ease;
   }
+
+  .selector-overlay.shrunk .vm-buttons {
+    gap: 10px;
+  }
+
   button {
     background-color: #000;
     color: #0f0;
@@ -37,43 +71,72 @@
     padding: 12px 30px;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 3px #0f0;
   }
-  button:hover, button:focus {
+
+  .selector-overlay.shrunk button {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+  }
+
+  button:hover {
     background-color: #0f0;
     color: #000;
-    outline: none;
+    text-shadow: none;
   }
+
   iframe {
-    flex: 1 1 auto;
+    flex: 1;
     width: 100%;
     border: none;
     background-color: #111;
+    z-index: 1;
+  }
+
+  @keyframes flicker {
+    0% { opacity: 1; }
+    5% { opacity: 0.8; }
+    10% { opacity: 1; }
+    15% { opacity: 0.9; }
+    20% { opacity: 1; }
+    100% { opacity: 1; }
+  }
+
+  h2, button {
+    animation: flicker 2s infinite alternate;
   }
 </style>
 </head>
 <body>
 
-<header>
-  <h2>ZXS Games - Select Your VM</h2>
+<div class="selector-overlay" id="selector">
+  <h2>ZXS Games VM</h2>
   <div class="vm-buttons">
     <button id="chromeBtn" aria-label="Select Chrome VM">Chrome VM</button>
     <button id="androidBtn" aria-label="Select Android VM">Android VM</button>
   </div>
-</header>
+</div>
 
 <iframe id="vmFrame" src="" title="VM Display Frame" aria-live="polite"></iframe>
 
 <script>
+  const selector = document.getElementById('selector');
   const vmFrame = document.getElementById('vmFrame');
   const chromeBtn = document.getElementById('chromeBtn');
   const androidBtn = document.getElementById('androidBtn');
 
+  function shrinkSelector() {
+    selector.classList.add('shrunk');
+  }
+
   chromeBtn.addEventListener('click', () => {
+    shrinkSelector();
     vmFrame.src = '/chromeVM.html';
   });
 
   androidBtn.addEventListener('click', () => {
+    shrinkSelector();
     vmFrame.src = '/uv-files/s/embed.html#https://appetize.io/embed/b_lpyv3tojqolercnfjmqqvgjqja';
   });
 </script>
