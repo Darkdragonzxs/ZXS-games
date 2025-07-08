@@ -1,145 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>VM Selector</title>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background-color: #000;
-    color: #0f0;
-    font-family: 'Consolas', monospace;
-    overflow: hidden;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VM Selector</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #000;
+      color: #0f0;
+      font-family: 'Consolas', monospace;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
 
-  body {
-    display: flex;
-    flex-direction: column;
-  }
+    .selector-bar {
+      width: 100%;
+      background-color: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: height 0.5s ease, padding 0.5s ease;
+      border-bottom: 1px solid #0f0;
+      z-index: 10;
+    }
 
-  .selector-overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: #000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.6s ease-in-out;
-    z-index: 2;
-  }
+    .selector-bar.fullscreen {
+      height: 100%;
+      padding-top: 15vh;
+      gap: 20px;
+    }
 
-  .selector-overlay.shrunk {
-    height: 60px;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 0 10px;
-  }
+    .selector-bar.shrunk {
+      height: 60px;
+      flex-direction: row;
+      justify-content: center;
+      padding: 0;
+      gap: 20px;
+    }
 
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-shadow: 0 0 5px #0f0;
-    transition: font-size 0.3s ease, margin 0.3s ease;
-  }
+    h2 {
+      font-size: 2rem;
+      text-shadow: 0 0 5px #0f0;
+      margin: 0;
+      transition: font-size 0.3s ease;
+    }
 
-  .selector-overlay.shrunk h2 {
-    font-size: 1rem;
-    margin: 0;
-  }
+    .selector-bar.shrunk h2 {
+      font-size: 1rem;
+    }
 
-  .vm-buttons {
-    display: flex;
-    gap: 20px;
-    transition: gap 0.3s ease;
-  }
+    .vm-buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
 
-  .selector-overlay.shrunk .vm-buttons {
-    gap: 10px;
-  }
+    .selector-bar.shrunk .vm-buttons {
+      gap: 10px;
+    }
 
-  button {
-    background-color: #000;
-    color: #0f0;
-    border: 2px solid #0f0;
-    padding: 12px 30px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-shadow: 0 0 3px #0f0;
-  }
+    button {
+      background-color: #000;
+      color: #0f0;
+      border: 2px solid #0f0;
+      padding: 12px 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 3px #0f0;
+    }
 
-  .selector-overlay.shrunk button {
-    padding: 4px 10px;
-    font-size: 0.8rem;
-  }
+    .selector-bar.shrunk button {
+      padding: 4px 10px;
+      font-size: 0.8rem;
+    }
 
-  button:hover {
-    background-color: #0f0;
-    color: #000;
-    text-shadow: none;
-  }
+    button:hover {
+      background-color: #0f0;
+      color: #000;
+      text-shadow: none;
+    }
 
-  iframe {
-    flex: 1;
-    width: 100%;
-    border: none;
-    background-color: #111;
-    z-index: 1;
-  }
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background-color: #111;
+    }
 
-  @keyframes flicker {
-    0% { opacity: 1; }
-    5% { opacity: 0.8; }
-    10% { opacity: 1; }
-    15% { opacity: 0.9; }
-    20% { opacity: 1; }
-    100% { opacity: 1; }
-  }
+    @keyframes flicker {
+      0% { opacity: 1; }
+      5% { opacity: 0.8; }
+      10% { opacity: 1; }
+      15% { opacity: 0.9; }
+      20% { opacity: 1; }
+      100% { opacity: 1; }
+    }
 
-  h2, button {
-    animation: flicker 2s infinite alternate;
-  }
-</style>
+    h2, button {
+      animation: flicker 2s infinite alternate;
+    }
+  </style>
 </head>
 <body>
 
-<div class="selector-overlay" id="selector">
-  <h2>ZXS Games VM</h2>
-  <div class="vm-buttons">
-    <button id="chromeBtn" aria-label="Select Chrome VM">Chrome VM</button>
-    <button id="androidBtn" aria-label="Select Android VM">Android VM</button>
+  <div class="selector-bar fullscreen" id="selector">
+    <h2>Select Your VM</h2>
+    <div class="vm-buttons">
+      <button id="chromeBtn" aria-label="Select Chrome VM">Chrome VM</button>
+      <button id="androidBtn" aria-label="Select Android VM">Android VM</button>
+    </div>
   </div>
-</div>
 
-<iframe id="vmFrame" src="" title="VM Display Frame" aria-live="polite"></iframe>
+  <iframe id="vmFrame" src="" title="VM Display Frame" aria-live="polite"></iframe>
 
-<script>
-  const selector = document.getElementById('selector');
-  const vmFrame = document.getElementById('vmFrame');
-  const chromeBtn = document.getElementById('chromeBtn');
-  const androidBtn = document.getElementById('androidBtn');
+  <script>
+    const selector = document.getElementById('selector');
+    const vmFrame = document.getElementById('vmFrame');
+    const chromeBtn = document.getElementById('chromeBtn');
+    const androidBtn = document.getElementById('androidBtn');
 
-  function shrinkSelector() {
-    selector.classList.add('shrunk');
-  }
+    function shrinkSelector() {
+      selector.classList.remove('fullscreen');
+      selector.classList.add('shrunk');
+    }
 
-  chromeBtn.addEventListener('click', () => {
-    shrinkSelector();
-    vmFrame.src = '/chromeVM.html';
-  });
+    chromeBtn.addEventListener('click', () => {
+      shrinkSelector();
+      vmFrame.src = '/chromeVM.html';
+    });
 
-  androidBtn.addEventListener('click', () => {
-    shrinkSelector();
-    vmFrame.src = '/uv-files/s/embed.html#https://appetize.io/embed/b_lpyv3tojqolercnfjmqqvgjqja';
-  });
-</script>
+    androidBtn.addEventListener('click', () => {
+      shrinkSelector();
+      vmFrame.src = '/uv-files/s/embed.html#https://appetize.io/embed/b_lpyv3tojqolercnfjmqqvgjqja';
+    });
+  </script>
 
 </body>
 </html>
