@@ -1,6 +1,6 @@
 self.__uv$config = {
 	prefix: "/s/kibidi/",
-	bare: "https://nodiddydogwasatthediddyparty.global.ssl.fastly.net/tspmo/",
+	bare: "https://bare.securedweb.ultimatearca.de",
 	encodeUrl: Ultraviolet.codec.xor.encode,
 	decodeUrl: Ultraviolet.codec.xor.decode,
 	handler: "/s/uv/uv.handler.js",
