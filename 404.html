@@ -1,639 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Not Found | ZXS Games</title>
-    <script src="/assets/js/panic-core.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://i.postimg.cc/ydnq9QzB/Screenshot-2025-05-13-12-03-53-PM-removebg-preview.png" type="image/png">
-    <style>
-    * {
-      cursor: none !important;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>404 Error</title>
+  <style>
+    :root {
+      --neon-green: #39FF14;
+      --bg-color: #000000;
+      --font: 'Courier New', Courier, monospace;
     }
 
-    iframe {
-      pointer-events: auto;
+    body {
+      background-color: var(--bg-color);
+      color: var(--neon-green);
+      font-family: var(--font);
+      font-size: clamp(16px, 2vw, 20px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow:
+        0 0 5px var(--neon-green),
+        0 0 10px var(--neon-green);
+    }
+
+    .glitch {
+      position: relative;
+      display: inline-block;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      color: var(--neon-green);
+    }
+
+    .glitch::before {
+      top: -2px;
+      text-shadow: -2px 0 #00ffff;
+      animation: glitch-anim-1 1s infinite linear alternate-reverse;
+    }
+
+    .glitch::after {
+      top: 2px;
+      text-shadow: 2px 0 #ff0055;
+      animation: glitch-anim-2 1.2s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-anim-1 {
+      0% { clip: rect(0, 9999px, 0, 0); transform: translate(-2px, -1px); }
+      50% { clip: rect(10px, 9999px, 90px, 0); transform: translate(2px, 1px); }
+      100% { clip: rect(85px, 9999px, 140px, 0); transform: translate(0, 0); }
+    }
+
+    @keyframes glitch-anim-2 {
+      0% { clip: rect(5px, 9999px, 5px, 0); transform: translate(2px, 0); }
+      50% { clip: rect(20px, 9999px, 60px, 0); transform: translate(-1px, 1px); }
+      100% { clip: rect(10px, 9999px, 30px, 0); transform: translate(0, 0); }
+    }
+
+    p {
+      max-width: 600px;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 6px var(--neon-green);
+    }
+
+    button {
+      background: transparent;
+      color: var(--neon-green);
+      border: 2px solid var(--neon-green);
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-family: var(--font);
+      cursor: pointer;
+      text-shadow: 0 0 6px var(--neon-green);
+      box-shadow: 0 0 10px var(--neon-green);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    button:hover {
+      background: var(--neon-green);
+      color: var(--bg-color);
     }
   </style>
 </head>
 <body>
-
-  <script type="module">
-    import { initCursor } from "https://unpkg.com/ipad-cursor@latest";
-
-    const cursor = initCursor();
-
-    function setCursorVisible(visible) {
-      const cursorEl = document.querySelector(".ipad-cursor");
-      if (cursorEl) {
-        cursorEl.style.opacity = visible ? "1" : "0";
-      }
-    }
-
-    document.addEventListener("mouseleave", () => {
-      setCursorVisible(false);
-    });
-
-    document.addEventListener("mouseenter", () => {
-      setCursorVisible(true);
-    });
-
-    const iframes = document.querySelectorAll("iframe");
-    iframes.forEach((iframe) => {
-      iframe.addEventListener("mouseenter", () => setCursorVisible(false));
-      iframe.addEventListener("mouseleave", () => setCursorVisible(true));
-    });
-
-    const observer = new MutationObserver(() => {
-      const newIframes = document.querySelectorAll("iframe:not([data-processed])");
-      newIframes.forEach((iframe) => {
-        iframe.dataset.processed = "true";
-        iframe.addEventListener("mouseenter", () => setCursorVisible(false));
-        iframe.addEventListener("mouseleave", () => setCursorVisible(true));
-      });
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-  </script>
-    <style>
-        :root {
-            --accent-color: #00ff41;
-            --accent-secondary: #00cc33;
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --text-secondary: #b0b0b0;
-            --panel-bg: rgba(40, 40, 40, 0.85);
-            --panel-bg-light: rgba(60, 60, 60, 0.7);
-            --panel-bg-dark: rgba(20, 20, 20, 0.9);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --border-accent: rgba(0, 255, 65, 0.3);
-            --transition-speed: 0.3s;
-            --glass-blur: 20px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--bg-color) 0%, #111111 50%, #000000 100%);
-            color: var(--text-color);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Enhanced Particles Background */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.4;
-        }
-
-        /* 404 Container */
-        .error-container {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            max-width: 800px;
-            padding: 60px 40px;
-            background: var(--panel-bg);
-            backdrop-filter: blur(var(--glass-blur));
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-            animation: slideIn 0.8s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        /* 404 Number */
-        .error-code {
-            font-size: 8rem;
-            font-weight: 900;
-            color: var(--accent-color);
-            text-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
-            margin-bottom: 20px;
-            letter-spacing: 10px;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { 
-                text-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
-                filter: drop-shadow(0 0 20px rgba(0, 255, 65, 0.3));
-            }
-            to { 
-                text-shadow: 0 0 50px rgba(0, 255, 65, 0.8);
-                filter: drop-shadow(0 0 40px rgba(0, 255, 65, 0.6));
-            }
-        }
-
-        /* Error Title */
-        .error-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 25px;
-            color: var(--text-color);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            letter-spacing: 2px;
-        }
-
-        /* Error Message */
-        .error-message {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            line-height: 1.6;
-            font-weight: 300;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Glitch Effect */
-        .glitch {
-            position: relative;
-            display: inline-block;
-        }
-
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .glitch::before {
-            animation: glitch-1 0.5s infinite;
-            color: #ff0040;
-            z-index: -1;
-        }
-
-        .glitch::after {
-            animation: glitch-2 0.5s infinite;
-            color: #00ffff;
-            z-index: -2;
-        }
-
-        @keyframes glitch-1 {
-            0%, 14%, 15%, 49%, 50%, 99%, 100% {
-                transform: translate(0);
-            }
-            15%, 49% {
-                transform: translate(-2px, 2px);
-            }
-        }
-
-        @keyframes glitch-2 {
-            0%, 20%, 21%, 62%, 63%, 99%, 100% {
-                transform: translate(0);
-            }
-            21%, 62% {
-                transform: translate(2px, -2px);
-            }
-        }
-
-        /* Action Buttons */
-        .error-actions {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-
-        .error-btn {
-            padding: 15px 30px;
-            background: var(--panel-bg-dark);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-accent);
-            color: var(--accent-color);
-            text-decoration: none;
-            border-radius: 12px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all var(--transition-speed) ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .error-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .error-btn:hover::before {
-            left: 100%;
-        }
-
-        .error-btn:hover {
-            background: var(--accent-color);
-            color: var(--bg-color);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 65, 0.3);
-        }
-
-        .error-btn.primary {
-            background: var(--accent-color);
-            color: var(--bg-color);
-            border-color: var(--accent-color);
-        }
-
-        .error-btn.primary:hover {
-            background: var(--accent-secondary);
-            border-color: var(--accent-secondary);
-            box-shadow: 0 8px 25px rgba(0, 255, 65, 0.4);
-        }
-
-        /* Error Details */
-        .error-details {
-            background: var(--panel-bg-light);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            margin-top: 30px;
-        }
-
-        .error-details h3 {
-            color: var(--accent-color);
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-
-        .error-details ul {
-            list-style: none;
-            text-align: left;
-            color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .error-details li {
-            position: relative;
-            padding-left: 20px;
-            margin-bottom: 8px;
-        }
-
-        .error-details li::before {
-            content: '▶';
-            position: absolute;
-            left: 0;
-            color: var(--accent-color);
-            font-size: 12px;
-        }
-
-        /* Floating Elements */
-        .floating-element {
-            position: absolute;
-            opacity: 0.1;
-            animation: float 6s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        .floating-element:nth-child(1) {
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .floating-element:nth-child(2) {
-            top: 20%;
-            right: 15%;
-            animation-delay: 2s;
-        }
-
-        .floating-element:nth-child(3) {
-            bottom: 15%;
-            left: 20%;
-            animation-delay: 4s;
-        }
-
-        .floating-element:nth-child(4) {
-            bottom: 25%;
-            right: 10%;
-            animation-delay: 1s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(5deg); }
-            66% { transform: translateY(10px) rotate(-3deg); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .error-container {
-                margin: 20px;
-                padding: 40px 30px;
-            }
-
-            .error-code {
-                font-size: 5rem;
-                letter-spacing: 5px;
-            }
-
-            .error-title {
-                font-size: 2rem;
-            }
-
-            .error-message {
-                font-size: 1rem;
-            }
-
-            .error-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .error-btn {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .error-code {
-                font-size: 4rem;
-            }
-
-            .error-title {
-                font-size: 1.5rem;
-            }
-
-            .error-container {
-                padding: 30px 20px;
-            }
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--panel-bg-dark);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-accent);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-color);
-        }
-
-        /* Logo */
-        .error-logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 30px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            padding: 10px;
-            background: var(--panel-bg-light);
-            backdrop-filter: blur(10px);
-            filter: drop-shadow(0 0 15px rgba(0, 255, 65, 0.3));
-            transition: all var(--transition-speed) ease;
-        }
-
-        .error-logo:hover {
-            filter: drop-shadow(0 0 25px rgba(0, 255, 65, 0.6));
-            transform: scale(1.05);
-            border-color: var(--border-accent);
-        }
-
-        .error-logo img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-        }
-    </style>
-</head>
-<body>
-    <!-- Particles Background -->
-    <div id="particles-js"></div>
-
-    <!-- Floating Elements -->
-    <div class="floating-element">404</div>
-    <div class="floating-element">ERROR</div>
-    <div class="floating-element">ZXS</div>
-    <div class="floating-element">GAMES</div>
-
-    <!-- 404 Container -->
-    <div class="error-container">
-       
-
-        <!-- Error Code -->
-        <div class="error-code glitch" data-text="404">404</div>
-
-        <!-- Error Title -->
-         
-        <h1 class="error-title">Page Not Found</h1>
-
-        <!-- Error Message -->
-        <p class="error-message">
-            The page you're looking for seems to have vanished into the digital void. 
-            It might have been moved, deleted, or never existed in the first place.
-        </p>
-
-        <!-- Action Buttons -->
-        <div class="error-actions">
-            <a href="/" class="error-btn primary">Return Home</a>
-        </div>
-
-        <!-- Error Details -->
-        <div class="error-details">
-            <h3>What can you do?</h3>
-            <ul>
-                <li>Check the URL for any typos or errors</li>
-                <li>Use the navigation menu to find what you're looking for</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        // Initialize particles.js with clean configuration
-        particlesJS('particles-js', {
-            "particles": {
-                "number": {
-                    "value": 60,
-                    "density": {
-                        "enable": true,
-                        "value_area": 1000
-                    }
-                },
-                "color": { 
-                    "value": "#00ff41" 
-                },
-                "shape": {
-                    "type": "circle",
-                    "stroke": { "width": 0, "color": "#000000" }
-                },
-                "opacity": { 
-                    "value": 0.3, 
-                    "random": true,
-                    "anim": {
-                        "enable": true,
-                        "speed": 0.5,
-                        "opacity_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "size": {
-                    "value": 2,
-                    "random": true,
-                    "anim": {
-                        "enable": true,
-                        "speed": 1,
-                        "size_min": 0.5,
-                        "sync": false
-                    }
-                },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 120,
-                    "color": "#00ff41",
-                    "opacity": 0.2,
-                    "width": 1
-                },
-                "move": {
-                    "enable": true,
-                    "speed": 1.5,
-                    "direction": "none",
-                    "random": true,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false
-                }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": { 
-                        "enable": true, 
-                        "mode": "repulse" 
-                    },
-                    "onclick": { 
-                        "enable": true, 
-                        "mode": "push" 
-                    },
-                    "resize": true
-                },
-                "modes": {
-                    "repulse": {
-                        "distance": 100,
-                        "duration": 0.4
-                    },
-                    "push": {
-                        "particles_nb": 2
-                    }
-                }
-            },
-            "retina_detect": true
-        });
-
-        // Add some interactive effects
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add click effect to the 404 number
-            const errorCode = document.querySelector('.error-code');
-            errorCode.addEventListener('click', function() {
-                this.style.animation = 'none';
-                setTimeout(() => {
-                    this.style.animation = 'glow 2s ease-in-out infinite alternate';
-                }, 10);
-            });
-
-            // Add hover effect to floating elements
-            const floatingElements = document.querySelectorAll('.floating-element');
-            floatingElements.forEach(element => {
-                element.addEventListener('mouseenter', function() {
-                    this.style.opacity = '0.3';
-                    this.style.transform = 'scale(1.2)';
-                });
-                
-                element.addEventListener('mouseleave', function() {
-                    this.style.opacity = '0.1';
-                    this.style.transform = 'scale(1)';
-                });
-            });
-
-            // Add keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Press 'H' to go home
-                if (e.key.toLowerCase() === 'h') {
-                    window.location.href = '/';
-                }
-                
-                // Press 'B' to go back
-                if (e.key.toLowerCase() === 'b') {
-                    history.back();
-                }
-                
-                // Press 'G' to go to games
-                if (e.key.toLowerCase() === 'g') {
-                    window.location.href = '/games';
-                }
-            });
-
-            // Add some random glitch effects
-            setInterval(() => {
-                const glitchElement = document.querySelector('.glitch');
-                glitchElement.style.animation = 'none';
-                setTimeout(() => {
-                    glitchElement.style.animation = '';
-                }, 100);
-            }, 5000 + Math.random() * 10000);
-        });
-
-        // Add dynamic title changes
-        const titles = [
-            '404 - Page Not Found | ZXS Games',
-            '404 - Lost in the Digital Void',
-            '404 - Page Missing | ZXS Games',
-            '404 - Error | ZXS Games'
-        ];
-
-        let titleIndex = 0;
-        setInterval(() => {
-            document.title = titles[titleIndex];
-            titleIndex = (titleIndex + 1) % titles.length;
-        }, 3000);
-    </script>
+  <h1 class="glitch" data-text="404 Error">404 Error</h1>
+  <p>dawg, this page does NOT EXIST 😭</p>
+  <p>if you were using the proxy press retry</p>
+  <button onclick="location.reload()">↻ Retry</button>
 </body>
 </html>
