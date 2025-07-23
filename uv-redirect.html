@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Proxy Terminal</title>
+  <meta http-equiv="refresh" content="5">
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.1rem;
+      padding: 2em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100vh;
+    }
+
+    .terminal-line {
+      margin-bottom: 1rem;
+    }
+
+    .blinking-cursor {
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    button {
+      background: #000;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 0.4em 0.8em;
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0f0;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal-line">> Establishing proxy connection...</div>
+  <div class="terminal-line">> Proxy route not found.</div>
+  <div class="terminal-line">> Sip wait ☕ — retrying in 5 seconds...</div>
+  <div class="terminal-line">
+    <button onclick="location.reload()">Retry Now</button>
+  </div>
+  <div class="terminal-line">
+    <span>> <span class="blinking-cursor">█</span></span>
+  </div>
+</body>
+</html>
