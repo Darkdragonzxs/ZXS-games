@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZXS Games - gays Section</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="/assets/js/panic-core.js" defer></script>
+
+  <style>
+    * {
+      cursor: none !important;
+    }
+
+    iframe {
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <script type="module">
+    import { initCursor } from "https://unpkg.com/ipad-cursor@latest";
+
+    const cursor = initCursor();
+
+    function setCursorVisible(visible) {
+      const cursorEl = document.querySelector(".ipad-cursor");
+      if (cursorEl) {
+        cursorEl.style.opacity = visible ? "1" : "0";
+      }
+    }
+
+    document.addEventListener("mouseleave", () => {
+      setCursorVisible(false);
+    });
+
+    document.addEventListener("mouseenter", () => {
+      setCursorVisible(true);
+    });
+
+    const iframes = document.querySelectorAll("iframe");
+    iframes.forEach((iframe) => {
+      iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+      iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+    });
+
+    const observer = new MutationObserver(() => {
+      const newIframes = document.querySelectorAll("iframe:not([data-processed])");
+      newIframes.forEach((iframe) => {
+        iframe.dataset.processed = "true";
+        iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+        iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  </script>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-color: #00ff00;
+            --panel-bg: rgba(0, 0, 0, 0.8);
+            --window-bg: rgba(10, 10, 10, 0.9);
+            --window-border: rgba(255, 255, 255, 0.2);
+            --window-header: rgba(20, 20, 20, 0.9);
+            --button-hover: rgba(255, 255, 255, 0.2);
+            --tile-bg: linear-gradient(135deg, #202020 0%, #101010 100%);
+            --tile-hover: linear-gradient(135deg, #303030 0%, #202020 100%);
+            --taskbar-height: 40px; /* Added taskbar height variable */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Particles Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Main Content */
+        .games-section {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin: 10px 0 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            background: linear-gradient(90deg, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .search-container::before {
+            content: '🔍';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.6);
+            pointer-events: none;
+        }
+
+        /* Game Groups */
+        .game-group {
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .game-group:hover {
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.15);
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .game-group-header {
+            padding: 15px 20px;
+            background: linear-gradient(90deg, rgba(20, 20, 20, 0.9), rgba(30, 30, 30, 0.7));
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .game-group-header:hover {
+            background: linear-gradient(90deg, rgba(30, 30, 30, 0.9), rgba(40, 40, 40, 0.7));
+        }
+
+        .game-group-header.expanded {
+            background: linear-gradient(90deg, rgba(0, 50, 0, 0.7), rgba(30, 30, 30, 0.7));
+            border-bottom-color: var(--accent-color);
+        }
+
+        .game-count {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: rgba(0, 255, 0, 0.2);
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .game-group-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .game-group-content.expanded {
+            max-height: 2000px;
+            overflow-y: auto;
+        }
+
+        /* Game Tiles */
+        .game-tiles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .game-tile {
+            width: 130px;
+            height: 130px;
+            background: var(--tile-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            font-size: 14px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 10px;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .game-tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-tile:hover {
+            transform: translateY(-5px) scale(1.05);
+            background: var(--tile-hover);
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.2);
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .game-tile:hover::before {
+            opacity: 1;
+        }
+
+        /* Window System */
+        .window-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+        }
+
+        .window {
+            position: absolute;
+            background-color: var(--window-bg);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+            border: 1px solid var(--window-border);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+            min-width: 400px;
+            min-height: 300px;
+        }
+
+        .window:hover {
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.4);
+        }
+
+        .window-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--window-header);
+            padding: 10px 15px;
+            cursor: move;
+            user-select: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .window-title {
+            font-size: 16px;
+            color: var(--text-color);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .window-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .window-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .minimize-btn:hover {
+            background-color: rgba(255, 255, 0, 0.3);
+        }
+
+        .maximize-btn:hover {
+            background-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .close-btn:hover {
+            background-color: rgba(255, 0, 0, 0.7);
+        }
+
+        .window-content {
+            width: 100%;
+            height: calc(100% - 45px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .window-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: white;
+        }
+
+        /* Resize Handles */
+        .resize-handle {
+            position: absolute;
+            background-color: transparent;
+        }
+
+        .resize-handle.top {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            cursor: n-resize;
+        }
+
+        .resize-handle.right {
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            cursor: e-resize;
+        }
+
+        .resize-handle.bottom {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            cursor: s-resize;
+        }
+
+        .resize-handle.left {
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            cursor: w-resize;
+        }
+
+        .resize-handle.top-left {
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            cursor: nw-resize;
+        }
+
+        .resize-handle.top-right {
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            cursor: ne-resize;
+        }
+
+        .resize-handle.bottom-right {
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            cursor: se-resize;
+        }
+
+        .resize-handle.bottom-left {
+            bottom: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            cursor: sw-resize;
+        }
+
+        /* Taskbar */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: var(--taskbar-height);
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1001;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .taskbar.active {
+            transform: translateY(0);
+        }
+
+        .taskbar-items {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            max-width: 100%;
+            padding: 5px 0;
+        }
+
+        .taskbar-item {
+            padding: 5px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            max-width: 200px;
+        }
+
+        .taskbar-item:hover {
+            background-color: rgba(0, 255, 0, 0.2);
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .taskbar-item.active {
+            background-color: rgba(0, 255, 0, 0.3);
+            border-color: rgba(0, 255, 0, 0.5);
+        }
+
+        .taskbar-item-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid transparent;
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Fullscreen Mode - FIXED to account for taskbar */
+        .window.fullscreen {
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: calc(100% - var(--taskbar-height)) !important; /* Adjusted to account for taskbar */
+            border-radius: 0 !important;
+        }
+
+        /* Minimized State */
+        .window.minimized {
+            display: none;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .game-tile {
+                width: 100px;
+                height: 100px;
+                font-size: 12px;
+            }
+
+            .window {
+                min-width: 300px;
+                min-height: 200px;
+            }
+
+            .window-title {
+                max-width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-tile {
+                width: 80px;
+                height: 80px;
+                font-size: 10px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .search-bar {
+                padding: 10px 15px 10px 35px;
+                font-size: 14px;
+            }
+
+            .window-title {
+                max-width: 150px;
+            }
+        }
+
+        /* Glow Effect for Active Window */
+        .window.active {
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            border-color: rgba(0, 255, 0, 0.5);
+        }
+
+        /* Window Animations */
+        @keyframes windowOpen {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .window {
+            animation: windowOpen 0.3s ease forwards;
+        }
+
+        /* Pulse Animation for Game Tiles */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); }
+        }
+
+        .game-tile:hover {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Main Content -->
+    <div class="games-section">
+        <h1 class="section-title">ZXS GAMES</h1>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search for a Game..." id="game-search" oninput="filterGames()">
+        </div>
+        <div id="game-groups-container"></div>
+    </div>
+
+    <!-- Window Container -->
+    <div class="window-container" id="window-container">
+        <!-- Windows will be dynamically created here -->
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar" id="taskbar">
+        <div class="taskbar-items" id="taskbar-items">
+            <!-- Taskbar items will be dynamically created here -->
+        </div>
+    </div>
+
+    <script>
+        // Game Data
+        const gameGroups = [
+            {
+                name: "Duck Life Series",
+                games: [
+                    { title: "Duck life", url: "/g/ducklife.html" },
+                    { title: "Duck life 2", url: "/g/ducklife2.html" },
+                    { title: "Duck life 3", url: "/g/ducklife3.html" },
+                    { title: "Duck life 4", url: "/g/ducklife4.html" },
+                    { title: "Duck life 5", url: "/g/ducklife5.html" }
+                ]
+            },
+            {
+                name: "Mario Games",
+                games: [
+                    { title: "Super Mario Bros.", url: "/g/supermariobros.html" },
+                    { title: "Super Mario 64", url: "/g/supermario64.html" },
+                    { title: "Mario Kart 64", url: "/g/mariokart64.html" },
+                    { title: "Mario Kart Super Circuit", url: "/g/MKsupercircut.html" }
+                ]
+            },
+            {
+                name: "Pokemon Games",
+                games: [
+                    { title: "Pokemon Emerald", url: "/g/Pokemonemerald.html" },
+                    { title: "Pokemon Firered", url: "/g/PokemonFireRed.html" },
+                    { title: "Pokemon Too Many Types", url: "/g/pokemon2manytypes.html" }
+                ]
+            },
+            {
+                name: "All Games",
+                games: [
+                    { title: "1", url: "/g/1.html" },
+                    { title: "10 minutes till dawn", url: "/g/10minutestilldawn.html" },
+                    { title: "1 on 1 soccer", url: "/g/1on1soccer.html" },
+                    { title: "1v1.lol", url: "/g/1v1lol.html" },
+                    { title: "ADOFAI", url: "/g/adofai.html" },
+                    { title: "Amazing Strange Rope Police", url: "/g/amazingstrangeropepolice.html" },
+                    { title: "Animal Crossing Wild World", url: "/g/wildworld.html" },
+                    { title: "Bad Time Simulator", url: "/g/badtimesimulator.html" },
+                    { title: "Baldi's Basics", url: "/g/baldisbasics.html" },
+                    { title: "Banjo‑kazooie", url: "/g/banjokazooie.html" },
+                    { title: "Basket Random", url: "/g/basketrandom.html" },
+                    { title: "Basketball Stars", url: "/g/basketballstars.html" },
+                    { title: "Bitlife", url: "/g/bitlife.html" },
+                    { title: "Boxing Random", url: "/g/boxingrandom.html" },
+                    { title: "Cell Machine", url: "/g/cellmachine.html" },
+                    { title: "Chess", url: "/g/chess.html" },
+                    { title: "Cluster Rush", url: "/g/clusterrush.html" },
+                    { title: "Cookie Clicker", url: "/g/cookieclicker.html" },
+                    { title: "Call of Duty - Black Ops", url: "/g/codblackops.html" },
+                    { title: "CS:GO Clicker", url: "/g/csgoclicker.html" },
+                    { title: "Doge Miner", url: "/g/dogeminer.html" },
+                    { title: "Donkey Kong 64", url: "/g/DK64.html" },
+                    { title: "DOOM", url: "/g/doom.html" },
+                    { title: "Dragon Ball Z Devolution", url: "/g/dbzdevolution.html" },
+                    { title: "Drift Boss", url: "/g/driftboss.html" },
+                    { title: "Escape Road", url: "/g/escaperoad.html" },
+                    { title: "Factory balls", url: "/g/factoryballs.html" },
+                    { title: "Fancy Pants Adventure", url: "/g/fancypantsadventure.html" },
+                    { title: "GD LITE", url: "/g/gdlite.html" },
+                    { title: "Gladihoppers", url: "/g/gladihoppers.html" },
+                    { title: "Google Dino", url: "/g/googledino.html" },
+                    { title: "Granny", url: "/g/granny.html" },
+                    { title: "Infinite Craft", url: "/g/infinitecraft.html" },
+                    { title: "Jetpack Joyride", url: "/g/jetpackjoyride.html" },
+                    { title: "Johnny Upgrade", url: "/g/Johnnyupgrade.html" },
+                    { title: "Justfall.lol", url: "/g/justfall.html" },
+                    { title: "Learn to fly", url: "/g/learn2fly.html" },
+                    { title: "Low Knight", url: "/g/lowknight.html" },
+                    { title: "Madalin Stunt Cars Multiplayer", url: "/g/madilinstunt.html" },
+                    { title: "Melon Playground", url: "/g/melonplayground.html" },
+                    { title: "MotoX3M", url: "/g/motox3m.html" },
+                    { title: "OvO", url: "/g/OVO.html" },
+                    { title: "Papa's Pizzeria", url: "/g/papapizzeria.html" },
+                    { title: "Paper.io 2", url: "/g/paperio2.html" },
+                    { title: "Ragdoll Archers", url: "/g/ragdollarcher.html" },
+                    { title: "Retro Bowl", url: "/g/retrobowl.html" },
+                    { title: "Rocket League", url: "/g/2drocketleauge.html" },
+                    { title: "Run 2", url: "/g/run2.html" },
+                    { title: "Slope", url: "/g/slope.html" },
+                    { title: "Soccer Random", url: "/g/soccerrandom.html" },
+                    { title: "Sprunki", url: "/g/sprunki.html" },
+                    { title: "Stickman Hook", url: "/g/stickmanhook.html" },
+                    { title: "Subway Surfers", url: "/g/subwaysurfer.html" },
+                    { title: "Super hot", url: "/g/superhot.html" },
+                    { title: "Sonic", url: "/g/sonic.html" },
+                    { title: "Sonic.EXE", url: "/g/sonicexe.html" },
+                    { title: "Final Fantasy VII", url: "/g/finalfantasy.html" },
+                    { title: "Parappa The Rapper", url: "/g/parappadarappa.html" },
+                    { title: "Achievement Unlocked", url: "/g/achivementunlcked.html" },
+                    { title: "Cat Mario", url: "/g/catmar10.html" },
+                    { title: "Little Devil", url: "/g/littledev1l.html" },
+                    { title: "Pizza Tower", url: "/g/PizzaTower.html" },
+                    { title: "Plants VS Zombies", url: "/g/pvz.html" },
+                    { title: "Sandtris", url: "/g/SandTris.html" },
+                    { title: "Wheely", url: "/g/wheely.html" },
+                    { title: "Tom Clancy's Rainbow 6", url: "/g/tomclancyrainbow6.html" },
+                    { title: "10 bullets", url: "/g/10bullets.html" },
+                    { title: "2048", url: "/g/2048.html" },
+                    { title: "60 sec burger run", url: "/g/60secburgerrun.html" },
+                    { title: "8 ball pool", url: "/g/8ballpool.html" },
+                    { title: "Among us", url: "/g/amongus.html" },
+                    { title: "Angry Birds", url: "/g/angryb1rds.html" },
+                    { title: "A small world cup", url: "/g/asmallworldcup.html" },
+                    { title: "Bad Parenting", url: "/g/Badparenting.html" },
+                    { title: "Buritto Bison", url: "/g/burittobison.html" },
+                    { title: "Crazy Cattle 3D", url: "/g/crazycattle.html" },
+                    { title: "Friday Night Funkin", url: "/g/Fridaynightfunk1n.html" },
+                    { title: "Rocket Soccer Derby", url: "/g/rocketsoccerderb.html" },
+                    { title: "Undertale", url: "/g/Undertale.html" },
+                    { title: "Brawl Stars", url: "/s/embed.html#https://easyfun.gg/embed/brawl-stars.html" },
+                    { title: "Roblox", url: "/s/embed.html#https://easyfun.gg/embed/roblox.html" },
+                    { title: "CS 1.6", url: "/s/embed.html#https://play-cs.com/" },
+                    { title: "UltraKill", url: "/g/ultrakill.html" },
+                    { title: "R.E.P.O", url: "/g/repo.html" },
+                    { title: "Balatro (Removed Due to Copyright)", url: "/404.html" },
+                    { title: "Bendy and the ink Machine", url: "/g/Bendyink.html" },
+                    { title: "Little Runmo", url: "/g/Little-Runmo.html" },
+                    { title: "Temple Run 2", url: "/g/TempleRun2.html" },
+                    { title: "That's not my neighbor", url: "/g/That'sNotMyNeighbor.html" },
+                    { title: "OSU!", url: "/g/osu.html" },
+                    { title: "Webfishing", url: "/g/WebFishing.html" },
+                    { title: "Deltarune", url: "/g/Deltarune.html" },
+                    { title: "BFDI Branches", url: "/g/BFDI_branches.html" },
+                    { title: "Buckshot Roulette", url: "/g/BuckshotRoulette.html" },
+                    { title: "Do NOT take this cat home", url: "/g/DNTTCH.html" },
+                    { title: "Half Life", url: "/g/HalfLife.html" },
+                    { title: "Happy Sheepies", url: "/g/HappySheepies.html" },
+                    { title: "OMORI", url: "/g/OMORI.html" },
+                    { title: "Quake III Arena", url: "/g/QuakeIIIArena.html" },
+                    { title: "Doki Doki Literature Club", url: "/g/DDLC.html" },
+                    { title: "RE:RUN", url: "/g/RE_RUN.html" },
+                ]
+            }
+        ];
+
+        let windows = [];
+        let activeWindowId = null;
+        let windowZIndex = 1000;
+        let windowIdCounter = 0;
+
+        // Initialize Particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize particles.js
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": { "value": "#ffffff" },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": { "width": 0, "color": "#000000" },
+                        "polygon": { "nb_sides": 5 }
+                    },
+                    "opacity": { "value": 0.5, "random": false, },
+                    "size": {
+                        "value": 3,
+                        "random": true
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#ffffff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 4,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": { "enable": true, "mode": "repulse" },
+                        "onclick": { "enable": true, "mode": "push" },
+                        "resize": true
+                    }
+                },
+                "retina_detect": true
+            });
+
+            // Create game groups
+            createGameGroups();
+        });
+
+        // Create Game Groups
+        function createGameGroups() {
+            const container = document.getElementById('game-groups-container');
+            container.innerHTML = '';
+            
+            gameGroups.forEach((group, index) => {
+                const groupElement = document.createElement('div');
+                groupElement.className = 'game-group';
+                groupElement.innerHTML = `
+                    <div class="game-group-header" onclick="toggleGroup(${index})">
+                        <div>${group.name} <span class="game-count">${group.games.length}</span></div>
+                    </div>
+                    <div class="game-group-content" id="group-content-${index}">
+                        <div class="game-tiles">
+                            ${group.games.map(game => `
+                                <div class="game-tile" onclick="openGame('${game.url}', '${game.title}')" data-title="${game.title.toLowerCase()}">
+                                    ${game.title}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(groupElement);
+            });
+
+            // Expand the "All Games" group by default
+            toggleGroup(gameGroups.length - 1);
+        }
+
+        // Toggle Game Group
+        function toggleGroup(groupIndex) {
+            const groupContent = document.getElementById(`group-content-${groupIndex}`);
+            const groupHeader = groupContent.previousElementSibling;
+            
+            groupContent.classList.toggle('expanded');
+            groupHeader.classList.toggle('expanded');
+        }
+
+        // Filter Games
+        function filterGames() {
+            const searchInput = document.getElementById('game-search').value.toLowerCase();
+            const gameTiles = document.querySelectorAll('.game-tile');
+            
+            let hasVisibleGames = Array(gameGroups.length).fill(false);
+            
+            gameTiles.forEach(tile => {
+                const tileText = tile.getAttribute('data-title');
+                const isVisible = tileText.includes(searchInput);
+                tile.style.display = isVisible ? 'flex' : 'none';
+                
+                // Find which group this tile belongs to
+                const groupContent = tile.closest('.game-group-content');
+                if (groupContent) {
+                    const groupIndex = parseInt(groupContent.id.replace('group-content-', ''));
+                    if (isVisible) {
+                        hasVisibleGames[groupIndex] = true;
+                    }
+                }
+            });
+            
+            // Show/hide groups based on whether they have visible games
+            hasVisibleGames.forEach((hasVisible, index) => {
+                const groupElement = document.getElementById(`group-content-${index}`).closest('.game-group');
+                groupElement.style.display = hasVisible ? 'block' : 'none';
+                
+                // Expand groups with visible games
+                if (hasVisible && searchInput.length > 0) {
+                    const groupContent = document.getElementById(`group-content-${index}`);
+                    const groupHeader = groupContent.previousElementSibling;
+                    groupContent.classList.add('expanded');
+                    groupHeader.classList.add('expanded');
+                }
+            });
+        }
+
+        // Create Window
+        function createWindow(url, title) {
+            const windowId = 'window-' + windowIdCounter++;
+            const windowContainer = document.getElementById('window-container');
+            
+            // Create window element
+            const windowElement = document.createElement('div');
+            windowElement.className = 'window';
+            windowElement.id = windowId;
+            windowElement.dataset.title = title;
+            
+            // Set initial position and size
+            const width = Math.min(window.innerWidth * 0.8, 1000);
+            const height = Math.min(window.innerHeight * 0.8, 700);
+            const left = (window.innerWidth - width) / 2;
+            const top = (window.innerHeight - height) / 2;
+            
+            windowElement.style.width = width + 'px';
+            windowElement.style.height = height + 'px';
+            windowElement.style.left = left + 'px';
+            windowElement.style.top = top + 'px';
+            
+            // Create window content
+            windowElement.innerHTML = `
+                <div class="window-header" id="${windowId}-header">
+                    <div class="window-title">${title}</div>
+                    <div class="window-controls">
+                        <div class="window-btn minimize-btn" onclick="minimizeWindow('${windowId}')" title="Minimize">_</div>
+                        <div class="window-btn maximize-btn" onclick="toggleMaximize('${windowId}')" title="Maximize">□</div>
+                        <div class="window-btn close-btn" onclick="closeWindow('${windowId}')" title="Close">✕</div>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="loading-overlay" id="${windowId}-loading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <iframe src="${url}" onload="hideLoading('${windowId}-loading')"></iframe>
+                </div>
+                <div class="resize-handle top" data-resize="top"></div>
+                <div class="resize-handle right" data-resize="right"></div>
+                <div class="resize-handle bottom" data-resize="bottom"></div>
+                <div class="resize-handle left" data-resize="left"></div>
+                <div class="resize-handle top-left" data-resize="top-left"></div>
+                <div class="resize-handle top-right" data-resize="top-right"></div>
+                <div class="resize-handle bottom-right" data-resize="bottom-right"></div>
+                <div class="resize-handle bottom-left" data-resize="bottom-left"></div>
+            `;
+            
+            // Add window to container
+            windowContainer.appendChild(windowElement);
+            
+            // Add to windows array
+            windows.push({
+                id: windowId,
+                title: title,
+                minimized: false
+            });
+            
+            // Setup window dragging
+            setupWindowDragging(windowId);
+            
+            // Setup window resizing
+            setupWindowResizing(windowId);
+            
+            // Make this window active
+            activateWindow(windowId);
+            
+            // Add to taskbar
+            addToTaskbar(windowId, title);
+            
+            // Show window container
+            windowContainer.style.display = 'block';
+            
+            // Show taskbar if it's not already visible
+            const taskbar = document.getElementById('taskbar');
+            taskbar.classList.add('active');
+            
+            return windowId;
+        }
+
+        // Hide Loading Overlay
+        function hideLoading(loadingId) {
+            const loadingElement = document.getElementById(loadingId);
+            if (loadingElement) {
+                loadingElement.style.display = 'none';
+            }
+        }
+
+        // Setup Window Dragging
+        function setupWindowDragging(windowId) {
+            const windowElement = document.getElementById(windowId);
+            const headerElement = document.getElementById(windowId + '-header');
+            
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            
+            headerElement.onmousedown = dragMouseDown;
+            
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                
+                // Check if window is maximized
+                if (windowElement.classList.contains('fullscreen')) {
+                    return;
+                }
+                
+                // Activate window
+                activateWindow(windowId);
+                
+                // Get the mouse cursor position at startup
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+            
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                
+                // Calculate the new cursor position
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                
+                // Set the element's new position
+                const newTop = windowElement.offsetTop - pos2;
+                const newLeft = windowElement.offsetLeft - pos1;
+                
+                // Ensure window stays within viewport
+                const maxTop = window.innerHeight - 50; // Allow some part to be visible
+                const maxLeft = window.innerWidth - 50;
+                
+                windowElement.style.top = Math.min(Math.max(newTop, 0), maxTop) + 'px';
+                windowElement.style.left = Math.min(Math.max(newLeft, -windowElement.offsetWidth + 100), maxLeft) + 'px';
+            }
+            
+            function closeDragElement() {
+                // Stop moving when mouse button is released
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        // Setup Window Resizing
+        function setupWindowResizing(windowId) {
+            const windowElement = document.getElementById(windowId);
+            const resizeHandles = windowElement.querySelectorAll('.resize-handle');
+            
+            resizeHandles.forEach(handle => {
+                handle.onmousedown = resizeMouseDown;
+            });
+            
+            function resizeMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                
+                // Check if window is maximized
+                if (windowElement.classList.contains('fullscreen')) {
+                    return;
+                }
+                
+                // Activate window
+                activateWindow(windowId);
+                
+                const resizeType = e.target.getAttribute('data-resize');
+                const startX = e.clientX;
+                const startY = e.clientY;
+                const startWidth = parseInt(document.defaultView.getComputedStyle(windowElement).width, 10);
+                const startHeight = parseInt(document.defaultView.getComputedStyle(windowElement).height, 10);
+                const startLeft = windowElement.offsetLeft;
+                const startTop = windowElement.offsetTop;
+                
+                document.onmouseup = stopResize;
+                document.onmousemove = function(e) {
+                    resizeWindow(e, resizeType, startX, startY, startWidth, startHeight, startLeft, startTop);
+                };
+            }
+            
+            function resizeWindow(e, resizeType, startX, startY, startWidth, startHeight, startLeft, startTop) {
+                const minWidth = 400;
+                const minHeight = 300;
+                const maxWidth = window.innerWidth;
+                const maxHeight = window.innerHeight;
+                
+                // Calculate new dimensions based on resize type
+                let newWidth = startWidth;
+                let newHeight = startHeight;
+                let newLeft = startLeft;
+                let newTop = startTop;
+                
+                switch (resizeType) {
+                    case 'right':
+                        newWidth = Math.min(Math.max(startWidth + e.clientX - startX, minWidth), maxWidth - startLeft);
+                        break;
+                    case 'bottom':
+                        newHeight = Math.min(Math.max(startHeight + e.clientY - startY, minHeight), maxHeight - startTop);
+                        break;
+                    case 'left':
+                        const widthChange = startX - e.clientX;
+                        newWidth = Math.min(Math.max(startWidth + widthChange, minWidth), startLeft + startWidth - 10);
+                        newLeft = Math.max(startLeft - widthChange, 0);
+                        break;
+                    case 'top':
+                        const heightChange = startY - e.clientY;
+                        newHeight = Math.min(Math.max(startHeight + heightChange, minHeight), startTop + startHeight - 10);
+                        newTop = Math.max(startTop - heightChange, 0);
+                        break;
+                    case 'bottom-right':
+                        newWidth = Math.min(Math.max(startWidth + e.clientX - startX, minWidth), maxWidth - startLeft);
+                        newHeight = Math.min(Math.max(startHeight + e.clientY - startY, minHeight), maxHeight - startTop);
+                        break;
+                    case 'bottom-left':
+                        const widthChangebl = startX - e.clientX;
+                        newWidth = Math.min(Math.max(startWidth + widthChangebl, minWidth), startLeft + startWidth - 10);
+                        newLeft = Math.max(startLeft - widthChangebl, 0);
+                        newHeight = Math.min(Math.max(startHeight + e.clientY - startY, minHeight), maxHeight - startTop);
+                        break;
+                    case 'top-right':
+                        newWidth = Math.min(Math.max(startWidth + e.clientX - startX, minWidth), maxWidth - startLeft);
+                        const heightChangetr = startY - e.clientY;
+                        newHeight = Math.min(Math.max(startHeight + heightChangetr, minHeight), startTop + startHeight - 10);
+                        newTop = Math.max(startTop - heightChangetr, 0);
+                        break;
+                    case 'top-left':
+                        const widthChangetl = startX - e.clientX;
+                        newWidth = Math.min(Math.max(startWidth + widthChangetl, minWidth), startLeft + startWidth - 10);
+                        newLeft = Math.max(startLeft - widthChangetl, 0);
+                        const heightChangetl = startY - e.clientY;
+                        newHeight = Math.min(Math.max(startHeight + heightChangetl, minHeight), startTop + startHeight - 10);
+                        newTop = Math.max(startTop - heightChangetl, 0);
+                        break;
+                }
+                
+                // Apply new dimensions
+                windowElement.style.width = newWidth + 'px';
+                windowElement.style.height = newHeight + 'px';
+                windowElement.style.left = newLeft + 'px';
+                windowElement.style.top = newTop + 'px';
+            }
+            
+            function stopResize() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        // Activate Window
+        function activateWindow(windowId) {
+            // Deactivate all windows
+            windows.forEach(window => {
+                const windowElement = document.getElementById(window.id);
+                if (windowElement) {
+                    windowElement.classList.remove('active');
+                    windowElement.style.zIndex = 1000;
+                }
+                
+                // Update taskbar
+                const taskbarItem = document.getElementById('taskbar-' + window.id);
+                if (taskbarItem) {
+                    taskbarItem.classList.remove('active');
+                }
+            });
+            
+            // Activate the selected window
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.classList.add('active');
+                windowElement.style.zIndex = ++windowZIndex;
+                activeWindowId = windowId;
+                
+                // Update taskbar
+                const taskbarItem = document.getElementById('taskbar-' + windowId);
+                if (taskbarItem) {
+                    taskbarItem.classList.add('active');
+                }
+            }
+        }
+
+        // Close Window
+        function closeWindow(windowId) {
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.remove();
+                
+                // Remove from windows array
+                windows = windows.filter(window => window.id !== windowId);
+                
+                // Remove from taskbar
+                const taskbarItem = document.getElementById('taskbar-' + windowId);
+                if (taskbarItem) {
+                    taskbarItem.remove();
+                }
+                
+                // Hide window container if no windows are open
+                if (windows.length === 0) {
+                    document.getElementById('window-container').style.display = 'none';
+                    document.getElementById('taskbar').classList.remove('active');
+                } else {
+                    // Activate the next window
+                    activateWindow(windows[windows.length - 1].id);
+                }
+            }
+        }
+
+        // Minimize Window
+        function minimizeWindow(windowId) {
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.classList.add('minimized');
+                
+                // Update windows array
+                const windowIndex = windows.findIndex(window => window.id === windowId);
+                if (windowIndex !== -1) {
+                    windows[windowIndex].minimized = true;
+                }
+                
+                // Activate the next visible window
+                const visibleWindows = windows.filter(window => !window.minimized);
+                if (visibleWindows.length > 0) {
+                    activateWindow(visibleWindows[visibleWindows.length - 1].id);
+                }
+            }
+        }
+
+        // Toggle Maximize
+        function toggleMaximize(windowId) {
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.classList.toggle('fullscreen');
+                
+                // Update maximize button icon
+                const maximizeBtn = windowElement.querySelector('.maximize-btn');
+                if (windowElement.classList.contains('fullscreen')) {
+                    maximizeBtn.textContent = '❐';
+                    maximizeBtn.title = 'Restore';
+                } else {
+                    maximizeBtn.textContent = '□';
+                    maximizeBtn.title = 'Maximize';
+                }
+            }
+        }
+
+        // Add to Taskbar
+        function addToTaskbar(windowId, title) {
+            const taskbarItems = document.getElementById('taskbar-items');
+            
+            // Create taskbar item
+            const taskbarItem = document.createElement('div');
+            taskbarItem.className = 'taskbar-item';
+            taskbarItem.id = 'taskbar-' + windowId;
+            taskbarItem.innerHTML = `<div class="taskbar-item-title">${title}</div>`;
+            taskbarItem.onclick = function() {
+                const windowElement = document.getElementById(windowId);
+                const windowData = windows.find(window => window.id === windowId);
+                
+                if (windowData && windowData.minimized) {
+                    // Restore window
+                    windowElement.classList.remove('minimized');
+                    windowData.minimized = false;
+                    activateWindow(windowId);
+                } else if (windowElement.classList.contains('active')) {
+                    // Minimize if already active
+                    minimizeWindow(windowId);
+                } else {
+                    // Activate window
+                    activateWindow(windowId);
+                }
+            };
+            
+            taskbarItems.appendChild(taskbarItem);
+        }
+
+        // Open Game
+        function openGame(url, title) {
+            // Check if game is already open
+            const existingWindow = windows.find(window => window.title === title);
+            if (existingWindow) {
+                // Restore if minimized
+                if (existingWindow.minimized) {
+                    const windowElement = document.getElementById(existingWindow.id);
+                    windowElement.classList.remove('minimized');
+                    existingWindow.minimized = false;
+                }
+                
+                // Activate window
+                activateWindow(existingWindow.id);
+                return;
+            }
+            
+            // Create new window
+            createWindow(url, title);
+        }
+
+        // Window Container Click Handler
+        document.getElementById('window-container').addEventListener('click', function(e) {
+            // Check if click is directly on the container (not on a window)
+            if (e.target === this) {
+                // Optionally close all windows or do nothing
+                // closeAllWindows();
+            }
+        });
+
+        // Close All Windows
+        function closeAllWindows() {
+            // Create a copy of the array to avoid modification during iteration
+            const windowsCopy = [...windows];
+            windowsCopy.forEach(window => {
+                closeWindow(window.id);
+            });
+        }
+
+        // Handle window clicks to activate
+        document.addEventListener('mousedown', function(e) {
+            // Find if click is inside a window
+            let targetWindow = e.target.closest('.window');
+            if (targetWindow) {
+                activateWindow(targetWindow.id);
+            }
+        });
+
+        // Handle keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Alt+Tab to cycle through windows
+            if (e.altKey && e.key === 'Tab') {
+                e.preventDefault();
+                
+                const visibleWindows = windows.filter(window => !window.minimized);
+                if (visibleWindows.length > 1) {
+                    const currentIndex = visibleWindows.findIndex(window => window.id === activeWindowId);
+                    const nextIndex = (currentIndex + 1) % visibleWindows.length;
+                    activateWindow(visibleWindows[nextIndex].id);
+                }
+            }
+            
+            // Escape to close active window
+            if (e.key === 'Escape' && activeWindowId) {
+                closeWindow(activeWindowId);
+            }
+        });
+    </script>
+</body>
+</html>
