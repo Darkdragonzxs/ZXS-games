@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      cursor: none !important;
+    }
+
+    iframe {
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <script type="module">
+    import { initCursor } from "https://unpkg.com/ipad-cursor@latest";
+
+    const cursor = initCursor();
+
+    function setCursorVisible(visible) {
+      const cursorEl = document.querySelector(".ipad-cursor");
+      if (cursorEl) {
+        cursorEl.style.opacity = visible ? "1" : "0";
+      }
+    }
+
+    document.addEventListener("mouseleave", () => {
+      setCursorVisible(false);
+    });
+
+    document.addEventListener("mouseenter", () => {
+      setCursorVisible(true);
+    });
+
+    const iframes = document.querySelectorAll("iframe");
+    iframes.forEach((iframe) => {
+      iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+      iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+    });
+
+    const observer = new MutationObserver(() => {
+      const newIframes = document.querySelectorAll("iframe:not([data-processed])");
+      newIframes.forEach((iframe) => {
+        iframe.dataset.processed = "true";
+        iframe.addEventListener("mouseenter", () => setCursorVisible(false));
+        iframe.addEventListener("mouseleave", () => setCursorVisible(true));
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  </script>
+  <style>
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    #vmframe {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      background: #000;
+      z-index: 1;
+    }
+    #loading {
+      color: #fff;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: sans-serif;
+      font-size: 1.5em;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">Loading...</div>
+  <script>
+    async function embedVM() {
+      try {
+        const res = await fetch('https://demo-api.tutturu.workers.dev/');
+        const data = await res.json();
+        const vmUrl = data.vmurl || data.url || data.vmUrl || data.vmURL; 
+
+        if (vmUrl) {
+          // Remove loading
+          document.getElementById('loading').remove();
+          // Create iframe
+          const iframe = document.createElement('iframe');
+          iframe.id = 'vmframe';
+          iframe.src = vmUrl;
+          iframe.allow = "fullscreen";
+          document.body.appendChild(iframe);
+        } else {
+          document.getElementById('loading').textContent = 'Error: VM URL not found in API response.';
+        }
+      } catch (e) {
+        document.getElementById('loading').textContent = 'Error fetching VM URL.';
+      }
+    }
+    embedVM();
+  </script>
+</body>
+</html>
