@@ -1,3 +1,3 @@
-/service/*    /index.html    200
-/*            /404.html    404
-/s/kibidi/*    /uv-redirect.html   200
+/service/*     /index.html         200
+/s/kibidi/*    /uv-redirect.html   404
+/*             /404.html           404
