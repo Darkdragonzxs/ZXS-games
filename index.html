@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Loading Ads</title>
+  <link id="favicon" rel="icon" type="image/png" href="https://i.postimg.cc/QxJTZ0Kw/Screenshot-2025-05-26-10-29-20-PM-removebg-preview.png">
   <style>
     html, body {
       margin: 0; padding: 0; height: 100vh; width: 100vw;
@@ -45,7 +46,36 @@
   const now = Date.now();
 
   function showMainSite() {
-    document.body.innerHTML = `<iframe src="/main.html"></iframe>`;
+    document.body.innerHTML = `<iframe src="main.html"></iframe>`;
+
+    // Tab title + favicon switcher script
+    const titles = {
+      active: "𝙕𝙓𝙎",
+      inactive: "Dashboard"
+    };
+
+    const favicons = {
+      active: "https://i.postimg.cc/QxJTZ0Kw/Screenshot-2025-05-26-10-29-20-PM-removebg-preview.png",
+      inactive: "https://i.postimg.cc/ydnq9QzB/Screenshot-2025-05-13-12-03-53-PM-removebg-preview.png"
+    };
+
+    const faviconElement = document.getElementById('favicon');
+
+    function updateTabInfo(isActive) {
+      document.title = isActive ? titles.active : titles.inactive;
+      if (faviconElement) {
+        faviconElement.href = isActive ? favicons.active : favicons.inactive;
+      }
+    }
+
+    updateTabInfo(true);
+
+    document.addEventListener('visibilitychange', () => {
+      updateTabInfo(!document.hidden);
+    });
+
+    window.addEventListener('focus', () => updateTabInfo(true));
+    window.addEventListener('blur', () => updateTabInfo(false));
   }
 
   if (accessUntil && parseInt(accessUntil) > now) {
