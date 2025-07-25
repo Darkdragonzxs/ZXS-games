@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loading Ads</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100vh; width: 100vw;
+      background: #111; color: #fff;
+      display: flex; justify-content: center; align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #ads {
+      text-align: center;
+    }
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<div id="ads" style="display:none;">
+  <p>Viewing ads... Please wait 5 seconds</p>
+  <script src="https://static.surfe.pro/js/net.js"></script>
+  <ins class="surfe-be" data-sid="414621"></ins>
+  <script>(adsurfebe = window.adsurfebe || []).push({});</script>
+  <br /><br />
+  <ins class="surfe-be" data-sid="414621"></ins>
+  <script>(adsurfebe = window.adsurfebe || []).push({});</script>
+</div>
+
+<div id="loader">
+  <p>Checking access...</p>
+</div>
+
+<script>
+  const ACCESS_KEY = 'access_granted_until';
+  const TWO_HOURS = 1000 * 60 * 60 * 2;
+  const accessUntil = localStorage.getItem(ACCESS_KEY);
+  const now = Date.now();
+
+  function showMainSite() {
+    document.body.innerHTML = `<iframe src="/main.html"></iframe>`;
+  }
+
+  if (accessUntil && parseInt(accessUntil) > now) {
+    showMainSite();
+  } else {
+    document.getElementById('ads').style.display = 'block';
+    document.getElementById('loader').style.display = 'none';
+
+    setTimeout(() => {
+      localStorage.setItem(ACCESS_KEY, Date.now() + TWO_HOURS);
+      showMainSite();
+    }, 5000);
+  }
+</script>
+
+</body>
+</html>
