@@ -32,15 +32,6 @@
 <div id="ads" style="display:none;">
   <p>Viewing ads... Please wait 5 seconds</p>
 
-  <!-- Surfe Pro Ad -->
-  <script src="https://static.surfe.pro/js/net.js"></script>
-  <ins class="surfe-be" data-sid="414621"></ins>
-  <script>(adsurfebe = window.adsurfebe || []).push({});</script>
-  <br /><br />
-  <ins class="surfe-be" data-sid="414621"></ins>
-  <script>(adsurfebe = window.adsurfebe || []).push({});</script>
-</div>
-
 <div id="loader">
   <p>Checking access...</p>
 </div>
@@ -54,7 +45,6 @@
   function showMainSite() {
     document.body.innerHTML = `<iframe src="main.html"></iframe>`;
 
-    // Tab title + favicon switcher
     const titles = { active: "𝙕𝙓𝙎", inactive: "Dashboard" };
     const favicons = {
       active: "https://i.postimg.cc/QxJTZ0Kw/Screenshot-2025-05-26-10-29-20-PM-removebg-preview.png",
@@ -79,8 +69,7 @@
     document.getElementById('ads').style.display = 'block';
     document.getElementById('loader').style.display = 'none';
 
-    const isIndex = location.pathname.endsWith('/') || location.pathname.endsWith('index.html');
-    if (isIndex && window.aclib && window.aclib.runAutoTag) {
+    if (window.aclib && window.aclib.runAutoTag) {
       aclib.runAutoTag({ zoneId: 'dlmkfmhlqo' });
     }
 
