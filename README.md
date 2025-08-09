@@ -10,6 +10,6 @@
 <p>We are a good community</p>
 <p>owner is responsive</p>
 <p>We have cool partners</p>
-<p>We have lots of links! BYOD is Coming in the next 2 weeks.</p>
+<p>We have lots of links! we have byod too!</p>
 <p>Free link: https://ze-ecks-es.netlify.app</p>
 <h2>We thank you for using my site :)</h2>
