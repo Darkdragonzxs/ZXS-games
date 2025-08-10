@@ -1,255 +1,38 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Credits — ZXS Games</title>
-  <link rel="icon" href="/assets/images/logoV.png">
-  <meta name="theme-color" content="#0a0a0a">
+  <meta charset="UTF-8" />
+  <title>Credits</title>
   <style>
-    :root{
-      --bg:#000000;
-      --text:#d9ffe4;
-      --muted:#9ed9b4;
-      --accent:#22c55e;
-      --accent-2:#16a34a;
-      --panel:rgba(10, 24, 16, .75);
-      --panel-2:rgba(8, 18, 12, .7);
-      --border:rgba(34, 197, 94, .28);
-      --radius:16px;
-      --shadow:0 30px 120px rgba(0,0,0,.5);
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: white;
+      color: black;
+      padding: 20px;
+      line-height: 1.4;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:#000;
-      color:var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      overflow:auto;
+    button {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: none;
+      border: 2px solid black;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-top: 20px;
     }
-    canvas#matrix{
-      position:fixed; inset:0; width:100%; height:100%; z-index:0;
-      background:
-        radial-gradient(1200px 700px at 10% -10%, #05160b 0%, rgba(0,0,0,0) 60%) no-repeat,
-        radial-gradient(800px 500px at 110% 10%, #07170e 0%, rgba(0,0,0,0) 55%) no-repeat,
-        #000;
+    ul {
+      margin-left: 20px;
     }
-    .wrap{ position:relative; z-index:1; display:grid; grid-template-rows:auto 1fr auto; min-height:100dvh; }
-    .top{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:14px 18px; border-bottom:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(0,0,0,.9), rgba(0,0,0,.55));
-      backdrop-filter: blur(6px);
-    }
-    .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
-    .brand img{ width:28px; height:28px; border-radius:8px; border:1px solid var(--border); background:#0b0b0b; }
-    .brand span{ font-weight:800; letter-spacing:.08em }
-    .back{
-      appearance:none; border:1px solid var(--border); color:var(--text);
-      background:rgba(10,10,10,.55); padding:10px 14px; border-radius:10px;
-      text-decoration:none; display:inline-flex; align-items:center; gap:8px;
-    }
-    .back:hover{ border-color:#2ae27a; background:rgba(15,15,15,.6) }
-    .main{ display:grid; place-items:center; padding:24px }
-    .panel{
-      width:min(1100px, 96vw);
-      background:
-        radial-gradient(120% 120% at 10% 0%, rgba(34,197,94,.08) 0%, transparent 60%),
-        var(--panel);
-      border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);
-      overflow:hidden; position:relative;
-    }
-    .panel::before{
-      content:""; position:absolute; inset:0;
-      background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,.06) 50%, transparent 100%);
-      opacity:.22; animation:scan 5.5s linear infinite; pointer-events:none;
-    }
-    @keyframes scan{ from{transform:translateY(-100%)} to{transform:translateY(100%)} }
-    .header{
-      padding:28px 28px 10px 28px; border-bottom:1px solid var(--border);
-      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
-      background:linear-gradient(180deg, rgba(34,197,94,.06), rgba(34,197,94,0) 30%);
-    }
-    .title{
-      font-size:clamp(28px, 5vw, 48px); line-height:1; letter-spacing:.12em;
-      position:relative; text-shadow:0 0 22px rgba(34,197,94,.28);
-    }
-    .title::after{
-      content:attr(data-shadow); position:absolute; inset:0; left:1px; top:0;
-      color:#8dffbf; opacity:.18; filter:blur(.8px);
-    }
-    .meta{ color:var(--muted); font-size:12px; letter-spacing:.22em; text-transform:uppercase }
-    .content{
-      display:grid; grid-template-columns: .9fr 1.1fr; gap:18px; padding:22px 24px 28px 24px;
-    }
-    .col{ display:grid; gap:18px; align-content:start }
-    .card{
-      background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:18px;
-      position:relative; overflow:hidden;
-    }
-    .card::after{
-      content:""; position:absolute; inset:auto 0 0 0; height:1px;
-      background:linear-gradient(90deg, transparent, rgba(34,197,94,.4), transparent); opacity:.6;
-    }
-    .dev-name{ font-size:clamp(20px, 3vw, 26px); margin:0 0 6px 0; letter-spacing:.06em; }
-    .dev-role{ margin:0 0 10px 0; color:#bfffd2; font-size:12px; letter-spacing:.16em; text-transform:uppercase }
-    .dev-desc{ margin:0; color:var(--muted); font-size:13px; line-height:1.6 }
-    .section-title{
-      margin:0 0 8px 0; color:#bfffd2; font-size:12px; letter-spacing:.16em; text-transform:uppercase
-    }
-    .games{ display:grid; grid-template-columns: repeat(2, minmax(220px,1fr)); gap:12px }
-    .game{
-      background:rgba(0,0,0,.25); border:1px solid var(--border); border-radius:10px; padding:12px 12px 11px;
-      display:grid; gap:6px;
-    }
-    .game-title{ margin:0; font-weight:700; letter-spacing:.04em; font-size:15px }
-    .game-meta{ color:var(--muted); font-size:12px; line-height:1.5 }
-    .game-links{ display:flex; flex-wrap:wrap; gap:8px; margin-top:2px }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--border);
-      border-radius:999px; color:#dffff0; text-decoration:none; background:rgba(0,0,0,.2); font-size:12px
-    }
-    .pill:hover{ border-color:#2ae27a }
-    .footer{
-      display:flex; justify-content:space-between; align-items:center; gap:12px;
-      padding:12px 18px; border-top:1px solid var(--border);
-      background:linear-gradient(0deg, rgba(34,197,94,.06), rgba(34,197,94,0) 30%);
-    }
-    .note{ color:var(--muted); font-size:12px }
-    .actions{ display:flex; align-items:center; gap:10px }
-    .btn{
-      appearance:none; border:1px solid var(--border); color:var(--text);
-      background:rgba(10,10,10,.55); padding:10px 14px; border-radius:10px; text-decoration:none;
-      display:inline-flex; align-items:center; gap:10px
-    }
-    .btn.primary{ border-color:#35f08a; background:rgba(28,55,38,.4); color:#dffff0 }
-    .btn:hover{ border-color:#2ae27a }
-    @media (max-width: 980px){ .content{ grid-template-columns:1fr } .games{ grid-template-columns:1fr } }
-    @media (prefers-reduced-motion: reduce){ .panel::before{ animation:none } }
   </style>
 </head>
 <body>
-  <canvas id="matrix" aria-hidden="true"></canvas>
-
-  <div class="wrap">
-    <header class="top">
-      <a class="brand" href="/" aria-label="Back to ZXS Games">
-        <img src="/logo.png" alt="ZXS Games">
-        <span>ZXS GAMES</span>
-      </a>
-      <a class="back" href="/" aria-label="Back to home">← Back</a>
-    </header>
-
-    <main class="main">
-      <section class="panel" aria-labelledby="credits-title">
-        <div class="header">
-          <h1 id="credits-title" class="title" data-shadow="CREDITS">CREDITS</h1>
-          <div class="meta">MATRIX MODE</div>
-        </div>
-
-        <div class="content">
-          <div class="col">
-            <article class="card">
-              <h2 class="dev-role">Developer</h2>
-              <p class="dev-name" id="dev-name">ZXS</p>
-              <p class="dev-desc">Solo dev. Code, design, and deployment.</p>
-            </article>
-
-            <article class="card">
-              <h2 class="section-title">Notes</h2>
-              <p class="dev-desc">I made this site for fun! I love the community and do this as my hobby!</p>
-            </article>
-          </div>
-
-          <div class="col">
-            <article class="card">
-              <h2 class="section-title">Ported Games</h2>
-              <div class="games" id="ported-list"></div>
-            </article>
-          </div>
-        </div>
-
-        <div class="footer">
-          <div class="note">ZXS Games</div>
-          <div class="actions">
-            <a class="btn" href="/" aria-label="Back">← Back</a>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="top" style="border-top:1px solid var(--border); border-bottom:none;">
-      <span style="color:var(--muted); font-size:12px">All systems nominal</span>
-      <span style="color:#aef7c7; font-size:12px">https://discord.gg/zxs</span>
-    </footer>
-  </div>
-
-  <script>
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d', { alpha: false });
-    const glyphs = '01░▒▓█ｱｲｳｴｵｶｷｸｹｺABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let fs = 16, cols = 0, drops = [], last = 0, frame = 1000/32;
-
-    function resize() {
-      const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
-      const w = Math.floor(window.innerWidth);
-      const h = Math.floor(window.innerHeight);
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.imageSmoothingEnabled = false;
-      fs = Math.max(14, Math.min(22, Math.round(w / 85)));
-      ctx.font = fs + 'px monospace';
-      cols = Math.floor(w / fs);
-      drops = new Array(cols).fill(0).map(() => Math.floor(Math.random() * (h / fs)));
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, w, h);
-    }
-
-    function draw(t) {
-      if (t - last < frame) { requestAnimationFrame(draw); return; }
-      last = t;
-      const w = window.innerWidth, h = window.innerHeight;
-      ctx.fillStyle = 'rgba(0,0,0,0.08)';
-      ctx.fillRect(0, 0, w, h);
-      for (let i = 0; i < drops.length; i++) {
-        const x = i * fs, y = drops[i] * fs;
-        const ch = glyphs.charAt((Math.random() * glyphs.length) | 0);
-        const l = 55 + Math.random() * 25;
-        ctx.fillStyle = `hsl(140deg 80% ${l}%)`;
-        ctx.fillText(ch, x, y);
-        if (y > h && Math.random() > 0.975) drops[i] = 0; else drops[i]++;
-      }
-      requestAnimationFrame(draw);
-    }
-
-    addEventListener('resize', resize, { passive:true });
-    resize();
-    requestAnimationFrame(draw);
-
-    const developerName = 'ZXS';
-    document.getElementById('dev-name').textContent = developerName;
-
-    const portedGames = [
-      { title: 'All the ports', author: 'Genitzy, 98corbins, Burnedprojects', source: 'https://github.com/genizy/web-port' },
-      { title: 'Nintendo Games', author: 'Nintendo (for games), EmulatorJS', source: 'https://github.com/EmulatorJS/EmulatorJS' },
-
-    ];
-
-    const list = document.getElementById('ported-list');
-    for (const g of portedGames) {
-      const el = document.createElement('div');
-      el.className = 'game';
-      el.innerHTML = `
-        <h3 class="game-title">${g.title}</h3>
-        <div class="game-meta">Author: ${g.author}</div>
-        <div class="game-links">
-          <a class="pill" href="${g.source}" target="_blank" rel="noopener">Source</a>
-        </div>
-      `;
-      list.appendChild(el);
-    }
-  </script>
+  <h1>Credits</h1>
+  <h3>Solo Developer: ZXS</h3>
+  <p>Games used in this site:</p>
+  <ul>
+    <li><b>All the ports</b> — Genitzy, 98corbins, Burnedprojects</li>
+    <li><b>Nintendo Games</b> — Nintendo (for games), EmulatorJS</li>
+  </ul>
+  <p>support these people!!! not nintendo they greedy af</p>
+  <button onclick="window.close()">Back</button>
 </body>
 </html>
