@@ -22,7 +22,148 @@
       }
     </style>
   </head>
+  <script>
+/**
+ * ZXS Games - Keyboard Navigation Prevention Script
+ * 
+ * This script prevents users from accidentally closing the tab or navigating away
+ * from the game using keyboard shortcuts like Ctrl+W, Alt+F4, etc.
+ */
+
+(function() {
+    // List of key combinations to prevent
+    const preventedCombinations = [
+        { key: 'w', ctrl: true },     // Ctrl+W (close tab)
+        { key: 'r', ctrl: true },     // Ctrl+R (refresh page)
+        { key: 'f4', alt: true },     // Alt+F4 (close window)
+        { key: 'f5' },                // F5 (refresh page)
+        { key: 'n', ctrl: true },     // Ctrl+N (new window)
+        { key: 't', ctrl: true },     // Ctrl+T (new tab)
+        { key: 'Tab', alt: true },    // Alt+Tab (switch window) - may not work in all browsers
+        { key: 'Backspace', alt: true }, // Alt+Backspace (back navigation)
+        { key: 'ArrowLeft', alt: true }, // Alt+Left Arrow (back navigation)
+        { key: 'ArrowRight', alt: true }, // Alt+Right Arrow (forward navigation)
+    ];
+
+    // Function to check if a key event matches a prevented combination
+    function matchesCombination(event, combo) {
+        return event.key.toLowerCase() === combo.key.toLowerCase() && 
+               (!combo.ctrl || event.ctrlKey) && 
+               (!combo.alt || event.altKey) && 
+               (!combo.shift || event.shiftKey);
+    }
+
+    // Main event handler for keydown events
+    function handleKeyDown(event) {
+        // Check if the active element is an input, textarea, or other form element
+        // Allow normal keyboard behavior in these elements
+        const activeElement = document.activeElement;
+        const isFormElement = activeElement.tagName === 'INPUT' || 
+                             activeElement.tagName === 'TEXTAREA' || 
+                             activeElement.tagName === 'SELECT' ||
+                             activeElement.isContentEditable;
+        
+        // Don't block shortcuts if user is typing in a form element
+        if (isFormElement) {
+            return;
+        }
+
+        // Check if the key combination should be prevented
+        for (const combo of preventedCombinations) {
+            if (matchesCombination(event, combo)) {
+                event.preventDefault();
+                event.stopPropagation();
+                console.log(`Prevented key combination: ${combo.key} (ctrl: ${!!combo.ctrl}, alt: ${!!combo.alt})`);
+                
+                // Optionally show a message to the user
+                showBlockedMessage(combo);
+                return;
+            }
+        }
+    }
+
+    // Function to show a temporary message when a shortcut is blocked
+    function showBlockedMessage(combo) {
+        // Create message element if it doesn't exist
+        let messageElement = document.getElementById('keyboard-blocked-message');
+        
+        if (!messageElement) {
+            messageElement = document.createElement('div');
+            messageElement.id = 'keyboard-blocked-message';
+            messageElement.style.position = 'fixed';
+            messageElement.style.bottom = '60px'; // Above the taskbar
+            messageElement.style.left = '50%';
+            messageElement.style.transform = 'translateX(-50%)';
+            messageElement.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            messageElement.style.color = '#00ff00';
+            messageElement.style.padding = '10px 20px';
+            messageElement.style.borderRadius = '5px';
+            messageElement.style.fontFamily = 'Orbitron, sans-serif';
+            messageElement.style.zIndex = '2000';
+            messageElement.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.5)';
+            messageElement.style.border = '1px solid rgba(0, 255, 0, 0.3)';
+            messageElement.style.transition = 'opacity 0.3s ease';
+            messageElement.style.opacity = '0';
+            document.body.appendChild(messageElement);
+        }
+
+        // Format the key combination for display
+        let keyCombo = '';
+        if (combo.ctrl) keyCombo += 'Ctrl+';
+        if (combo.alt) keyCombo += 'Alt+';
+        if (combo.shift) keyCombo += 'Shift+';
+        keyCombo += combo.key.toUpperCase();
+
+        // Set message content
+        messageElement.textContent = `Keyboard shortcut blocked: ${keyCombo}`;
+        
+        // Show the message
+        messageElement.style.opacity = '1';
+        
+        // Hide the message after 2 seconds
+        clearTimeout(messageElement.hideTimeout);
+        messageElement.hideTimeout = setTimeout(() => {
+            messageElement.style.opacity = '0';
+        }, 2000);
+    }
+
+    // Function to handle beforeunload event (when user tries to close the tab/window)
+    function handleBeforeUnload(event) {
+        // Check if any game windows are open
+        const gameWindows = document.querySelectorAll('.window');
+        if (gameWindows.length > 0) {
+            // Standard way of showing a confirmation dialog
+            event.preventDefault();
+            event.returnValue = 'You have games open. Are you sure you want to leave?';
+            return event.returnValue;
+        }
+    }
+
+    // Add event listeners
+    function initialize() {
+        document.addEventListener('keydown', handleKeyDown, { capture: true });
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        
+        console.log('ZXS Games: Navigation prevention initialized');
+    }
+
+    // Initialize when the DOM is fully loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initialize);
+    } else {
+        initialize();
+    }
+
+    // Expose a method to disable the prevention if needed
+    window.disableNavigationPrevention = function() {
+        document.removeEventListener('keydown', handleKeyDown, { capture: true });
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        console.log('ZXS Games: Navigation prevention disabled');
+    };
+})();
+</script>
   <body>
     <div id="unityContainer"></div>
   </body>
 </html>
+
