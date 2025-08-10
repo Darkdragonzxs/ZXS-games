@@ -69,7 +69,7 @@
             --button-hover: rgba(255, 255, 255, 0.2);
             --tile-bg: linear-gradient(135deg, #202020 0%, #101010 100%);
             --tile-hover: linear-gradient(135deg, #303030 0%, #202020 100%);
-            --taskbar-height: 40px; /* Added taskbar height variable */
+            --taskbar-height: 40px; 
         }
 
         * {
@@ -89,7 +89,7 @@
             width: 100vw;
         }
 
-        /* Particles Background */
+        
         #particles-js {
             position: fixed;
             width: 100%;
@@ -97,7 +97,7 @@
             z-index: 0;
         }
 
-        /* Main Content */
+      
         .games-section {
             position: relative;
             width: 100%;
@@ -107,7 +107,7 @@
             z-index: 1;
         }
 
-        /* Section Title */
+        
         .section-title {
             text-align: center;
             font-size: 32px;
@@ -133,7 +133,7 @@
             background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
         }
 
-        /* Search Bar */
+        
         .search-container {
             position: relative;
             max-width: 600px;
@@ -170,7 +170,6 @@
             pointer-events: none;
         }
 
-        /* Game Groups */
         .game-group {
             margin: 20px 0;
             border-radius: 10px;
@@ -228,7 +227,6 @@
             overflow-y: auto;
         }
 
-        /* Game Tiles */
         .game-tiles {
             display: flex;
             flex-wrap: wrap;
@@ -614,7 +612,6 @@
             animation: windowOpen 0.3s ease forwards;
         }
 
-        /* Pulse Animation for Game Tiles */
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(0, 255, 0, 0); }
@@ -627,10 +624,8 @@
     </style>
 </head>
 <body>
-    <!-- Particles Background -->
     <div id="particles-js"></div>
 
-    <!-- Main Content -->
     <div class="games-section">
         <h1 class="section-title">ZXS GAMES</h1>
         <div class="search-container">
@@ -639,155 +634,211 @@
         <div id="game-groups-container"></div>
     </div>
 
-    <!-- Window Container -->
     <div class="window-container" id="window-container">
-        <!-- Windows will be dynamically created here -->
     </div>
 
-    <!-- Taskbar -->
     <div class="taskbar" id="taskbar">
         <div class="taskbar-items" id="taskbar-items">
-            <!-- Taskbar items will be dynamically created here -->
         </div>
     </div>
 
     <script>
-        // Game Data
-        const gameGroups = [
-            {
-                name: "Duck Life Series",
-                games: [
-                    { title: "Duck life", url: "/g/ducklife.html" },
-                    { title: "Duck life 2", url: "/g/ducklife2.html" },
-                    { title: "Duck life 3", url: "/g/ducklife3.html" },
-                    { title: "Duck life 4", url: "/g/ducklife4.html" },
-                    { title: "Duck life 5", url: "/g/ducklife5.html" }
-                ]
-            },
-            {
-                name: "Mario Games",
-                games: [
-                    { title: "Super Mario Bros.", url: "/g/supermariobros.html" },
-                    { title: "Super Mario 64", url: "/g/supermario64.html" },
-                    { title: "Mario Kart 64", url: "/g/mariokart64.html" },
-                    { title: "Mario Kart Super Circuit", url: "/g/MKsupercircut.html" }
-                ]
-            },
-            {
-                name: "Pokemon Games",
-                games: [
-                    { title: "Pokemon Emerald", url: "/g/Pokemonemerald.html" },
-                    { title: "Pokemon Firered", url: "/g/PokemonFireRed.html" },
-                    { title: "Pokemon Too Many Types", url: "/g/pokemon2manytypes.html" }
-                ]
-            },
-            {
-                name: "All Games",
-                games: [
-                    { title: "1", url: "/g/1.html" },
-                    { title: "10 minutes till dawn", url: "/g/10minutestilldawn.html" },
-                    { title: "1 on 1 soccer", url: "/g/1on1soccer.html" },
-                    { title: "1v1.lol", url: "/g/1v1lol.html" },
-                    { title: "ADOFAI", url: "/g/adofai.html" },
-                    { title: "Amazing Strange Rope Police", url: "/g/amazingstrangeropepolice.html" },
-                    { title: "Animal Crossing Wild World", url: "/g/wildworld.html" },
-                    { title: "Bad Time Simulator", url: "/g/badtimesimulator.html" },
-                    { title: "Baldi's Basics", url: "/g/baldisbasics.html" },
-                    { title: "Banjo‑kazooie", url: "/g/banjokazooie.html" },
-                    { title: "Basket Random", url: "/g/basketrandom.html" },
-                    { title: "Basketball Stars", url: "/g/basketballstars.html" },
-                    { title: "Bitlife", url: "/g/bitlife.html" },
-                    { title: "Boxing Random", url: "/g/boxingrandom.html" },
-                    { title: "Cell Machine", url: "/g/cellmachine.html" },
-                    { title: "Chess", url: "/g/chess.html" },
-                    { title: "Cluster Rush", url: "/g/clusterrush.html" },
-                    { title: "Cookie Clicker", url: "/g/cookieclicker.html" },
-                    { title: "Call of Duty - Black Ops", url: "/g/codblackops.html" },
-                    { title: "CS:GO Clicker", url: "/g/csgoclicker.html" },
-                    { title: "Doge Miner", url: "/g/dogeminer.html" },
-                    { title: "Donkey Kong 64", url: "/g/DK64.html" },
-                    { title: "DOOM", url: "/g/doom.html" },
-                    { title: "Dragon Ball Z Devolution", url: "/g/dbzdevolution.html" },
-                    { title: "Drift Boss", url: "/g/driftboss.html" },
-                    { title: "Escape Road", url: "/g/escaperoad.html" },
-                    { title: "Factory balls", url: "/g/factoryballs.html" },
-                    { title: "Fancy Pants Adventure", url: "/g/fancypantsadventure.html" },
-                    { title: "GD LITE", url: "/g/gdlite.html" },
-                    { title: "Gladihoppers", url: "/g/gladihoppers.html" },
-                    { title: "Google Dino", url: "/g/googledino.html" },
-                    { title: "Granny", url: "/g/granny.html" },
-                    { title: "Infinite Craft", url: "/g/infinitecraft.html" },
-                    { title: "Jetpack Joyride", url: "/g/jetpackjoyride.html" },
-                    { title: "Johnny Upgrade", url: "/g/Johnnyupgrade.html" },
-                    { title: "Justfall.lol", url: "/g/justfall.html" },
-                    { title: "Learn to fly", url: "/g/learn2fly.html" },
-                    { title: "Low Knight", url: "/g/lowknight.html" },
-                    { title: "Madalin Stunt Cars Multiplayer", url: "/g/madilinstunt.html" },
-                    { title: "Melon Playground", url: "/g/melonplayground.html" },
-                    { title: "MotoX3M", url: "/g/motox3m.html" },
-                    { title: "OvO", url: "/g/OVO.html" },
-                    { title: "Papa's Pizzeria", url: "/g/papapizzeria.html" },
-                    { title: "Paper.io 2", url: "/g/paperio2.html" },
-                    { title: "Ragdoll Archers", url: "/g/ragdollarcher.html" },
-                    { title: "Retro Bowl", url: "/g/retrobowl.html" },
-                    { title: "Rocket League", url: "/g/2drocketleauge.html" },
-                    { title: "Run 2", url: "/g/run2.html" },
-                    { title: "Slope", url: "/g/slope.html" },
-                    { title: "Soccer Random", url: "/g/soccerrandom.html" },
-                    { title: "Sprunki", url: "/g/sprunki.html" },
-                    { title: "Stickman Hook", url: "/g/stickmanhook.html" },
-                    { title: "Subway Surfers", url: "/g/subwaysurfer.html" },
-                    { title: "Super hot", url: "/g/superhot.html" },
-                    { title: "Sonic", url: "/g/sonic.html" },
-                    { title: "Sonic.EXE", url: "/g/sonicexe.html" },
-                    { title: "Final Fantasy VII", url: "/g/finalfantasy.html" },
-                    { title: "Parappa The Rapper", url: "/g/parappadarappa.html" },
-                    { title: "Achievement Unlocked", url: "/g/achivementunlcked.html" },
-                    { title: "Cat Mario", url: "/g/catmar10.html" },
-                    { title: "Little Devil", url: "/g/littledev1l.html" },
-                    { title: "Pizza Tower", url: "/g/PizzaTower.html" },
-                    { title: "Plants VS Zombies", url: "/g/pvz.html" },
-                    { title: "Sandtris", url: "/g/SandTris.html" },
-                    { title: "Wheely", url: "/g/wheely.html" },
-                    { title: "Tom Clancy's Rainbow 6", url: "/g/tomclancyrainbow6.html" },
-                    { title: "10 bullets", url: "/g/10bullets.html" },
-                    { title: "2048", url: "/g/2048.html" },
-                    { title: "60 sec burger run", url: "/g/60secburgerrun.html" },
-                    { title: "8 ball pool", url: "/g/8ballpool.html" },
-                    { title: "Among us", url: "/g/amongus.html" },
-                    { title: "Angry Birds", url: "/g/angryb1rds.html" },
-                    { title: "A small world cup", url: "/g/asmallworldcup.html" },
-                    { title: "Bad Parenting", url: "/g/Badparenting.html" },
-                    { title: "Buritto Bison", url: "/g/burittobison.html" },
-                    { title: "Crazy Cattle 3D", url: "/g/crazycattle.html" },
-                    { title: "Friday Night Funkin", url: "/g/Fridaynightfunk1n.html" },
-                    { title: "Rocket Soccer Derby", url: "/g/rocketsoccerderb.html" },
-                    { title: "Undertale", url: "/g/Undertale.html" },
-                    { title: "Brawl Stars", url: "/s/embed.html#https://easyfun.gg/embed/brawl-stars.html" },
-                    { title: "Roblox", url: "/s/embed.html#https://easyfun.gg/embed/roblox.html" },
-                    { title: "CS 1.6", url: "/s/embed.html#https://play-cs.com/" },
-                    { title: "UltraKill", url: "/g/ultrakill.html" },
-                    { title: "R.E.P.O", url: "/g/repo.html" },
-                    { title: "Balatro (Removed Due to Copyright)", url: "/404.html" },
-                    { title: "Bendy and the ink Machine", url: "/g/Bendyink.html" },
-                    { title: "Little Runmo", url: "/g/Little-Runmo.html" },
-                    { title: "Temple Run 2", url: "/g/TempleRun2.html" },
-                    { title: "That's not my neighbor", url: "/g/That'sNotMyNeighbor.html" },
-                    { title: "OSU!", url: "/g/osu.html" },
-                    { title: "Webfishing", url: "/g/WebFishing.html" },
-                    { title: "Deltarune", url: "/g/Deltarune.html" },
-                    { title: "BFDI Branches", url: "/g/BFDI_branches.html" },
-                    { title: "Buckshot Roulette", url: "/g/BuckshotRoulette.html" },
-                    { title: "Do NOT take this cat home", url: "/g/DNTTCH.html" },
-                    { title: "Half Life", url: "/g/HalfLife.html" },
-                    { title: "Happy Sheepies", url: "/g/HappySheepies.html" },
-                    { title: "OMORI", url: "/g/OMORI.html" },
-                    { title: "Quake III Arena", url: "/g/QuakeIIIArena.html" },
-                    { title: "Doki Doki Literature Club", url: "/g/DDLC.html" },
-                    { title: "RE:RUN", url: "/g/RE_RUN.html" },
-                ]
-            }
-        ];
+       const gameGroups = [
+    {
+        name: "Duck Life Series",
+        games: [
+            { title: "Duck life", url: "/g/ducklife.html" },
+            { title: "Duck life 2", url: "/g/ducklife2.html" },
+            { title: "Duck life 3", url: "/g/ducklife3.html" },
+            { title: "Duck life 4", url: "/g/ducklife4.html" },
+            { title: "Duck life 5", url: "/g/ducklife5.html" }
+        ]
+    },
+    {
+        name: "Mario Games",
+        games: [
+            { title: "Super Mario Bros.", url: "/g/supermariobros.html" },
+            { title: "Super Mario 64", url: "/g/supermario64.html" },
+            { title: "Mario Kart 64", url: "/g/mariokart64.html" },
+            { title: "Mario Kart Super Circuit", url: "/g/MKsupercircut.html" }
+        ]
+    },
+    {
+        name: "Pokemon Games",
+        games: [
+            { title: "Pokemon Emerald", url: "/g/Pokemonemerald.html" },
+            { title: "Pokemon Firered", url: "/g/PokemonFireRed.html" },
+            { title: "Pokemon Too Many Types", url: "/g/pokemon2manytypes.html" }
+        ]
+    },
+    {
+        name: "All Games",
+        games: [
+            { title: "1", url: "/g/1.html" },
+            { title: "1 Mini Battles", url: "/g/12MiniBattles.html" },
+            { title: "10 bullets", url: "/g/10bullets.html" },
+            { title: "10 minutes till dawn", url: "/g/10minutestilldawn.html" },
+            { title: "1 on 1 soccer", url: "/g/1on1soccer.html" },
+            { title: "1v1.lol", url: "/g/1v1lol.html" },
+            { title: "2048", url: "/g/2048.html" },
+            { title: "2D Rocket League", url: "/g/2drocketleauge.html" },
+            { title: "60 sec burger run", url: "/g/60secburgerrun.html" },
+            { title: "8 ball pool", url: "/g/8ballpool.html" },
+            { title: "Achievement Unlocked", url: "/g/achivementunlcked.html" },
+            { title: "Achievement Unlocked 2", url: "/g/AchievementUnlocked2.html" },
+            { title: "Achievement Unlocked 3", url: "/g/AchievementUnlocked3.html" },
+            { title: "ADOFAI", url: "/g/adofai.html" },
+            { title: "Adventure Capitalist", url: "/g/AdventureCapatalist.html" },
+            { title: "Alien Hominid", url: "/g/AlienHominid.html" },
+            { title: "Amanda the Adventurer", url: "/g/AmandatheAdventurer.html" },
+            { title: "Among us", url: "/g/amongus.html" },
+            { title: "Angry Birds", url: "/g/angryb1rds.html" },
+            { title: "Animal Crossing Wild World", url: "/g/wildworld.html" },
+            { title: "A small world cup", url: "/g/asmallworldcup.html" },
+            { title: "Backrooms", url: "/g/Backrooms.html" },
+            { title: "Bad Parenting", url: "/g/Badparenting.html" },
+            { title: "Bad Time Simulator", url: "/g/badtimesimulator.html" },
+            { title: "Balatro (Removed Due to Copyright)", url: "/404.html" },
+            { title: "Baldis Basics", url: "/g/baldisbasics.html" },
+            { title: "Banjo-kazooie", url: "/g/banjokazooie.html" },
+            { title: "Basket Battle", url: "/g/BasketBattle.html" },
+            { title: "Basket Random", url: "/g/basketrandom.html" },
+            { title: "Basketball Stars", url: "/g/basketballstars.html" },
+            { title: "BFDI Branches", url: "/g/BFDI_branches.html" },
+            { title: "Bendy and the ink Machine", url: "/g/Bendyink.html" },
+            { title: "Bitlife", url: "/g/bitlife.html" },
+            { title: "Blood Money", url: "/g/BLOODMONEY.html" },
+            { title: "Bouncemasters", url: "/g/Bouncemasters.html" },
+            { title: "Bowmasters", url: "/g/Bowmasters.html" },
+            { title: "Brawl Stars", url: "/s/embed.html#https://easyfun.gg/embed/brawl-stars.html" },
+            { title: "Buckshot Roulette", url: "/g/BuckshotRoulette.html" },
+            { title: "Buritto Bison", url: "/g/burittobison.html" },
+            { title: "Call of Duty - Black Ops", url: "/g/codblackops.html" },
+            { title: "Cat Mario", url: "/g/catmar10.html" },
+            { title: "Cell Machine", url: "/g/cellmachine.html" },
+            { title: "Chess", url: "/g/chess.html" },
+            { title: "Cluster Rush", url: "/g/clusterrush.html" },
+            { title: "Cookie Clicker", url: "/g/cookieclicker.html" },
+            { title: "Crazy Cattle 3D", url: "/g/crazycattle.html" },
+            { title: "CS:GO Clicker", url: "/g/csgoclicker.html" },
+            { title: "Dadish", url: "/g/Dadish.html" },
+            { title: "Dadish 2", url: "/g/Dadish2.html" },
+            { title: "Dadish 3", url: "/g/Dadish3.html" },
+            { title: "Dadish 3D", url: "/g/Dadish3D.html" },
+            { title: "Daily Dadish", url: "/g/DailyDadish.html" },
+            { title: "Deltarune", url: "/g/Deltarune.html" },
+            { title: "Doki Doki Literature Club", url: "/g/DDLC.html" },
+            { title: "Do NOT take this cat home", url: "/g/DNTTCH.html" },
+            { title: "Doge Miner", url: "/g/dogeminer.html" },
+            { title: "Donkey Kong 64", url: "/g/DK64.html" },
+            { title: "DOOM", url: "/g/doom.html" },
+            { title: "Draw Joust", url: "/g/DrawJoust.html" },
+            { title: "Drift Boss", url: "/g/driftboss.html" },
+            { title: "Endoparasitic", url: "/g/Endoparasitic.html" },
+            { title: "Escape Road", url: "/g/EscapeRoad.html" },
+            { title: "Factory balls", url: "/g/factoryballs.html" },
+            { title: "Fancy Pants Adventure", url: "/g/fancypantsadventure.html" },
+            { title: "Final Fantasy VII", url: "/g/finalfantasy.html" },
+            { title: "Five Nights at Freddy's", url: "/g/FiveNightsatFreddys.html" },
+            { title: "Five Nights at Freddy's 2", url: "/g/FiveNightsatFreddys2.html" },
+            { title: "Five Nights at Freddy's 3", url: "/g/FiveNightsatFreddys3.html" },
+            { title: "Five Nights at Freddy's 4", url: "/g/FiveNightsatFreddys4.html" },
+            { title: "FNAF UCN", url: "/g/FNAF-UCN.html" },
+            { title: "Fruit Ninja", url: "/g/FruitNinja.html" },
+            { title: "Friday Night Funkin", url: "/g/Fridaynightfunk1n.html" },
+            { title: "GD LITE", url: "/g/gdlite.html" },
+            { title: "Gladihoppers", url: "/g/gladihoppers.html" },
+            { title: "Google Dino", url: "/g/googledino.html" },
+            { title: "Granny", url: "/g/granny.html" },
+            { title: "Half Life", url: "/g/HalfLife.html" },
+            { title: "Happy Sheepies", url: "/g/HappySheepies.html" },
+            { title: "Jelly Mario", url: "/g/JellyMario.html" },
+            { title: "Jetpack Joyride", url: "/g/jetpackjoyride.html" },
+            { title: "Johnny Upgrade", url: "/g/Johnnyupgrade.html" },
+            { title: "Justfall.lol", url: "/g/justfall.html" },
+            { title: "Learn to fly", url: "/g/learn2fly.html" },
+            { title: "Little Devil", url: "/g/littledev1l.html" },
+            { title: "Little Runmo", url: "/g/Little-Runmo.html" },
+            { title: "Live Runmo", url: "/g/Little-Runmo.html" },
+            { title: "Low Knight", url: "/g/lowknight.html" },
+            { title: "Madalin Stunt Cars Multiplayer", url: "/g/madilinstunt.html" },
+            { title: "Mario Kart 64", url: "/g/mariokart64.html" },
+            { title: "Melon Playground", url: "/g/melonplayground.html" },
+            { title: "MotoX3M", url: "/g/motox3m.html" },
+            { title: "MotoX3M 2", url: "/g/MotoX3M2.html" },
+            { title: "MotoX3M 3", url: "/g/MotoX3M3.html" },
+            { title: "MotoX3M Pool Party", url: "/g/MotoX3MPoolParty.html" },
+            { title: "MotoX3M Spooky", url: "/g/MotoX3MSpooky.html" },
+            { title: "MotoX3M Winter", url: "/g/MotoX3MWinter.html" },
+            { title: "Nijikas Ahoge", url: "/g/NijikasAhoge.html" },
+            { title: "OMORI", url: "/g/OMORI.html" },
+            { title: "OSU!", url: "/g/osu.html" },
+            { title: "OvO", url: "/g/OVO.html" },
+            { title: "Papa Bakeria", url: "/g/PapaBakeria.html" },
+            { title: "Papa Burgeria", url: "/g/PapaBurgeria.html" },
+            { title: "Papa Cheeseria", url: "/g/PapaCheeseria.html" },
+            { title: "Papa Cupcakeria", url: "/g/PapaCupcakeria.html" },
+            { title: "Papa Donuteria", url: "/g/PapaDonuteria.html" },
+            { title: "Papa Freezeria", url: "/g/PapaFreezeria.html" },
+            { title: "Papa Hot Doggeria", url: "/g/PapaHotDoggeria.html" },
+            { title: "Papa Pancakeria", url: "/g/PapaPancakeria.html" },
+            { title: "Papa Pastaria", url: "/g/PapaPastaria.html" },
+            { title: "Papa Scooperia", url: "/g/PapaScooperia.html" },
+            { title: "Papa Sushiria", url: "/g/PapaSushiria.html" },
+            { title: "Papa Taco Mia", url: "/g/PapaTacoMia.html" },
+            { title: "Papa Wingeria", url: "/g/PapaWingeria.html" },
+            { title: "Paper.io 2", url: "/g/paperio2.html" },
+            { title: "People Playground", url: "/g/PeoplePlayground.html" },
+            { title: "Pixel Gun Survival", url: "/g/PixelGunSurvival.html" },
+            { title: "Pizza Tower", url: "/g/PizzaTower.html" },
+            { title: "Plants VS Zombies", url: "/g/pvz.html" },
+            { title: "Pokemon Emerald", url: "/g/Pokemonemerald.html" },
+            { title: "Pokemon Firered", url: "/g/PokemonFireRed.html" },
+            { title: "Pokemon Too Many Types", url: "/g/pokemon2manytypes.html" },
+            { title: "PVZ", url: "/g/pvz.html" },
+            { title: "Quake III Arena", url: "/g/QuakeIIIArena.html" },
+            { title: "R.E.P.O", url: "/g/repo.html" },
+            { title: "RE:RUN", url: "/g/RE_RUN.html" },
+            { title: "Retro Bowl", url: "/g/retrobowl.html" },
+            { title: "Rocket Soccer Derby", url: "/g/rocketsoccerderb.html" },
+            { title: "Run 2", url: "/g/run2.html" },
+            { title: "Sandtris", url: "/g/SandTris.html" },
+            { title: "Sister Location", url: "/g/sisterlocation.html" },
+            { title: "Slope", url: "/g/slope.html" },
+            { title: "Slowroads", url: "/g/Slowroads.html" },
+            { title: "Smash Karts", url: "/g/SmashKarts.html" },
+            { title: "Snowbattle.io", url: "/g/snowbattleio.html" },
+            { title: "Soccer Random", url: "/g/soccerrandom.html" },
+            { title: "Speed Stars", url: "/g/SpeedStars.html" },
+            { title: "Sprunki", url: "/g/sprunki.html" },
+            { title: "Stickman Hook", url: "/g/stickmanhook.html" },
+            { title: "Subway Surfers", url: "/g/subwaysurfer.html" },
+            { title: "Super hot", url: "/g/superhot.html" },
+            { title: "Super Mario 64", url: "/g/supermario64.html" },
+            { title: "Supreme Duelist", url: "/g/SupremeDuelist.html" },
+            { title: "Temple Run 2", url: "/g/TempleRun2.html" },
+            { title: "Thats not my neighbor", url: "/g/ThatsNotMyNeighbor.html" },
+            { title: "The Impossible Quiz", url: "/g/theimpossibleqiuz.html" },
+            { title: "Tiny Fishing", url: "/g/tinyfishing.html" },
+            { title: "Tom Clancy's Rainbow 6", url: "/g/tomclancyrainbow6.html" },
+            { title: "UltraKill", url: "/g/ultrakill.html" },
+            { title: "Undertale", url: "/g/Undertale.html" },
+            { title: "Vex 1", url: "/g/Vex1.html" },
+            { title: "Vex 2", url: "/g/Vex2.html" },
+            { title: "Vex 3", url: "/g/Vex3.html" },
+            { title: "Vex 4", url: "/g/Vex4.html" },
+            { title: "Vex 5", url: "/g/Vex5.html" },
+            { title: "Vex 6", url: "/g/Vex6.html" },
+            { title: "Vex 7", url: "/g/Vex7.html" },
+            { title: "Vex 8", url: "/g/Vex8.html" },
+            { title: "Web Fishing", url: "/g/WebFishing.html" },
+            { title: "Wheely", url: "/g/wheely.html" },
+            { title: "Wild World", url: "/g/wildworld.html" },
+            { title: "Yume Nikki", url: "/g/YumeNikki.html" }
+        ]
+    }
+];
+
 
         let windows = [];
         let activeWindowId = null;
@@ -1082,12 +1133,10 @@
                 e = e || window.event;
                 e.preventDefault();
                 
-                // Check if window is maximized
                 if (windowElement.classList.contains('fullscreen')) {
                     return;
                 }
                 
-                // Activate window
                 activateWindow(windowId);
                 
                 const resizeType = e.target.getAttribute('data-resize');
@@ -1110,7 +1159,6 @@
                 const maxWidth = window.innerWidth;
                 const maxHeight = window.innerHeight;
                 
-                // Calculate new dimensions based on resize type
                 let newWidth = startWidth;
                 let newHeight = startHeight;
                 let newLeft = startLeft;
@@ -1159,7 +1207,6 @@
                         break;
                 }
                 
-                // Apply new dimensions
                 windowElement.style.width = newWidth + 'px';
                 windowElement.style.height = newHeight + 'px';
                 windowElement.style.left = newLeft + 'px';
@@ -1172,9 +1219,7 @@
             }
         }
 
-        // Activate Window
         function activateWindow(windowId) {
-            // Deactivate all windows
             windows.forEach(window => {
                 const windowElement = document.getElementById(window.id);
                 if (windowElement) {
@@ -1182,21 +1227,18 @@
                     windowElement.style.zIndex = 1000;
                 }
                 
-                // Update taskbar
                 const taskbarItem = document.getElementById('taskbar-' + window.id);
                 if (taskbarItem) {
                     taskbarItem.classList.remove('active');
                 }
             });
             
-            // Activate the selected window
             const windowElement = document.getElementById(windowId);
             if (windowElement) {
                 windowElement.classList.add('active');
                 windowElement.style.zIndex = ++windowZIndex;
                 activeWindowId = windowId;
                 
-                // Update taskbar
                 const taskbarItem = document.getElementById('taskbar-' + windowId);
                 if (taskbarItem) {
                     taskbarItem.classList.add('active');
@@ -1204,45 +1246,37 @@
             }
         }
 
-        // Close Window
         function closeWindow(windowId) {
             const windowElement = document.getElementById(windowId);
             if (windowElement) {
                 windowElement.remove();
                 
-                // Remove from windows array
                 windows = windows.filter(window => window.id !== windowId);
                 
-                // Remove from taskbar
                 const taskbarItem = document.getElementById('taskbar-' + windowId);
                 if (taskbarItem) {
                     taskbarItem.remove();
                 }
                 
-                // Hide window container if no windows are open
                 if (windows.length === 0) {
                     document.getElementById('window-container').style.display = 'none';
                     document.getElementById('taskbar').classList.remove('active');
                 } else {
-                    // Activate the next window
                     activateWindow(windows[windows.length - 1].id);
                 }
             }
         }
 
-        // Minimize Window
         function minimizeWindow(windowId) {
             const windowElement = document.getElementById(windowId);
             if (windowElement) {
                 windowElement.classList.add('minimized');
                 
-                // Update windows array
                 const windowIndex = windows.findIndex(window => window.id === windowId);
                 if (windowIndex !== -1) {
                     windows[windowIndex].minimized = true;
                 }
                 
-                // Activate the next visible window
                 const visibleWindows = windows.filter(window => !window.minimized);
                 if (visibleWindows.length > 0) {
                     activateWindow(visibleWindows[visibleWindows.length - 1].id);
@@ -1250,13 +1284,11 @@
             }
         }
 
-        // Toggle Maximize
         function toggleMaximize(windowId) {
             const windowElement = document.getElementById(windowId);
             if (windowElement) {
                 windowElement.classList.toggle('fullscreen');
                 
-                // Update maximize button icon
                 const maximizeBtn = windowElement.querySelector('.maximize-btn');
                 if (windowElement.classList.contains('fullscreen')) {
                     maximizeBtn.textContent = '❐';
@@ -1268,11 +1300,9 @@
             }
         }
 
-        // Add to Taskbar
         function addToTaskbar(windowId, title) {
             const taskbarItems = document.getElementById('taskbar-items');
             
-            // Create taskbar item
             const taskbarItem = document.createElement('div');
             taskbarItem.className = 'taskbar-item';
             taskbarItem.id = 'taskbar-' + windowId;
@@ -1282,15 +1312,12 @@
                 const windowData = windows.find(window => window.id === windowId);
                 
                 if (windowData && windowData.minimized) {
-                    // Restore window
                     windowElement.classList.remove('minimized');
                     windowData.minimized = false;
                     activateWindow(windowId);
                 } else if (windowElement.classList.contains('active')) {
-                    // Minimize if already active
                     minimizeWindow(windowId);
                 } else {
-                    // Activate window
                     activateWindow(windowId);
                 }
             };
@@ -1298,57 +1325,42 @@
             taskbarItems.appendChild(taskbarItem);
         }
 
-        // Open Game
         function openGame(url, title) {
-            // Check if game is already open
             const existingWindow = windows.find(window => window.title === title);
             if (existingWindow) {
-                // Restore if minimized
                 if (existingWindow.minimized) {
                     const windowElement = document.getElementById(existingWindow.id);
                     windowElement.classList.remove('minimized');
                     existingWindow.minimized = false;
                 }
                 
-                // Activate window
                 activateWindow(existingWindow.id);
                 return;
             }
             
-            // Create new window
             createWindow(url, title);
         }
 
-        // Window Container Click Handler
         document.getElementById('window-container').addEventListener('click', function(e) {
-            // Check if click is directly on the container (not on a window)
             if (e.target === this) {
-                // Optionally close all windows or do nothing
-                // closeAllWindows();
             }
         });
 
-        // Close All Windows
         function closeAllWindows() {
-            // Create a copy of the array to avoid modification during iteration
             const windowsCopy = [...windows];
             windowsCopy.forEach(window => {
                 closeWindow(window.id);
             });
         }
 
-        // Handle window clicks to activate
         document.addEventListener('mousedown', function(e) {
-            // Find if click is inside a window
             let targetWindow = e.target.closest('.window');
             if (targetWindow) {
                 activateWindow(targetWindow.id);
             }
         });
 
-        // Handle keyboard shortcuts
         document.addEventListener('keydown', function(e) {
-            // Alt+Tab to cycle through windows
             if (e.altKey && e.key === 'Tab') {
                 e.preventDefault();
                 
@@ -1360,7 +1372,6 @@
                 }
             }
             
-            // Escape to close active window
             if (e.key === 'Escape' && activeWindowId) {
                 closeWindow(activeWindowId);
             }
