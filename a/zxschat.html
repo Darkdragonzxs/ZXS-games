@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Terminal Chat — Connected</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --terminal-bg: #0a0a0a;
+            --terminal-surface: #1a1a1a;
+            --terminal-border: #333333;
+            --terminal-green: #00ff41;
+            --terminal-blue: #00aaff;
+            --terminal-yellow: #ffff00;
+            --terminal-red: #ff4444;
+            --terminal-white: #ffffff;
+            --terminal-gray: #888888;
+            --terminal-dim: #555555;
+            --shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            background: var(--terminal-bg);
+            color: var(--terminal-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .terminal-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            background: var(--terminal-surface);
+            border: 2px solid var(--terminal-border);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            animation: bootUp 0.8s ease-out;
+        }
+
+        @keyframes bootUp {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .terminal-header {
+            background: var(--terminal-bg);
+            border-bottom: 1px solid var(--terminal-border);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .terminal-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .terminal-prompt {
+            color: var(--terminal-green);
+            font-weight: 600;
+        }
+
+        .terminal-path {
+            color: var(--terminal-blue);
+        }
+
+        .terminal-status {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 12px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--terminal-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            background: transparent;
+            border: 1px solid var(--terminal-border);
+            color: var(--terminal-gray);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            color: var(--terminal-green);
+            border-color: var(--terminal-green);
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--terminal-bg);
+        }
+
+        .messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: var(--terminal-surface);
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: var(--terminal-border);
+            border-radius: 4px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            padding: 12px;
+            border: 1px solid var(--terminal-border);
+            border-radius: 4px;
+            background: var(--terminal-surface);
+            animation: messageAppear 0.3s ease-out;
+            position: relative;
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.self {
+            border-color: var(--terminal-blue);
+            background: rgba(0, 170, 255, 0.05);
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .message-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-prompt {
+            color: var(--terminal-green);
+            font-weight: 600;
+        }
+
+        .user-name {
+            color: var(--terminal-blue);
+            font-weight: 500;
+        }
+
+        .message-time {
+            color: var(--terminal-dim);
+            font-size: 11px;
+        }
+
+        .message-content {
+            color: var(--terminal-white);
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message-content .link {
+            color: var(--terminal-yellow);
+            text-decoration: underline;
+        }
+
+        .message-content .link:hover {
+            color: var(--terminal-white);
+        }
+
+        .reactions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .reaction-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            border: 1px solid var(--terminal-border);
+            border-radius: 3px;
+            background: var(--terminal-bg);
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        .reaction-pill:hover {
+            border-color: var(--terminal-green);
+        }
+
+        .reaction-pill.active {
+            border-color: var(--terminal-green);
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .reaction-count {
+            color: var(--terminal-gray);
+        }
+
+        .terminal-input {
+            background: var(--terminal-bg);
+            border-top: 1px solid var(--terminal-border);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .input-line {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--terminal-surface);
+            border: 1px solid var(--terminal-border);
+            border-radius: 4px;
+            padding: 8px 12px;
+        }
+
+        .input-prompt {
+            color: var(--terminal-green);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .input-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--terminal-white);
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .input-field::placeholder {
+            color: var(--terminal-dim);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: var(--terminal-surface);
+            border: 1px solid var(--terminal-border);
+            color: var(--terminal-gray);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            color: var(--terminal-green);
+            border-color: var(--terminal-green);
+        }
+
+        .action-btn.primary {
+            background: var(--terminal-green);
+            color: var(--terminal-bg);
+            border-color: var(--terminal-green);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--terminal-white);
+        }
+
+        .action-btn.active {
+            color: var(--terminal-red);
+            border-color: var(--terminal-red);
+        }
+
+        .join-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .join-terminal {
+            width: 400px;
+            max-width: 90vw;
+            background: var(--terminal-surface);
+            border: 2px solid var(--terminal-border);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .join-header {
+            color: var(--terminal-green);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .join-description {
+            color: var(--terminal-gray);
+            font-size: 12px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .join-input {
+            width: 100%;
+            background: var(--terminal-bg);
+            border: 1px solid var(--terminal-border);
+            border-radius: 4px;
+            padding: 12px;
+            color: var(--terminal-white);
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .join-input::placeholder {
+            color: var(--terminal-dim);
+        }
+
+        .join-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .join-btn {
+            flex: 1;
+            background: var(--terminal-green);
+            color: var(--terminal-bg);
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .join-btn:hover {
+            background: var(--terminal-white);
+        }
+
+        .demo-btn {
+            background: transparent;
+            color: var(--terminal-gray);
+            border: 1px solid var(--terminal-border);
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .demo-btn:hover {
+            color: var(--terminal-green);
+            border-color: var(--terminal-green);
+        }
+
+        .reaction-menu {
+            position: fixed;
+            z-index: 9999;
+            display: flex;
+            gap: 4px;
+            padding: 8px;
+            background: var(--terminal-surface);
+            border: 1px solid var(--terminal-border);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: 1px solid var(--terminal-border);
+            padding: 6px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .menu-btn:hover {
+            border-color: var(--terminal-green);
+            transform: scale(1.1);
+        }
+
+        .system-message {
+            border-color: var(--terminal-yellow);
+            background: rgba(255, 255, 0, 0.05);
+        }
+
+        .system-message .user-name {
+            color: var(--terminal-yellow);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--terminal-surface);
+            border: 1px solid var(--terminal-border);
+            border-radius: 4px;
+            padding: 12px 16px;
+            color: var(--terminal-white);
+            font-size: 12px;
+            z-index: 1001;
+            animation: toastSlide 0.3s ease-out;
+        }
+
+        @keyframes toastSlide {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .terminal-container {
+                height: 100vh;
+                border-radius: 0;
+                border: none;
+            }
+            
+            .messages-container {
+                padding: 12px;
+            }
+            
+            .message {
+                margin-bottom: 12px;
+                padding: 8px;
+            }
+            
+            .terminal-input {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-container" id="app">
+        <header class="terminal-header">
+            <div class="terminal-title">
+                <span class="terminal-prompt">user@terminal:~$</span>
+                <span class="terminal-path">/chat/<span id="userNameDisplay">connecting...</span></span>
+            </div>
+            <div class="terminal-status">
+                <div class="status-indicator">
+                    <div class="status-dot" id="onlineDot"></div>
+                    <span id="userCount">0</span> users
+                </div>
+                <div class="terminal-controls">
+                    <button class="control-btn" id="btnInvite" title="Copy invite link">
+                        <i class="fa-solid fa-link"></i>
+                    </button>
+                    <button class="control-btn" id="btnLeave" title="Disconnect">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="messages-container" id="messages" aria-live="polite"></main>
+
+        <div class="terminal-input">
+            <div class="input-line">
+                <span class="input-prompt">></span>
+                <input 
+                    id="messageInput" 
+                    class="input-field" 
+                    placeholder="type message and press enter..."
+                    autocomplete="off"
+                />
+            </div>
+            <div class="input-actions">
+                <button class="action-btn" id="micButton" title="Voice input">
+                    <i id="micIcon" class="fa-solid fa-microphone-slash"></i>
+                </button>
+                <button class="action-btn primary" id="sendBtn" title="Send">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Modal -->
+    <div class="join-modal" id="joinModal">
+        <div class="join-terminal">
+            <div class="join-header">$ connect --user</div>
+            <div class="join-description">
+                Enter your username to connect to the terminal chat.<br>
+                You'll be placed in the public room automatically.
+            </div>
+            <input 
+                id="usernameInput" 
+                class="join-input"
+                type="text" 
+                placeholder="username (alphanumeric only)" 
+                maxlength="24"
+                autofocus 
+            />
+            <div class="join-actions">
+                <button class="join-btn" id="joinBtn">Connect</button>
+                <button class="demo-btn" id="demoBtn">Demo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reaction Menu -->
+    <div id="reactionMenu" class="reaction-menu" style="display:none">
+        <button class="menu-btn" data-reaction="❤️">❤️</button>
+        <button class="menu-btn" data-reaction="👍">👍</button>
+    </div>
+
+    <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
+    <script>
+        /***** Config & state *****/ 
+        const CLIENT_ID = "aSEKMcR4GsEZONob";
+        let drone = null, room = null, clientId = null;
+        let userName = "", roomCode = generateSiteRoomCode();
+        let recognition = null, isRecording = false;
+
+        // DOM refs
+        const joinModal = document.getElementById('joinModal');
+        const joinBtn = document.getElementById('joinBtn');
+        const demoBtn = document.getElementById('demoBtn');
+        const usernameInput = document.getElementById('usernameInput');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const messagesEl = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const micBtn = document.getElementById('micButton');
+        const micIcon = document.getElementById('micIcon');
+        const userCountEl = document.getElementById('userCount');
+        const reactionMenu = document.getElementById('reactionMenu');
+
+        // dedupe set: prevents double-render of same message
+        const seenMessageIds = new Set();
+        // reaction map: messageId -> { emoji -> Set(actorId) }
+        const reactionsMap = {};
+
+        /***** Helpers *****/
+        function generateSiteRoomCode(){
+            // Use hostname to create unique room per site deployment
+            const hostname = window.location.hostname || 'localhost';
+            // Create a simple hash of the hostname for room isolation
+            let hash = 0;
+            for(let i = 0; i < hostname.length; i++){
+                const char = hostname.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return `site-${hostname.replace(/\./g, '-')}-${Math.abs(hash)}`;
+        }
+
+        function uid(){
+            return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,8);
+        }
+
+        function escapeHtml(s){
+            return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[c]));
+        }
+
+        function formatLinks(text){
+            const urlPattern = /(https?:\/\/[^\s]+)/g;
+            return escapeHtml(text).replace(urlPattern, url => `<a class="link" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+        }
+
+        function formatTime(iso){
+            try{
+                const d = iso ? new Date(iso) : new Date();
+                return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            }catch(e){
+                return '';
+            }
+        }
+
+        /***** DOM: add message (idempotent) *****/
+        function addMessageToDOM(data, isSelf=false){
+            // every message must have an id; skip if we've seen it
+            if(!data || !data.id) return;
+            if(seenMessageIds.has(data.id)) return;
+            seenMessageIds.add(data.id);
+
+            const mid = data.id;
+            const isSystem = data.name === 'System';
+            
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${isSelf ? 'self' : ''} ${isSystem ? 'system-message' : ''}`;
+            messageEl.setAttribute('data-mid', mid);
+            messageEl.setAttribute('tabindex', '-1');
+
+            messageEl.innerHTML = `
+                <div class="message-header">
+                    <div class="message-user">
+                        <span class="user-prompt">${isSelf ? 'you' : (isSystem ? 'sys' : 'usr')}@terminal:~$</span>
+                        <span class="user-name">${escapeHtml(data.name || 'unknown')}</span>
+                    </div>
+                    <div class="message-time">[${formatTime(data.timestamp)}]</div>
+                </div>
+                <div class="message-content">${formatLinks(data.text || '')}</div>
+                <div class="reactions" data-mid="${mid}"></div>
+            `;
+
+            attachReactionTriggers(messageEl);
+            messagesEl.appendChild(messageEl);
+            messagesEl.scrollTop = messagesEl.scrollHeight + 200;
+
+            // render pre-existing reactions if any
+            if(reactionsMap[mid]) renderReactions(mid);
+        }
+
+        /***** Reactions rendering & handlers *****/
+        function renderReactions(mid){
+            const holder = messagesEl.querySelector('.reactions[data-mid="'+mid+'"]');
+            if(!holder) return;
+            holder.innerHTML = '';
+            
+            const map = reactionsMap[mid] || {};
+            for(const emoji of Object.keys(map)){
+                const users = map[emoji];
+                const count = users.size;
+                if(count <= 0) continue;
+
+                const pill = document.createElement('div');
+                pill.className = 'reaction-pill';
+                if(users.has(clientId)) pill.classList.add('active');
+                pill.innerHTML = `<span class="reaction-emoji">${emoji}</span><span class="reaction-count">${count}</span>`;
+                pill.addEventListener('click', (e)=>{
+                    e.stopPropagation();
+                    toggleReaction(mid, emoji);
+                });
+                holder.appendChild(pill);
+            }
+        }
+
+        function toggleReaction(mid, emoji){
+            if(!mid || !emoji) return;
+            if(!reactionsMap[mid]) reactionsMap[mid] = {};
+            if(!reactionsMap[mid][emoji]) reactionsMap[mid][emoji] = new Set();
+            
+            const users = reactionsMap[mid][emoji];
+            const already = users.has(clientId);
+            if(already) users.delete(clientId);
+            else users.add(clientId);
+            
+            renderReactions(mid);
+
+            // publish reaction event
+            if(drone && room){
+                drone.publish({
+                    room: `observable-${roomCode}`,
+                    message: {
+                        type:'reaction',
+                        messageId: mid,
+                        reaction: emoji,
+                        actor: clientId,
+                        timestamp: new Date().toISOString()
+                    }
+                });
+            }
+        }
+
+        function handleIncomingReaction(payload){
+            if(!payload || !payload.messageId || !payload.reaction) return;
+            const mid = payload.messageId;
+            const emoji = payload.reaction;
+            const actor = payload.actor || payload.actorId || 'remote';
+            
+            if(!reactionsMap[mid]) reactionsMap[mid] = {};
+            if(!reactionsMap[mid][emoji]) reactionsMap[mid][emoji] = new Set();
+            reactionsMap[mid][emoji].add(actor);
+            renderReactions(mid);
+        }
+
+        /***** Reaction menu triggers *****/
+        function attachReactionTriggers(msgEl){
+            let longpressTimer = null;
+            let startCoords = null;
+
+            function openMenuAt(x,y, mid){
+                reactionMenu.style.display = 'flex';
+                reactionMenu.style.left = (x - 8) + 'px';
+                reactionMenu.style.top = (y - 52) + 'px';
+                reactionMenu.setAttribute('data-mid', mid);
+            }
+
+            function closeMenu(){
+                reactionMenu.style.display = 'none';
+                reactionMenu.removeAttribute('data-mid');
+            }
+
+            msgEl.addEventListener('contextmenu', (e)=>{
+                e.preventDefault();
+                const mid = msgEl.getAttribute('data-mid');
+                openMenuAt(e.clientX, e.clientY, mid);
+            });
+
+            msgEl.addEventListener('touchstart', (e)=>{
+                if(e.touches.length > 1) return;
+                startCoords = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                longpressTimer = setTimeout(()=>{
+                    const mid = msgEl.getAttribute('data-mid');
+                    openMenuAt(startCoords.x, startCoords.y, mid);
+                }, 600);
+            }, {passive:true});
+
+            ['touchend','touchmove','touchcancel'].forEach(ev => 
+                msgEl.addEventListener(ev, ()=> {
+                    if(longpressTimer){
+                        clearTimeout(longpressTimer);
+                        longpressTimer = null;
+                    }
+                }, {passive:true})
+            );
+
+            // close on outside click / Escape
+            document.addEventListener('click', (e)=> {
+                if(reactionMenu.style.display !== 'none' && !reactionMenu.contains(e.target)) closeMenu();
+            });
+            document.addEventListener('keydown', (e)=> {
+                if(e.key === 'Escape') closeMenu();
+            });
+        }
+
+        reactionMenu.addEventListener('click', (e)=>{
+            const btn = e.target.closest('button[data-reaction]');
+            if(!btn) return;
+            const emoji = btn.getAttribute('data-reaction');
+            const mid = reactionMenu.getAttribute('data-mid');
+            if(mid && emoji) toggleReaction(mid, emoji);
+            reactionMenu.style.transform = 'scale(.98)';
+            setTimeout(()=> {
+                reactionMenu.style.display = 'none';
+                reactionMenu.style.transform = '';
+            }, 120);
+        });
+
+        /***** Connect to ScaleDrone *****/
+        function connectToRoom(){
+            drone = new ScaleDrone(CLIENT_ID, {
+                data: { name: userName }
+            });
+
+            drone.on('open', (err) => {
+                if(err){
+                    showToast('Connection error: ' + err, true);
+                    return;
+                }
+                clientId = drone.clientId;
+
+                // subscribe
+                room = drone.subscribe(`observable-${roomCode}`);
+                room.on('open', (err) => {
+                    if(err){
+                        showToast('Room subscription error: ' + err, true);
+                        return;
+                    }
+                    // announce join
+                    drone.publish({
+                        room: `observable-${roomCode}`,
+                        message: {
+                            type:'join',
+                            name:userName,
+                            timestamp:new Date().toISOString()
+                        }
+                    });
+                });
+
+                // main incoming handler
+                room.on('data', (data, member) => {
+                    if(!data) return;
+
+                    // reaction event
+                    if(data.type === 'reaction'){
+                        const payload = {
+                            messageId: data.messageId || data.messageId,
+                            reaction: data.reaction,
+                            actor: data.actor || member?.id || 'remote',
+                            timestamp: data.timestamp
+                        };
+                        handleIncomingReaction(payload);
+                        return;
+                    }
+
+                    // join notices
+                    if(data.type === 'join'){
+                        showToast(`${data.name} connected`);
+                        return;
+                    }
+
+                    // normal chat message
+                    if(data.id){
+                        if(seenMessageIds.has(data.id)) {
+                            return;
+                        }
+                        addMessageToDOM(data, false);
+                        return;
+                    }
+                });
+
+                room.on('member_join', (m) => updateMembersCount());
+                room.on('member_leave', (m) => updateMembersCount());
+                room.on('members', (m) => updateMembersCount(m));
+            });
+
+            drone.on('close', () => showToast('Connection lost', true));
+            drone.on('error', (err) => showToast('Connection error', true));
+        }
+
+        function updateMembersCount(members){
+            const count = (room && room.members && room.members.length) || (Array.isArray(members) ? members.length : 1);
+            document.getElementById('userCount').textContent = count;
+        }
+
+        /***** Send message *****/
+        function sendMessage(){
+            const text = messageInput.value.trim();
+            if(!text) return;
+
+            const id = uid();
+            const payload = {
+                id,
+                text,
+                name: userName,
+                timestamp: new Date().toISOString()
+            };
+
+            // publish and local echo
+            if(drone && room){
+                drone.publish({
+                    room: `observable-${roomCode}`,
+                    message: payload
+                });
+            }
+
+            // local echo first
+            addMessageToDOM(payload, true);
+            seenMessageIds.add(id);
+            messageInput.value = '';
+            messageInput.focus();
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keydown', (e)=>{
+            if(e.key === 'Enter' && !e.shiftKey){
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        /***** Toast notifications *****/
+        function showToast(text, danger=false){
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            if(danger) toast.style.borderColor = 'var(--terminal-red)';
+            toast.textContent = text;
+            document.body.appendChild(toast);
+            setTimeout(()=> toast.style.opacity = '0', 2200);
+            setTimeout(()=> toast.remove(), 2600);
+        }
+
+        /***** Speech recognition *****/
+        function initSpeech(){
+            if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
+                micIcon.className = 'fa-solid fa-microphone-slash';
+                micBtn.disabled = true;
+                micBtn.title = 'Speech recognition not supported';
+                return;
+            }
+
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRec();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = ()=> {
+                isRecording = true;
+                micIcon.className = 'fa-solid fa-microphone';
+                micBtn.classList.add('active');
+            };
+
+            recognition.onresult = (e)=>{
+                const txt = e.results[0][0].transcript;
+                messageInput.value = txt;
+                sendMessage();
+            };
+
+            recognition.onerror = ()=> {
+                showToast('Speech error', true);
+                stopRecognition();
+            };
+
+            recognition.onend = ()=> stopRecognition();
+        }
+
+        function startRecognition(){
+            if(!recognition) initSpeech();
+            try{
+                recognition.start();
+            }catch(e){}
+        }
+
+        function stopRecognition(){
+            isRecording = false;
+            micIcon.className = 'fa-solid fa-microphone-slash';
+            micBtn.classList.remove('active');
+            try{
+                recognition && recognition.stop();
+            }catch(e){}
+        }
+
+        micBtn.addEventListener('click', ()=> {
+            if(isRecording) stopRecognition();
+            else startRecognition();
+        });
+
+        /***** Join flow *****/
+        usernameInput.addEventListener('keydown', (e)=> {
+            if(e.key === 'Enter') joinRoom();
+        });
+
+        joinBtn.addEventListener('click', joinRoom);
+        demoBtn.addEventListener('click', ()=> {
+            usernameInput.value = 'demo_user';
+            joinRoom();
+        });
+
+        function sanitizeName(n){
+            return n.replace(/[^a-zA-Z0-9_]/g,'').slice(0,24);
+        }
+
+        function joinRoom(){
+            const rawName = sanitizeName(usernameInput.value || 'Guest');
+            if(!rawName){
+                alert('Please enter a username');
+                return;
+            }
+
+            userName = rawName;
+
+            // display name and hide modal
+            userNameDisplay.textContent = userName;
+            joinModal.style.display = 'none';
+
+            // connect
+            connectToRoom();
+
+            try{
+                localStorage.setItem('terminal-chat-username', usernameInput.value);
+            }catch(e){}
+        }
+
+        window.addEventListener('load', ()=>{
+            try{
+                const stored = localStorage.getItem('terminal-chat-username');
+                if(stored) usernameInput.value = stored;
+            }catch(e){}
+
+            addMessageToDOM({
+                id: uid(),
+                name:'System',
+                text: 'Terminal chat initialized. Right-click or long-press messages to add reactions. Type /help for commands.',
+                timestamp: new Date().toISOString()
+            }, false);
+        });
+
+        document.getElementById('btnInvite').addEventListener('click', ()=>{
+            const url = location.href.split('#')[0];
+            navigator.clipboard?.writeText(url).then(()=> showToast('Site link copied! Others on this domain can join.'));
+        });
+
+        document.getElementById('btnLeave').addEventListener('click', ()=> {
+            if(confirm('Disconnect from terminal?')) location.reload();
+        });
+    </script>
+</body>
+</html>
