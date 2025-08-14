@@ -1,180 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ZXS AI</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js" defer></script>
-  <style>
-    body {
-      background: radial-gradient(ellipse at top left, #0f172a, #000);
-      color: #e0f2f1;
-      font-family: 'Segoe UI', sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZXS AI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+  * { box-sizing: border-box; }
 
-    .glassy {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+  body {
+    margin: 0;
+    font-family: 'Roboto Mono', monospace;
+    background: #0b0b0b;
+    color: #00ff00;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    .message {
-      animation: fadeInUp 0.3s ease-out;
-    }
+  .app-container {
+    width: 480px;
+    max-width: 95vw;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #00ff00;
+    background: #0b0b0b;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 0 40px #00ff00aa;
+  }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+  .ai-bar {
+    background: #000;
+    padding: 12px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-align: center;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #00ff00;
+    color: #00ff00;
+    text-transform: uppercase;
+  }
 
-    /* Markdown support */
-    .markdown p {
-      margin-bottom: 0.5rem;
-    }
+  .chat-container {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.95rem;
+  }
 
-    .markdown pre {
-      background: #1e293b;
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      overflow-x: auto;
-    }
+  .message {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 4px;
+    line-height: 1.4;
+    word-break: break-word;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    box-shadow: 0 0 5px #00ff00aa inset;
+  }
 
-    .markdown code {
-      background: #1e293b;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-    }
+  .user { background: #003300; align-self: flex-end; color: #00ff00; border-left: 2px solid #ff0000; }
+  .bot { background: #000000; align-self: flex-start; color: #00ff00; border-left: 2px solid #ff0000; }
 
-    .markdown h1, .markdown h2, .markdown h3 {
-      font-weight: bold;
-      margin-top: 1rem;
-    }
-  </style>
+  .input-container {
+    display: flex;
+    padding: 10px;
+    gap: 8px;
+    border-top: 1px solid #00ff00;
+  }
+
+  textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #00ff00;
+    border-radius: 2px;
+    background: #000;
+    color: #00ff00;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.95rem;
+    resize: none;
+    outline: none;
+  }
+  textarea:focus { border-color: #ff0000; box-shadow: 0 0 5px #ff0000aa; }
+
+  button {
+    padding: 0 14px;
+    border-radius: 2px;
+    border: 1px solid #00ff00;
+    background: #000;
+    color: #00ff00;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+  }
+  button:hover { border-color: #ff0000; color: #ff0000; }
+
+  input[type="file"] { display: none; }
+  .file-label {
+    padding: 8px 10px;
+    border: 1px solid #00ff00;
+    border-radius: 2px;
+    cursor: pointer;
+    color: #00ff00;
+    background: #000;
+    font-family: 'Roboto Mono', monospace;
+  }
+  .file-label:hover { color: #ff0000; border-color: #ff0000; }
+
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.2s steps(4,end) infinite;
+  }
+  @keyframes dots {
+    0%,20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80% { content: '...'; }
+    100% { content: ''; }
+  }
+</style>
 </head>
-<body class="h-screen flex flex-col">
-  <header class="text-center py-4 text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-    ZXS AI
-  </header>
+<body>
 
-  <main id="messages-container" class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-    <!-- Messages appear here -->
-  </main>
+<div class="app-container">
+  <div class="ai-bar">ZXS AI</div>
+  <div class="chat-container" id="chat"></div>
 
-  <footer class="p-4 glassy">
-    <div class="flex gap-2">
-      <textarea
-        id="user-input"
-        placeholder="Type something..."
-        rows="1"
-        class="flex-1 resize-none p-3 bg-transparent border border-emerald-500 text-white rounded-xl focus:outline-none"
-        oninput="autoResize(this)"
-        onkeydown="handleKeyDown(event)"
-      ></textarea>
-      <button
-        id="send-button"
-        onclick="sendMessage()"
-        class="bg-emerald-500 hover:bg-emerald-600 text-black font-bold px-5 py-3 rounded-xl"
-      >
-        Send
-      </button>
-    </div>
-  </footer>
+  <div class="input-container">
+    <label class="file-label" for="fileInput">+</label>
+    <input type="file" id="fileInput" multiple>
+    <textarea id="userInput" placeholder="Type something..." rows="1" spellcheck="false" autocomplete="off"></textarea>
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
 
-  <script>
-    const API_KEY = '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';
-    const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+<script>
+const chat = document.getElementById("chat");
+const userInput = document.getElementById("userInput");
+const sendBtn = document.getElementById("sendBtn");
+const fileInput = document.getElementById("fileInput");
 
-    const messages = [
-      {
-        role: 'system',
-        content: `You are ZXS AI, a helpful assistant created by a person called ZXS. You provide clear, concise, and helpful responses. when you respond, use shortened language, incorrect punctuation, and make it sound like tou dont want to type that much letters. for example, if you wanna say: Hello! How can I assist you today? (instead say) wsp cuh; and make it more humanlike like your talking to a person online. Dont use emojis but be kinda goofy. You support *Markdown*, so use **bold**, *italic*, \`code\`, and links when needed. Don't crash when returning HTML.`
-      }
-    ];
+// Replace with your actual API key
+const API_KEY = "AIzaSyBUZy87H0IQUAkAn8E9PZgh-q4BQrPm4C4";
+const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
-    let loading = false;
+userInput.addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+});
+sendBtn.addEventListener("click", sendMessage);
 
-    async function sendMessage() {
-      if (loading) return;
-      const input = document.getElementById('user-input');
-      const message = input.value.trim();
-      if (!message) return;
+function appendMessage(text, sender, isTemp=false){
+  const msg = document.createElement("div");
+  msg.classList.add("message", sender);
+  if(isTemp){ msg.id="typing"; msg.classList.add("loading-dots"); }
+  msg.textContent = text;
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
 
-      addMessage('user', message);
-      messages.push({ role: 'user', content: message });
-      input.value = '';
-      input.style.height = 'auto';
-      setLoading(true);
+function streamReplyToBot(text){
+  const typing = document.getElementById("typing");
+  if(!typing) return;
+  typing.classList.remove("loading-dots");
+  typing.textContent = "";
+  let i=0;
+  const interval = setInterval(()=>{
+    if(i>=text.length){ clearInterval(interval); typing.removeAttribute("id"); return; }
+    typing.textContent += text.charAt(i); i++;
+    chat.scrollTop = chat.scrollHeight;
+  }, 25);
+}
 
-      addMessage('assistant', '...', true); // Loading placeholder
-      const loadingEl = document.querySelector('#messages-container .assistant:last-child');
+async function sendMessage(){
+  const message = userInput.value.trim();
+  if(!message && !fileInput.files.length) return;
 
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'gemma2-9b-it',
-            messages,
-            temperature: 0.7,
-            max_tokens: 1000
-          })
-        });
-
-        const data = await res.json();
-        const reply = data.choices?.[0]?.message?.content || "huh... i froze or sum idk 💀";
-
-        // Replace loading with actual message
-        loadingEl.remove();
-        addMessage('assistant', reply);
-        messages.push({ role: 'assistant', content: reply });
-
-      } catch (err) {
-        console.error(err);
-        loadingEl.remove();
-        addMessage('assistant', `**Error:** Couldn't connect. Maybe try again?`);
-      }
-
-      setLoading(false);
+  // Show attached files in chat
+  if(fileInput.files.length){
+    for(const file of fileInput.files){
+      appendMessage(`📎 ${file.name}`, "user");
     }
+  }
 
-    function addMessage(role, text, isLoading = false) {
-      const container = document.getElementById('messages-container');
-      const messageEl = document.createElement('div');
-      messageEl.className = `message ${role} markdown px-4 py-3 rounded-xl max-w-xl ${role === 'user' ? 'self-end bg-emerald-700 text-white' : 'self-start bg-white/10 border border-white/10'}`;
-      if (isLoading) {
-        messageEl.innerHTML = `<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>`;
-      } else {
-        messageEl.innerHTML = marked.parse(text);
-      }
-      container.appendChild(messageEl);
-      container.scrollTop = container.scrollHeight;
-    }
+  if(message) appendMessage(message,"user");
+  userInput.value="";
+  fileInput.value="";
 
-    function setLoading(val) {
-      loading = val;
-      document.getElementById('send-button').disabled = val;
-      document.getElementById('user-input').disabled = val;
-    }
+  appendMessage("", "bot", true);
 
-    function handleKeyDown(e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    }
+  try {
+    // Call AI API
+    const response = await fetch(API_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          { role: "user", parts: [{ text: message }] }
+        ]
+      })
+    });
 
-    function autoResize(textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-    }
+    if(!response.ok) throw new Error(`API error ${response.status}`);
 
-    window.onload = () => {
-      addMessage('assistant', `**yo** welcome to *ZXS AI* — ask me anything fr`);
-    };
-  </script>
+    const data = await response.json();
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 
+      "ZXS AI: I don't answer nonsense.";
+
+    streamReplyToBot(reply);
+
+  } catch(err){
+    console.error(err);
+    streamReplyToBot("Error: Check your API key or network.");
+  }
+}
+</script>
+
 </body>
 </html>
