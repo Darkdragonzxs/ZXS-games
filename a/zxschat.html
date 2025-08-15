@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>zxs chat</title>
-    <script src="/assets/js/panic-core.js" defer></script>
+    <title>ZXS CHAT</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -30,16 +29,9 @@
             height: 100%;
             margin: 0;
             padding: 0;
-        }
-
-        body {
-            font-family: "JetBrains Mono", "Courier New", monospace;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
             background: var(--terminal-bg);
             color: var(--terminal-white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
             overflow: hidden;
         }
 
@@ -52,9 +44,11 @@
             border-radius: 8px;
             box-shadow: var(--shadow);
             display: flex;
-            flex-direction: column;
+            /* Changed from column to row to accommodate sidebar */
+            flex-direction: row;
             position: relative;
             animation: bootUp 0.8s ease-out;
+            margin: 5vh auto;
         }
 
         @keyframes bootUp {
@@ -66,6 +60,138 @@
                 opacity: 1;
                 transform: scale(1);
             }
+        }
+
+        /* Added sidebar for chat navigation */
+        .chat-sidebar {
+            width: 280px;
+            background: var(--terminal-bg);
+            border-right: 1px solid var(--terminal-border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--terminal-border);
+        }
+
+        .sidebar-title {
+            color: var(--terminal-green);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .user-info {
+            color: var(--terminal-blue);
+            font-size: 12px;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .chat-section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            color: var(--terminal-yellow);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding: 0 8px;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+
+        .chat-item:hover {
+            background: var(--terminal-surface);
+        }
+
+        .chat-item.active {
+            background: rgba(0, 255, 65, 0.1);
+            border-left: 3px solid var(--terminal-green);
+        }
+
+        .chat-icon {
+            width: 16px;
+            text-align: center;
+            color: var(--terminal-gray);
+        }
+
+        .chat-item.active .chat-icon {
+            color: var(--terminal-green);
+        }
+
+        .chat-name {
+            flex: 1;
+            color: var(--terminal-white);
+        }
+
+        .chat-item.active .chat-name {
+            color: var(--terminal-green);
+        }
+
+        .unread-count {
+            background: var(--terminal-red);
+            color: var(--terminal-white);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        .online-users {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 12px;
+        }
+
+        .user-item:hover {
+            background: var(--terminal-surface);
+        }
+
+        .user-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--terminal-green);
+        }
+
+        .user-name {
+            color: var(--terminal-white);
+        }
+
+        /* Modified main chat area to work with sidebar */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .terminal-header {
@@ -152,7 +278,7 @@
         }
 
         .messages-container::-webkit-scrollbar-track {
-            background: var(--terminal-surface);
+            background: var(--terminal-bg);
         }
 
         .messages-container::-webkit-scrollbar-thumb {
@@ -186,6 +312,16 @@
             background: rgba(0, 170, 255, 0.05);
         }
 
+        .message.system-message {
+            border-color: var(--terminal-yellow);
+            background: rgba(255, 255, 0, 0.05);
+        }
+
+        .message.dm-message {
+            border-left: 3px solid #ff6b6b;
+            background: rgba(255, 107, 107, 0.05);
+        }
+
         .message-header {
             display: flex;
             align-items: center;
@@ -210,6 +346,13 @@
             font-weight: 500;
         }
 
+        .dm-indicator {
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-left: 8px;
+            font-size: 0.8em;
+        }
+
         .message-time {
             color: var(--terminal-dim);
             font-size: 11px;
@@ -222,12 +365,12 @@
         }
 
         .message-content .link {
-            color: var(--terminal-yellow);
+            color: #64ffda;
             text-decoration: underline;
         }
 
         .message-content .link:hover {
-            color: var(--terminal-white);
+            color: #4fd3b8;
         }
 
         .reactions {
@@ -434,19 +577,20 @@
             position: fixed;
             z-index: 9999;
             display: flex;
-            gap: 4px;
+            gap: 8px;
             padding: 8px;
+            border-radius: 8px;
             background: var(--terminal-surface);
             border: 1px solid var(--terminal-border);
-            border-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow);
         }
 
         .menu-btn {
             background: transparent;
             border: 1px solid var(--terminal-border);
+            color: var(--terminal-white);
             padding: 6px 8px;
-            border-radius: 3px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
             transition: all 0.2s;
@@ -457,104 +601,125 @@
             transform: scale(1.1);
         }
 
-        .system-message {
-            border-color: var(--terminal-yellow);
-            background: rgba(255, 255, 0, 0.05);
-        }
-
-        .system-message .user-name {
-            color: var(--terminal-yellow);
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--terminal-surface);
-            border: 1px solid var(--terminal-border);
-            border-radius: 4px;
-            padding: 12px 16px;
-            color: var(--terminal-white);
-            font-size: 12px;
-            z-index: 1001;
-            animation: toastSlide 0.3s ease-out;
-        }
-
-        @keyframes toastSlide {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
+        /* Added responsive design for mobile */
         @media (max-width: 768px) {
             .terminal-container {
                 height: 100vh;
                 border-radius: 0;
-                border: none;
+                margin: 0;
             }
             
-            .messages-container {
-                padding: 12px;
+            .chat-sidebar {
+                width: 240px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .chat-sidebar {
+                position: absolute;
+                left: -280px;
+                top: 0;
+                bottom: 0;
+                z-index: 100;
+                transition: left 0.3s ease;
             }
             
-            .message {
-                margin-bottom: 12px;
-                padding: 8px;
+            .chat-sidebar.open {
+                left: 0;
             }
             
-            .terminal-input {
-                padding: 12px;
+            .sidebar-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 99;
+                display: none;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="terminal-container" id="app">
-        <header class="terminal-header">
-            <div class="terminal-title">
-                <span class="terminal-prompt">user@terminal:~$</span>
-                <span class="terminal-path">/chat/<span id="userNameDisplay">connecting...</span></span>
+        <!-- Added sidebar for chat navigation -->
+        <div class="chat-sidebar" id="chatSidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Terminal Chat</div>
+                <div class="user-info" id="sidebarUserInfo">connecting...</div>
             </div>
-            <div class="terminal-status">
-                <div class="status-indicator">
-                    <div class="status-dot" id="onlineDot"></div>
-                    <span id="userCount">0</span> users
+            
+            <div class="chat-list">
+                <div class="chat-section">
+                    <div class="section-title">Channels</div>
+                    <div class="chat-item active" data-chat-type="public" data-chat-id="public">
+                        <div class="chat-icon"><i class="fa-solid fa-hashtag"></i></div>
+                        <div class="chat-name">public</div>
+                    </div>
                 </div>
-                <div class="terminal-controls">
-                    <button class="control-btn" id="btnInvite" title="Copy invite link">
-                        <i class="fa-solid fa-link"></i>
-                    </button>
-                    <button class="control-btn" id="btnLeave" title="Disconnect">
-                        <i class="fa-solid fa-power-off"></i>
-                    </button>
+                
+                <div class="chat-section">
+                    <div class="section-title">Direct Messages</div>
+                    <div id="dmList">
+                        <!-- DM conversations will be added here -->
+                    </div>
+                </div>
+                
+                <div class="chat-section">
+                    <div class="section-title">Online Users</div>
+                    <div class="online-users" id="onlineUsersList">
+                        <!-- Online users will be added here -->
+                    </div>
                 </div>
             </div>
-        </header>
+        </div>
 
-        <main class="messages-container" id="messages" aria-live="polite"></main>
+        <!-- Wrapped main chat in container -->
+        <div class="chat-main">
+            <header class="terminal-header">
+                <div class="terminal-title">
+                    <span class="terminal-prompt">user@terminal:~$</span>
+                    <span class="terminal-path">/chat/<span id="currentChatDisplay">public</span></span>
+                </div>
+                <div class="terminal-status">
+                    <div class="status-indicator">
+                        <div class="status-dot" id="onlineDot"></div>
+                        <span id="userCount">0</span> users
+                    </div>
+                    <div class="terminal-controls">
+                        <button class="control-btn" id="btnInvite" title="Copy invite link">
+                            <i class="fa-solid fa-link"></i>
+                        </button>
+                        <button class="control-btn" id="btnLeave" title="Disconnect">
+                            <i class="fa-solid fa-power-off"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
 
-        <div class="terminal-input">
-            <div class="input-line">
-                <span class="input-prompt">></span>
-                <input 
-                    id="messageInput" 
-                    class="input-field" 
-                    placeholder="type message and press enter..."
-                    autocomplete="off"
-                />
-            </div>
-            <div class="input-actions">
-                <button class="action-btn" id="micButton" title="Voice input">
-                    <i id="micIcon" class="fa-solid fa-microphone-slash"></i>
-                </button>
-                <button class="action-btn primary" id="sendBtn" title="Send">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
+            <main class="messages-container" id="messages" aria-live="polite"></main>
+
+            <div class="terminal-input">
+                <div class="input-line">
+                    <span class="input-prompt">></span>
+                    <input 
+                        id="messageInput" 
+                        class="input-field" 
+                        placeholder="type message and press enter..."
+                        autocomplete="off"
+                    />
+                </div>
+                <div class="input-actions">
+                    <button class="action-btn" id="micButton" title="Voice input">
+                        <i id="micIcon" class="fa-solid fa-microphone-slash"></i>
+                    </button>
+                    <button class="action-btn primary" id="sendBtn" title="Send">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -588,20 +753,29 @@
         <button class="menu-btn" data-reaction="👍">👍</button>
     </div>
 
+    <!-- Added mobile sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
     <script>
         /***** Config & state *****/ 
         const CLIENT_ID = "aSEKMcR4GsEZONob";
         let drone = null, room = null, clientId = null;
-        let userName = "", roomCode = generateSiteRoomCode();
+        let userName = "", roomCode = "";
         let recognition = null, isRecording = false;
+        let currentChatType = 'public'; // 'public' or 'dm'
+        let currentChatId = 'public'; // room name or username for DM
+        let onlineUsers = new Map(); // userId -> userData
+        let dmConversations = new Map(); // username -> messages
+        let unreadCounts = new Map(); // chatId -> count
 
         // DOM refs
         const joinModal = document.getElementById('joinModal');
         const joinBtn = document.getElementById('joinBtn');
         const demoBtn = document.getElementById('demoBtn');
         const usernameInput = document.getElementById('usernameInput');
-        const userNameDisplay = document.getElementById('userNameDisplay');
+        const sidebarUserInfo = document.getElementById('sidebarUserInfo');
+        const currentChatDisplay = document.getElementById('currentChatDisplay');
         const messagesEl = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
@@ -609,6 +783,8 @@
         const micIcon = document.getElementById('micIcon');
         const userCountEl = document.getElementById('userCount');
         const reactionMenu = document.getElementById('reactionMenu');
+        const onlineUsersList = document.getElementById('onlineUsersList');
+        const dmList = document.getElementById('dmList');
 
         // dedupe set: prevents double-render of same message
         const seenMessageIds = new Set();
@@ -619,14 +795,7 @@
         function generateSiteRoomCode(){
             // Use hostname to create unique room per site deployment
             const hostname = window.location.hostname || 'localhost';
-            // Create a simple hash of the hostname for room isolation
-            let hash = 0;
-            for(let i = 0; i < hostname.length; i++){
-                const char = hostname.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash; // Convert to 32-bit integer
-            }
-            return `site-${hostname.replace(/\./g, '-')}-${Math.abs(hash)}`;
+            return hostname.replace(/[^a-zA-Z0-9]/g, '_') + '_chat';
         }
 
         function uid(){
@@ -651,6 +820,158 @@
             }
         }
 
+        function parseCommand(text) {
+            if (text.startsWith('/dm ')) {
+                const parts = text.slice(4).split(' ');
+                const targetUser = parts[0];
+                const message = parts.slice(1).join(' ');
+                return { type: 'dm', target: targetUser, message };
+            }
+            if (text === '/users') {
+                return { type: 'users' };
+            }
+            if (text === '/public') {
+                return { type: 'public' };
+            }
+            return { type: 'public', message: text };
+        }
+
+        function showUserList() {
+            const users = Array.from(onlineUsers.values()).map(u => u.name).join(', ');
+            addMessageToDOM({
+                id: uid(),
+                name: 'System',
+                text: `Online users: ${users || 'none'}. Use /dm username message to send direct message.`,
+                timestamp: new Date().toISOString()
+            }, false);
+        }
+
+        function setDMMode(targetUser) {
+            dmMode = true;
+            dmTarget = targetUser;
+            messageInput.placeholder = `DM to ${targetUser} (type /public to return to public chat)`;
+            messageInput.style.borderColor = '#ff6b6b';
+            addMessageToDOM({
+                id: uid(),
+                name: 'System',
+                text: `Now in DM mode with ${targetUser}. Messages will be private.`,
+                timestamp: new Date().toISOString()
+            }, false);
+        }
+
+        function exitDMMode() {
+            dmMode = false;
+            dmTarget = null;
+            messageInput.placeholder = 'Type a message and press Enter — or use the mic';
+            messageInput.style.borderColor = '';
+            addMessageToDOM({
+                id: uid(),
+                name: 'System',
+                text: 'Returned to public chat.',
+                timestamp: new Date().toISOString()
+            }, false);
+        }
+
+        function pickAvatarBg(name){
+            const colors = ['linear-gradient(135deg,#ff9a9e,#fecfef)','linear-gradient(135deg,#ffd7a8,#ffb3a7)','linear-gradient(135deg,#cfe9ff,#aabfff)','linear-gradient(135deg,#b7ffda,#9be7d1)','linear-gradient(135deg,#e6d3ff,#c9b6ff)','linear-gradient(135deg,#ffd1f3,#ffb3e6)'];
+            return colors[(name||'U').charCodeAt(0) % colors.length];
+        }
+
+        function switchToChat(chatType, chatId) {
+            currentChatType = chatType;
+            currentChatId = chatId;
+            
+            // Update UI
+            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+            const activeItem = document.querySelector(`[data-chat-id="${chatId}"]`);
+            if (activeItem) activeItem.classList.add('active');
+            
+            currentChatDisplay.textContent = chatType === 'public' ? 'public' : `dm:${chatId}`;
+            
+            // Clear messages and load chat history
+            messagesEl.innerHTML = '';
+            seenMessageIds.clear();
+            
+            if (chatType === 'dm' && dmConversations.has(chatId)) {
+                const messages = dmConversations.get(chatId);
+                messages.forEach(msg => addMessageToDOM(msg, msg.name === userName));
+            }
+            
+            // Clear unread count
+            unreadCounts.set(chatId, 0);
+            updateUnreadCount(chatId, 0);
+            
+            // Update input placeholder
+            messageInput.placeholder = chatType === 'public' ? 
+                'type message and press enter...' : 
+                `message @${chatId}...`;
+        }
+
+        function updateUnreadCount(chatId, count) {
+            const chatItem = document.querySelector(`[data-chat-id="${chatId}"]`);
+            if (!chatItem) return;
+            
+            let badge = chatItem.querySelector('.unread-count');
+            if (count > 0) {
+                if (!badge) {
+                    badge = document.createElement('div');
+                    badge.className = 'unread-count';
+                    chatItem.appendChild(badge);
+                }
+                badge.textContent = count;
+            } else if (badge) {
+                badge.remove();
+            }
+        }
+
+        function addDMConversation(username) {
+            if (dmConversations.has(username)) return;
+            
+            dmConversations.set(username, []);
+            
+            const dmItem = document.createElement('div');
+            dmItem.className = 'chat-item';
+            dmItem.setAttribute('data-chat-type', 'dm');
+            dmItem.setAttribute('data-chat-id', username);
+            dmItem.innerHTML = `
+                <div class="chat-icon"><i class="fa-solid fa-user"></i></div>
+                <div class="chat-name">${username}</div>
+            `;
+            
+            dmItem.addEventListener('click', () => switchToChat('dm', username));
+            dmList.appendChild(dmItem);
+        }
+
+        function updateOnlineUsers(members) {
+            onlineUsers.clear();
+            onlineUsersList.innerHTML = '';
+            
+            if (!members) return;
+            
+            members.forEach(member => {
+                if (member.clientData && member.clientData.name && member.clientData.name !== userName) {
+                    const username = member.clientData.name;
+                    onlineUsers.set(member.id, { username, id: member.id });
+                    
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.innerHTML = `
+                        <div class="user-status"></div>
+                        <div class="user-name">${username}</div>
+                    `;
+                    
+                    userItem.addEventListener('click', () => {
+                        addDMConversation(username);
+                        switchToChat('dm', username);
+                    });
+                    
+                    onlineUsersList.appendChild(userItem);
+                }
+            });
+            
+            userCountEl.textContent = members.length;
+        }
+
         /***** DOM: add message (idempotent) *****/
         function addMessageToDOM(data, isSelf=false){
             // every message must have an id; skip if we've seen it
@@ -659,45 +980,60 @@
             seenMessageIds.add(data.id);
 
             const mid = data.id;
-            const isSystem = data.name === 'System';
+            const wrap = document.createElement('div');
+            wrap.className = 'message' + (isSelf ? ' self' : '');
+            if (data.isDM) wrap.classList.add('dm-message');
+            if (data.type === 'system') wrap.classList.add('system-message');
+            wrap.setAttribute('data-mid', mid);
+            wrap.setAttribute('tabindex', '-1');
+
+            const messageHeader = document.createElement('div');
+            messageHeader.className = 'message-header';
             
-            const messageEl = document.createElement('div');
-            messageEl.className = `message ${isSelf ? 'self' : ''} ${isSystem ? 'system-message' : ''}`;
-            messageEl.setAttribute('data-mid', mid);
-            messageEl.setAttribute('tabindex', '-1');
-
-            messageEl.innerHTML = `
-                <div class="message-header">
-                    <div class="message-user">
-                        <span class="user-prompt">${isSelf ? 'you' : (isSystem ? 'sys' : 'usr')}@terminal:~$</span>
-                        <span class="user-name">${escapeHtml(data.name || 'unknown')}</span>
-                    </div>
-                    <div class="message-time">[${formatTime(data.timestamp)}]</div>
-                </div>
-                <div class="message-content">${formatLinks(data.text || '')}</div>
-                <div class="reactions" data-mid="${mid}"></div>
+            const userSection = document.createElement('div');
+            userSection.className = 'message-user';
+            userSection.innerHTML = `
+                <span class="user-prompt">$</span>
+                <span class="user-name">${escapeHtml(data.name || 'Unknown')}</span>
+                ${data.isDM ? '<span class="dm-indicator">[DM]</span>' : ''}
             `;
+            
+            const timeSection = document.createElement('div');
+            timeSection.className = 'message-time';
+            timeSection.textContent = formatTime(data.timestamp);
+            
+            messageHeader.appendChild(userSection);
+            messageHeader.appendChild(timeSection);
 
-            attachReactionTriggers(messageEl);
-            messagesEl.appendChild(messageEl);
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = formatLinks(data.text || '');
+
+            const reactionsHolder = document.createElement('div');
+            reactionsHolder.className = 'reactions';
+            reactionsHolder.setAttribute('data-mid', mid);
+
+            wrap.appendChild(messageHeader);
+            wrap.appendChild(content);
+            wrap.appendChild(reactionsHolder);
+
+            attachReactionTriggers(wrap);
+            messagesEl.appendChild(wrap);
             messagesEl.scrollTop = messagesEl.scrollHeight + 200;
 
             // render pre-existing reactions if any
             if(reactionsMap[mid]) renderReactions(mid);
         }
 
-        /***** Reactions rendering & handlers *****/
         function renderReactions(mid){
             const holder = messagesEl.querySelector('.reactions[data-mid="'+mid+'"]');
             if(!holder) return;
             holder.innerHTML = '';
-            
             const map = reactionsMap[mid] || {};
             for(const emoji of Object.keys(map)){
                 const users = map[emoji];
                 const count = users.size;
                 if(count <= 0) continue;
-
                 const pill = document.createElement('div');
                 pill.className = 'reaction-pill';
                 if(users.has(clientId)) pill.classList.add('active');
@@ -708,21 +1044,19 @@
                 });
                 holder.appendChild(pill);
             }
+            holder.animate([{opacity:0.0, transform:'translateY(6px)'},{opacity:1, transform:'translateY(0)'}], {duration:180, easing:'cubic-bezier(.2,.9,.25,1)'});
         }
 
         function toggleReaction(mid, emoji){
             if(!mid || !emoji) return;
             if(!reactionsMap[mid]) reactionsMap[mid] = {};
             if(!reactionsMap[mid][emoji]) reactionsMap[mid][emoji] = new Set();
-            
             const users = reactionsMap[mid][emoji];
             const already = users.has(clientId);
             if(already) users.delete(clientId);
             else users.add(clientId);
-            
             renderReactions(mid);
-
-            // publish reaction event
+            // publish reaction event (actor = clientId)
             if(drone && room){
                 drone.publish({
                     room: `observable-${roomCode}`,
@@ -742,36 +1076,31 @@
             const mid = payload.messageId;
             const emoji = payload.reaction;
             const actor = payload.actor || payload.actorId || 'remote';
-            
             if(!reactionsMap[mid]) reactionsMap[mid] = {};
             if(!reactionsMap[mid][emoji]) reactionsMap[mid][emoji] = new Set();
             reactionsMap[mid][emoji].add(actor);
             renderReactions(mid);
         }
 
-        /***** Reaction menu triggers *****/
+        /***** Reaction menu triggers (right-click / long-press) *****/
         function attachReactionTriggers(msgEl){
             let longpressTimer = null;
             let startCoords = null;
-
             function openMenuAt(x,y, mid){
                 reactionMenu.style.display = 'flex';
                 reactionMenu.style.left = (x - 8) + 'px';
                 reactionMenu.style.top = (y - 52) + 'px';
                 reactionMenu.setAttribute('data-mid', mid);
             }
-
             function closeMenu(){
                 reactionMenu.style.display = 'none';
                 reactionMenu.removeAttribute('data-mid');
             }
-
             msgEl.addEventListener('contextmenu', (e)=>{
                 e.preventDefault();
                 const mid = msgEl.getAttribute('data-mid');
                 openMenuAt(e.clientX, e.clientY, mid);
             });
-
             msgEl.addEventListener('touchstart', (e)=>{
                 if(e.touches.length > 1) return;
                 startCoords = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -780,16 +1109,12 @@
                     openMenuAt(startCoords.x, startCoords.y, mid);
                 }, 600);
             }, {passive:true});
-
-            ['touchend','touchmove','touchcancel'].forEach(ev => 
-                msgEl.addEventListener(ev, ()=> {
-                    if(longpressTimer){
-                        clearTimeout(longpressTimer);
-                        longpressTimer = null;
-                    }
-                }, {passive:true})
-            );
-
+            ['touchend','touchmove','touchcancel'].forEach(ev => msgEl.addEventListener(ev, ()=> {
+                if(longpressTimer){
+                    clearTimeout(longpressTimer);
+                    longpressTimer = null;
+                }
+            }, {passive:true}));
             // close on outside click / Escape
             document.addEventListener('click', (e)=> {
                 if(reactionMenu.style.display !== 'none' && !reactionMenu.contains(e.target)) closeMenu();
@@ -812,7 +1137,7 @@
             }, 120);
         });
 
-        /***** Connect to ScaleDrone *****/
+        /***** Connect to ScaleDrone with dedupe rules *****/
         function connectToRoom(){
             drone = new ScaleDrone(CLIENT_ID, {
                 data: { name: userName }
@@ -820,16 +1145,15 @@
 
             drone.on('open', (err) => {
                 if(err){
-                    showToast('Connection error: ' + err, true);
+                    alert('Connection error: ' + err);
                     return;
                 }
                 clientId = drone.clientId;
-
                 // subscribe
                 room = drone.subscribe(`observable-${roomCode}`);
                 room.on('open', (err) => {
                     if(err){
-                        showToast('Room subscription error: ' + err, true);
+                        alert('Room subscription error: ' + err);
                         return;
                     }
                     // announce join
@@ -846,7 +1170,7 @@
                 // main incoming handler
                 room.on('data', (data, member) => {
                     if(!data) return;
-
+                    
                     // reaction event
                     if(data.type === 'reaction'){
                         const payload = {
@@ -859,60 +1183,123 @@
                         return;
                     }
 
-                    // join notices
+                    // join notices (optional)
                     if(data.type === 'join'){
-                        showToast(`${data.name} connected`);
+                        showTransient(`${data.name} joined`);
                         return;
                     }
 
-                    // normal chat message
-                    if(data.id){
-                        if(seenMessageIds.has(data.id)) {
-                            return;
+                    // DM message
+                    if(data.type === 'dm'){
+                        const senderName = data.name;
+                        const targetName = data.target;
+                        
+                        // Only show if it's for us or from us
+                        if(targetName === userName || senderName === userName) {
+                            const chatPartner = senderName === userName ? targetName : senderName;
+                            
+                            // Add to DM conversation
+                            if(!dmConversations.has(chatPartner)) {
+                                addDMConversation(chatPartner);
+                            }
+                            
+                            const dmMessage = {
+                                ...data,
+                                isDM: true
+                            };
+                            
+                            dmConversations.get(chatPartner).push(dmMessage);
+                            
+                            // Show message if we're in this DM chat
+                            if(currentChatType === 'dm' && currentChatId === chatPartner) {
+                                addMessageToDOM(dmMessage, senderName === userName);
+                            } else {
+                                // Update unread count
+                                const currentUnread = unreadCounts.get(chatPartner) || 0;
+                                unreadCounts.set(chatPartner, currentUnread + 1);
+                                updateUnreadCount(chatPartner, currentUnread + 1);
+                            }
                         }
-                        addMessageToDOM(data, false);
+                        return;
+                    }
+
+                    // normal chat message — must have id
+                    if(data.id){
+                        // Only show public messages when in public chat
+                        if(currentChatType === 'public') {
+                            if(seenMessageIds.has(data.id)) {
+                                return;
+                            }
+                            addMessageToDOM(data, false);
+                        }
                         return;
                     }
                 });
 
-                room.on('member_join', (m) => updateMembersCount());
-                room.on('member_leave', (m) => updateMembersCount());
-                room.on('members', (m) => updateMembersCount(m));
+                room.on('member_join', (m) => updateOnlineUsers(room.members));
+                room.on('member_leave', (m) => updateOnlineUsers(room.members));
+                room.on('members', (m) => updateOnlineUsers(m));
             });
 
-            drone.on('close', () => showToast('Connection lost', true));
-            drone.on('error', (err) => showToast('Connection error', true));
+            drone.on('close', () => showTransient('Disconnected', true));
+            drone.on('error', (err) => showTransient('Connection error', true));
         }
 
-        function updateMembersCount(members){
-            const count = (room && room.members && room.members.length) || (Array.isArray(members) ? members.length : 1);
-            document.getElementById('userCount').textContent = count;
-        }
-
-        /***** Send message *****/
+        /***** Send message (adds id to seen set AFTER local render so local echo shows) *****/
         function sendMessage(){
             const text = messageInput.value.trim();
             if(!text) return;
 
             const id = uid();
-            const payload = {
-                id,
-                text,
-                name: userName,
-                timestamp: new Date().toISOString()
-            };
+            const timestamp = new Date().toISOString();
 
-            // publish and local echo
-            if(drone && room){
-                drone.publish({
-                    room: `observable-${roomCode}`,
-                    message: payload
-                });
+            if(currentChatType === 'public') {
+                const payload = {
+                    id,
+                    text,
+                    name: userName,
+                    timestamp
+                };
+
+                // publish and local echo
+                if(drone && room){
+                    drone.publish({
+                        room: `observable-${roomCode}`,
+                        message: payload
+                    });
+                }
+
+                addMessageToDOM(payload, true);
+                seenMessageIds.add(id);
+            } else if(currentChatType === 'dm') {
+                const dmPayload = {
+                    id,
+                    type: 'dm',
+                    text,
+                    name: userName,
+                    target: currentChatId,
+                    timestamp,
+                    isDM: true
+                };
+
+                // publish DM
+                if(drone && room){
+                    drone.publish({
+                        room: `observable-${roomCode}`,
+                        message: dmPayload
+                    });
+                }
+
+                // Add to local DM conversation
+                if(!dmConversations.has(currentChatId)) {
+                    addDMConversation(currentChatId);
+                }
+                dmConversations.get(currentChatId).push(dmPayload);
+                
+                addMessageToDOM(dmPayload, true);
+                seenMessageIds.add(id);
             }
 
-            // local echo first
-            addMessageToDOM(payload, true);
-            seenMessageIds.add(id);
             messageInput.value = '';
             messageInput.focus();
         }
@@ -925,18 +1312,27 @@
             }
         });
 
-        /***** Toast notifications *****/
-        function showToast(text, danger=false){
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            if(danger) toast.style.borderColor = 'var(--terminal-red)';
-            toast.textContent = text;
-            document.body.appendChild(toast);
-            setTimeout(()=> toast.style.opacity = '0', 2200);
-            setTimeout(()=> toast.remove(), 2600);
+        /***** Transient toast *****/
+        function showTransient(text, danger=false){
+            const t = document.createElement('div');
+            t.className = 'typing';
+            t.style.position = 'fixed';
+            t.style.right = '22px';
+            t.style.bottom = '22px';
+            t.style.zIndex = '160';
+            t.style.background = danger ? 'linear-gradient(90deg,#ff6b6b33,#ff6b6b22)' : 'linear-gradient(90deg,#3174ff22,#73b6ff11)';
+            t.style.padding = '10px 14px';
+            t.style.borderRadius='12px';
+            t.style.color='#eaf2ff';
+            t.textContent = text;
+            document.body.appendChild(t);
+            setTimeout(()=> t.style.opacity = '0', 2200);
+            setTimeout(()=> t.remove(), 2600);
         }
 
-        /***** Speech recognition *****/
+        // ... existing code for speech recognition ...
+
+        /***** Basic speech recognition (unchanged) *****/
         function initSpeech(){
             if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
                 micIcon.className = 'fa-solid fa-microphone-slash';
@@ -944,30 +1340,25 @@
                 micBtn.title = 'Speech recognition not supported';
                 return;
             }
-
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRec();
             recognition.lang = 'en-US';
             recognition.interimResults = false;
             recognition.maxAlternatives = 1;
-
             recognition.onstart = ()=> {
                 isRecording = true;
                 micIcon.className = 'fa-solid fa-microphone';
                 micBtn.classList.add('active');
             };
-
             recognition.onresult = (e)=>{
                 const txt = e.results[0][0].transcript;
                 messageInput.value = txt;
                 sendMessage();
             };
-
             recognition.onerror = ()=> {
-                showToast('Speech error', true);
+                showTransient('Speech error');
                 stopRecognition();
             };
-
             recognition.onend = ()=> stopRecognition();
         }
 
@@ -992,19 +1383,18 @@
             else startRecognition();
         });
 
-        /***** Join flow *****/
         usernameInput.addEventListener('keydown', (e)=> {
             if(e.key === 'Enter') joinRoom();
         });
 
         joinBtn.addEventListener('click', joinRoom);
         demoBtn.addEventListener('click', ()=> {
-            usernameInput.value = 'demo_user';
+            usernameInput.value = 'DemoUser';
             joinRoom();
         });
 
         function sanitizeName(n){
-            return n.replace(/[^a-zA-Z0-9_]/g,'').slice(0,24);
+            return n.replace(/[^a-zA-Z0-9 ]/g,'').slice(0,24);
         }
 
         function joinRoom(){
@@ -1013,42 +1403,51 @@
                 alert('Please enter a username');
                 return;
             }
-
             userName = rawName;
 
-            // display name and hide modal
-            userNameDisplay.textContent = userName;
+            const hostname = window.location.hostname;
+            roomCode = btoa(hostname).replace(/[^a-zA-Z0-9]/g, '').slice(0, 16);
+
+            sidebarUserInfo.textContent = `${userName}@${hostname}`;
             joinModal.style.display = 'none';
 
-            // connect
             connectToRoom();
-
             try{
-                localStorage.setItem('terminal-chat-username', usernameInput.value);
+                localStorage.setItem('ln-username', usernameInput.value);
             }catch(e){}
         }
 
+        document.addEventListener('click', (e) => {
+            const chatItem = e.target.closest('.chat-item');
+            if (chatItem) {
+                const chatType = chatItem.getAttribute('data-chat-type');
+                const chatId = chatItem.getAttribute('data-chat-id');
+                switchToChat(chatType, chatId);
+            }
+        });
+
         window.addEventListener('load', ()=>{
             try{
-                const stored = localStorage.getItem('terminal-chat-username');
+                const stored = localStorage.getItem('ln-username');
                 if(stored) usernameInput.value = stored;
             }catch(e){}
 
             addMessageToDOM({
                 id: uid(),
                 name:'System',
-                text: 'Terminal chat initialized. Right-click or long-press messages to add reactions. Type /help for commands.',
-                timestamp: new Date().toISOString()
+                text: 'Welcome to Terminal Chat! Click on users in the sidebar to start direct messages. Right-click messages to react.',
+                timestamp: new Date().toISOString(),
+                type: 'system'
             }, false);
         });
 
         document.getElementById('btnInvite').addEventListener('click', ()=>{
-            const url = location.href.split('#')[0];
-            navigator.clipboard?.writeText(url).then(()=> showToast('Site link copied! Others on this domain can join.'));
+            const url = window.location.href;
+            navigator.clipboard?.writeText(url).then(()=> showTransient('Invite link copied!'));
         });
 
         document.getElementById('btnLeave').addEventListener('click', ()=> {
-            if(confirm('Disconnect from terminal?')) location.reload();
+            if(confirm('Leave the chat?')) location.reload();
         });
     </script>
 </body>
