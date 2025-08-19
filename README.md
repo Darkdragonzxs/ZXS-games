@@ -1,5 +1,5 @@
 # ZXS GAMES
-<p>Discord: discord.gg/zxs</p>
+<p>Discord: dsc.gg/zxsgames</p>
 <img width="262" height="161" alt="download" src="https://github.com/user-attachments/assets/d8f80f8d-642a-4890-b0fb-421e01040b4a" />
 <p>ZXS GAMES IS A SITE WHERE SCHOOL DREAMS ARE NO MORE. </p>
 <p>WE ARE UBG LIKE NEVER SEEN BEFORE.</p>
