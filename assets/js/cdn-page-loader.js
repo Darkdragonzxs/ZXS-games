@@ -1,6 +1,3 @@
-// CDN Page Loader for ZXS Games
-// Loads page content from jsdelivr CDN, extracts <body>, <style>, and <script>, and displays in the iframe.
-
 const CDN_PREFIX = "https://cdn.jsdelivr.net/gh/Darkdragonzxs/ZXS-games@main/assets/pages/";
 
 function loadPageIntoIframe(iframeId, pageName) {
@@ -18,10 +15,11 @@ function loadPageIntoIframe(iframeId, pageName) {
       const styleMatches = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)];
       const styleContent = styleMatches.map(m => m[1]).join("\n");
 
-      // Extract <script> tags
+      // Extract <script> tags (inline only, not src)
       const scriptMatches = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)];
-      const scriptContent = scriptMatches.map(m => m[1]).join("\n");
+      const scriptContents = scriptMatches.map(m => m[1]);
 
+      // Write the body and style (omit scripts for now)
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       doc.open();
       doc.write(`
@@ -32,16 +30,20 @@ function loadPageIntoIframe(iframeId, pageName) {
           </head>
           <body style="background: transparent; color: inherit; font-family: inherit;">
             ${bodyContent}
-            <script>
-              try { ${scriptContent} } catch(e) { console.error("CDN iframe script error:", e); }
-            </script>
           </body>
         </html>
       `);
       doc.close();
+
+      // Dynamically inject scripts so they run
+      scriptContents.forEach(scriptText => {
+        const scriptEl = doc.createElement('script');
+        scriptEl.type = "text/javascript";
+        scriptEl.textContent = scriptText;
+        doc.body.appendChild(scriptEl);
+      });
     })
     .catch(() => {
-      // Display error if CDN file not found
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       doc.open();
       doc.write(`<body style="color:red; font-family:Orbitron,sans-serif; background: #222;">Failed to load page: ${pageName}</body>`);
@@ -49,7 +51,6 @@ function loadPageIntoIframe(iframeId, pageName) {
     });
 }
 
-// Map section to CDN HTML page
 const CDN_PAGE_MAPPINGS = {
   games: "Games.html",
   apps: "apps.html",
@@ -58,7 +59,6 @@ const CDN_PAGE_MAPPINGS = {
   partners: "partners.html"
 };
 
-// Overwrite the showSection function in main page script
 window.showSection = function(section) {
   document.querySelectorAll('.content-frame').forEach(frame => frame.classList.remove('active'));
   document.getElementById('settings-section').classList.remove('active');
@@ -76,7 +76,6 @@ window.showSection = function(section) {
   }
 };
 
-// Initial load for home
 document.addEventListener('DOMContentLoaded', function() {
   window.showSection('home');
 });
