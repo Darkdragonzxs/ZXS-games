@@ -2,854 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
-  <script type='text/javascript' src='//pl27385714.profitableratecpm.com/20/f3/a4/20f3a4ffd2582777f6625c42ac0fccc1.js'></script>
-  <meta property="og:title" content="ZXS Games" />
-  <meta property="og:description" content="play games at school muwahaha >:)" />
-  <meta property="og:url" content="https://zxsgames.vip/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="/assets/images/logoV.png" />
-
-  <meta name="description" content="A Gaming Site with everything you need." />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
-  <link rel="icon" href="/logo.png" type="image/png" id="favicon" />
-  <link rel="stylesheet" href="https://zxs.netlify.app/assets/css/sparkle.css" />
-  <script src="/assets/js/sparkle.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="ZXS Games, HTML, JS, CSS, gaming" />
+  <meta name="author" content="ZXS Games" />
+  <title>ZXS Games</title>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/style.css" />
 </head>
 <body>
-  <style>
- :root {
-  --sidebar-width: 220px;
-  --sidebar-collapsed-width: 75px;
-  --accent-color: #22c55e;
-  --accent-secondary: #16a34a;
-  --bg-color: #0a0a0a;
-  --text-color: #ffffff;
-  --text-secondary: #cfcfcf;
-  --panel-bg: rgba(20, 20, 20, 0.9);
-  --panel-bg-light: rgba(30, 30, 30, 0.7);
-  --panel-bg-dark: rgba(15, 15, 15, 0.95);
-  --button-hover: rgba(34, 197, 94, 0.12);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-accent: rgba(34, 197, 94, 0.2);
-  --transition-speed: 0.3s;
-  --glass-blur: 12px;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  overflow: hidden;
-  background: linear-gradient(135deg, var(--bg-color) 0%, #0e0e0e 50%, #0a0a0a 100%);
-  color: var(--text-color);
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 400;
-}
-/* particles js in big 25 */
-#particles-js {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  opacity: 0.35;
-}
-.sidebar {
-  position: fixed;
-  top: 0; left: 0;
-  height: 100%;
-  width: var(--sidebar-width);
-  background: var(--panel-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  border-right: 1px solid var(--border-color);
-  transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 0 0 rgba(0,0,0,0); 
-}
-.sidebar.collapsed { width: var(--sidebar-collapsed-width); }
-.sidebar-toggle {
-  position: absolute;
-  top: 20px;
-  right: -37px;
-  background: var(--panel-bg-light);
-  backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--border-accent);
-  color: var(--accent-color);
-  font-size: 16px;
-  cursor: pointer;
-  z-index: 101;
-  padding: 10px;
-  border-radius: 50%;
-  transition: all var(--transition-speed) ease;
-  box-shadow: 0 0 0 rgba(0,0,0,0);
-}
-.sidebar-toggle:hover {
-  background: var(--panel-bg-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 0 0 rgba(0,0,0,0);
-}
-.logo-container {
-  margin: 35px 0 25px 0;
-  text-align: center;
-  transition: all var(--transition-speed) ease;
-  position: relative;
-}
-.logo-container img {
-  max-width: 120px;
-  height: auto;
-  transition: all var(--transition-speed) ease;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  padding: 8px;
-  background: var(--panel-bg-light);
-  backdrop-filter: blur(8px);
-  filter: none;
-}
-.logo-container:hover img {
-  transform: scale(1.02);
-  border-color: var(--border-accent);
-}
-.sidebar.collapsed .logo-container img {
-  max-width: 45px;
-  padding: 4px;
-}
-.sidebar-info {
-  text-align: center;
-  margin-bottom: 25px;
-  transition: all var(--transition-speed) ease;
-  padding: 0 20px;
-  width: 100%;
-}
-.sidebar.collapsed .sidebar-info {
-  opacity: 0; height: 0; overflow: hidden; margin: 0;
-}
-#random-message {
-  font-size: 11px;
-  margin-bottom: 12px;
-  padding: 10px 12px;
-  background: var(--panel-bg-light);
-  backdrop-filter: blur(8px);
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  font-weight: 300;
-  line-height: 1.4;
-}
-#battery-percentage {
-  font-size: 10px;
-  color: var(--accent-color);
-  font-weight: 500;
-  padding: 6px 10px;
-  background: var(--panel-bg-dark);
-  border-radius: 8px;
-  border: 1px solid var(--border-accent);
-}
-.nav-buttons {
-  display: flex; flex-direction: column; gap: 8px;
-  width: 100%; padding: 0 20px; box-sizing: border-box;
-}
-.nav-button {
-  display: flex; align-items: center;
-  padding: 16px 18px;
-  border: none;
-  background: var(--panel-bg-light);
-  backdrop-filter: blur(8px);
-  color: var(--text-color);
-  cursor: pointer;
-  border-radius: 12px;
-  transition: all var(--transition-speed) ease;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--border-color);
-  font-weight: 400; font-size: 13px;
-  box-shadow: none; 
-}
-.nav-button::before { display: none; } 
-.nav-button:hover {
-  background: var(--panel-bg-dark);
-  transform: translateY(-1px);
-  box-shadow: none;
-  border-color: var(--border-accent);
-}
-.nav-button.active {
-  background: var(--panel-bg-dark);
-  border-color: var(--accent-color);
-  box-shadow: none;
-}
-.nav-button img {
-  width: 20px; height: 20px; margin-right: 14px;
-  filter: invert(1) opacity(0.85);
-  transition: all var(--transition-speed) ease;
-}
-.nav-button:hover img,
-.nav-button.active img {
-  filter: invert(1) opacity(1);
-}
-.nav-button span { transition: all var(--transition-speed) ease; font-weight: 400; }
-.sidebar.collapsed .nav-button { justify-content: center; padding: 16px 12px; }
-.sidebar.collapsed .nav-button span { display: none; }
-.sidebar.collapsed .nav-button img { margin-right: 0; }
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <button class="closebtn" id="closeSidebar">&times;</button>
+    <a href="#home">Home</a>
+    <a href="#games">Games</a>
+    <a href="#apps">Apps</a>
+    <a href="#hacks">Hacks</a>
+    <a href="#vm">VM</a>
+    <a href="#partners">Partners</a>
+    <a href="#settings">Settings</a>
+  </nav>
 
-.main-content {
-  position: relative;
-  margin-left: var(--sidebar-width);
-  height: 100vh;
-  transition: margin-left var(--transition-speed) ease;
-  z-index: 1;
-  overflow: hidden;
-}
-.sidebar.collapsed ~ .main-content { margin-left: var(--sidebar-collapsed-width); }
+  <!-- Top Navigation -->
+  <header class="topnav">
+    <button class="openbtn" id="openSidebar">&#9776;</button>
+    <h1 class="logo">ZXS Games</h1>
+    <p id="battery">Battery: 0%</p>
+  </header>
 
-.content-frame {
-  width: 100%; height: 100%; border: none; display: none; opacity: 0;
-  transition: opacity 0.4s ease; background: transparent;
-}
-.content-frame.active { display: block; opacity: 1; animation: slideIn 0.5s ease; }
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  <!-- Main Content -->
+  <main>
+    <section id="welcome">
+      <img src="zxslogo.png" alt="ZXS Logo" class="logo-img" />
+      <h2>Welcome to ZXS GAMES</h2>
+      <p>You went to the right place!</p>
+      <p id="randomMessage">Enjoy your time here!</p>
+    </section>
 
-.home-content {
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
-  height: 100%; text-align: center; padding: 0 40px;
-  background: radial-gradient(circle at center, rgba(34, 197, 94, 0.05) 0%, transparent 70%);
-}
-.home-content img {
-  max-width: 220px; margin-bottom: 28px; filter: none; animation: float 4s ease-in-out infinite;
-}
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-.home-content h1 {
-  font-size: 2.4rem; font-weight: 700; margin-bottom: 16px; color: var(--text-color);
-  text-shadow: none; letter-spacing: 1px;
-}
-.home-content p {
-  font-size: 1rem; color: var(--text-secondary); max-width: 600px; line-height: 1.6; font-weight: 300;
-}
+    <!-- Settings -->
+    <section id="settings">
+      <h2>Settings</h2>
 
-/* Proxy */
-.proxy-container { width: 100%; height: 100%; display: flex; flex-direction: column; background: transparent; }
-.proxy-header {
-  padding: 20px 24px; background: var(--panel-bg); backdrop-filter: blur(var(--glass-blur));
-  border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; gap: 16px;
-}
-.proxy-status { color: var(--accent-color); font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-.proxy-status::before { content: ''; width: 8px; height: 8px; background: var(--accent-color); border-radius: 50%; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-.proxy-frame { flex: 1; border: none; background: #fff; border-radius: 0; }
+      <div class="setting">
+        <h3>Tab Cloak</h3>
+        <p>Change how this tab appears in your browser</p>
+        <button id="applyCloak">Apply Tab Cloak</button>
+      </div>
 
-.settings-panel {
-  display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  background: var(--panel-bg); backdrop-filter: blur(var(--glass-blur)); padding: 32px;
-  box-sizing: border-box; overflow-y: auto; z-index: 5;
-}
-.settings-panel.active { display: block; animation: slideIn 0.5s ease; }
-.settings-panel h1 {
-  font-size: 2rem; font-weight: 700; margin-bottom: 28px; color: var(--text-color); text-shadow: none;
-}
-.settings-section {
-  margin-bottom: 24px; padding: 20px; background: var(--panel-bg-light);
-  backdrop-filter: blur(8px); border-radius: 12px; border: 1px solid var(--border-color);
-  transition: all var(--transition-speed) ease;
-}
-.settings-section:hover {
-  background: var(--panel-bg-dark);
-  transform: translateY(-1px);
-  box-shadow: none;
-  border-color: var(--border-accent);
-}
-.settings-section h2 { margin-top: 0; color: var(--accent-color); font-weight: 600; font-size: 1.2rem; margin-bottom: 12px; }
-.settings-option { margin-bottom: 18px; }
-.settings-option p { color: var(--text-secondary); font-size: 14px; margin-bottom: 12px; font-weight: 300; }
-.settings-option input {
-  background: var(--panel-bg-dark); backdrop-filter: blur(8px); border: 1px solid var(--border-color);
-  padding: 12px 14px; border-radius: 10px; color: var(--text-color); margin: 8px 0;
-  width: 100%; max-width: 420px; font-family: 'Orbitron', sans-serif; font-size: 13px; transition: all var(--transition-speed) ease;
-}
-.settings-option input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 rgba(0,0,0,0); }
-.settings-option button {
-  background: var(--panel-bg-dark); backdrop-filter: blur(8px); border: 1px solid var(--border-accent);
-  color: var(--accent-color); padding: 12px 16px; border-radius: 10px; cursor: pointer;
-  font-family: 'Orbitron', sans-serif; font-weight: 500; font-size: 12px; transition: all var(--transition-speed) ease; margin: 8px 5px;
-}
-.settings-option button:hover { background: var(--accent-color); color: var(--bg-color); transform: translateY(-1px); }
-.key-display {
-  display: inline-block; padding: 8px 12px; background: var(--panel-bg-dark);
-  backdrop-filter: blur(8px); border-radius: 8px; margin: 0 8px; border: 1px solid var(--border-accent);
-  font-weight: 500; color: var(--accent-color);
-}
-.status-message { display: inline-block; font-style: italic; margin-left: 12px; color: var(--accent-color); font-weight: 400; font-size: 13px; }
+      <div class="setting">
+        <h3>About:blank Launch</h3>
+        <p>Open ZXS Games in about:blank to hide the URL</p>
+        <button id="openAboutBlank">Open in About:blank</button>
+      </div>
 
-.popup {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(12px);
-  display: flex; justify-content: center; align-items: center; z-index: 1000;
-  opacity: 0; visibility: hidden; transition: all 0.5s ease;
-}
-.popup.active { opacity: 1; visibility: visible; }
-.popup-content {
-  background: var(--panel-bg); backdrop-filter: blur(var(--glass-blur));
-  border-radius: 16px; padding: 32px; max-width: 520px; width: 90%; text-align: center;
-  border: 1px solid var(--border-accent); transform: scale(0.96); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.popup.active .popup-content { transform: scale(1); }
-.popup-content h1 { margin-top: 0; color: var(--accent-color); font-weight: 700; font-size: 1.6rem; text-shadow: none; }
-.popup-content h2 { color: var(--text-secondary); font-weight: 400; font-size: 1rem; }
-.popup-content p { color: var(--text-secondary); font-size: 14px; font-weight: 300; margin: 8px 0; }
-.popup-content button {
-  background: var(--panel-bg-dark); backdrop-filter: blur(8px); border: 1px solid var(--accent-color);
-  color: var(--accent-color); padding: 12px 24px; border-radius: 22px; font-family: 'Orbitron', sans-serif; font-weight: 500;
-  cursor: pointer; margin-top: 20px; transition: all var(--transition-speed) ease; font-size: 14px;
-}
-.popup-content button:hover { background: var(--accent-color); color: var(--bg-color); transform: translateY(-1px); }
+      <div class="setting">
+        <h3>Panic Key</h3>
+        <p>Press a key to instantly redirect when someone approaches</p>
+        <p>Current Panic Key: <span id="panicKey">]</span></p>
+        <button id="changeKey">Change Key</button>
+        <label>
+          Redirect URL:
+          <input type="text" id="panicUrl" placeholder="https://example.com" />
+        </label>
+        <button id="saveSettings">Save Settings</button>
+        <p id="panicStatus">Panic key is active</p>
+      </div>
 
-.loading {
-  display: flex; justify-content: center; align-items: center; height: 100%;
-  font-size: 1rem; color: var(--accent-color); background: var(--panel-bg); backdrop-filter: blur(var(--glass-blur));
-}
-.loading::after {
-  content: ''; width: 28px; height: 28px; border: 3px solid var(--border-color); border-top: 3px solid var(--accent-color);
-  border-radius: 50%; animation: spin 1s linear infinite; margin-left: 12px;
-}
-@keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+      <div class="setting">
+        <h3>Credits</h3>
+        <p>View the people and projects that made ZXS Games possible.</p>
+        <button id="openCredits">Open Credits</button>
+      </div>
+    </section>
+  </main>
 
-@media (max-width: 768px) {
-  :root { --sidebar-width: 200px; }
-  .home-content h1 { font-size: 2rem; }
-  .settings-panel { padding: 24px; }
-}
-@media (max-width: 480px) {
-  .sidebar { width: var(--sidebar-collapsed-width); }
-  .sidebar .nav-button span { display: none; }
-  .sidebar .nav-button { justify-content: center; padding: 16px 12px; }
-  .sidebar .nav-button img { margin-right: 0; }
-  .sidebar .logo-container img { max-width: 45px; }
-  .sidebar .sidebar-info { opacity: 0; height: 0; overflow: hidden; margin: 0; }
-  .main-content { margin-left: var(--sidebar-collapsed-width); }
-  .home-content h1 { font-size: 1.6rem; }
-}
-
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--panel-bg-dark); }
-::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
-
-.home-content h1 {
-  font-size: clamp(1.4rem, 3.5vw, 2.4rem);
-}
-.home-content p {
-  font-size: clamp(0.9rem, 2.5vw, 1rem);
-}
-.home-content img {
-  width: min(55vw, 220px);
-  height: auto;
-}
-.nav-button {
-  padding: clamp(12px, 3.5vw, 16px) clamp(12px, 3.5vw, 18px);
-  font-size: clamp(12px, 2.8vw, 13px);
-}
-@media (max-width: 380px) {
-  .settings-panel { padding: 18px; }
-  .settings-section { padding: 16px; }
-  .sidebar-toggle { right: -34px; }
-  .proxy-header { padding: 16px 18px; }
-  .home-content { padding: 0 20px; }
-}
-.content-frame,
-#proxy-frame {
-  height: 100%;
-  min-height: 100%;
-}
-
-.nav-button[data-section="hacks"] {
-  background: var(--panel-bg-light) !important;
-  color: var(--text-color) !important;
-  border-color: var(--border-color) !important;
-  box-shadow: none !important;
-}
-.nav-button[data-section="hacks"]:hover {
-  background: var(--panel-bg-dark) !important;
-  transform: translateY(-1px);
-  border-color: var(--border-accent) !important;
-  box-shadow: none !important;
-}
-.nav-button[data-section="hacks"].active {
-  background: var(--panel-bg-dark) !important;
-  color: var(--text-color) !important;
-  border-color: var(--accent-color) !important;
-  box-shadow: none !important;
-}
-.nav-button[data-section="hacks"] img {
-  filter: invert(1) opacity(0.85) !important;
-}
-.nav-button[data-section="hacks"]:hover img,
-.nav-button[data-section="hacks"].active img {
-  filter: invert(1) opacity(1) !important;
-}
-.sidebar.collapsed .nav-button[data-section="hacks"] {
-  background: var(--panel-bg-light) !important;
-}
-    
-.nav-button[data-section="hacks"] img,
-.nav-button[data-section="hacks"]:hover img,
-.nav-button[data-section="hacks"].active img,
-.sidebar.collapsed .nav-button[data-section="hacks"] img {
-  filter: brightness(0) invert(1) saturate(0) !important;
-  -webkit-filter: brightness(0) invert(1) saturate(0) !important;
-  opacity: 1 !important;
-}
-  </style>
-
-  <div id="announcement-popup" class="popup">
+  <!-- Popup -->
+  <div id="popup" class="popup">
     <div class="popup-content">
-      <h1>🚀 Welcome to ZXS GAMES 2.6!</h1>
-      <h2>1. added ads :(</h2>
-      <p>2. revamped partner page</p>
-      <p>3. added credits</p>
-      <button id="close-popup-btn">Proceed</button>
+      <span class="close" id="closePopup">&times;</span>
+      <h2>Welcome to ZXS GAMES 2.6!</h2>
+      <ul>
+        <li>1. Added ads :(</li>
+        <li>2. Revamped partner page</li>
+        <li>3. Added credits</li>
+      </ul>
+      <button id="proceed">Proceed</button>
     </div>
   </div>
 
-  <div id="particles-js"></div>
-
-  <div id="sidebar" class="sidebar">
-    <button id="sidebar-toggle" class="sidebar-toggle">☰</button>
-    <p></p>
-    <div class="sidebar-info">
-      <div id="random-message">Welcome to ZXS Games</div>
-      <div id="battery-percentage">Battery: 0%</div>
-    </div>
-
-    <div class="nav-buttons">
-      <button class="nav-button active" data-section="home">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Im0zIDkgOS03IDkgN3Y4YTIgMiAwIDAgMS0yIDJINWEyIDIgMCAwIDEtMi0yWiIvPjxwb2x5bGluZSBwb2ludHM9IjkgMjIgOSAxMiAxNSAxMiAxNSAyMiIvPjwvc3ZnPg==" alt="Home" />
-        <span>Home</span>
-      </button>
-
-      <button class="nav-button" data-section="games">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxyZWN0IHg9IjYiIHk9IjExIiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIi8+PHJlY3QgeD0iMiIgeT0iNiIgd2lkdGg9IjIwIiBoZWlnaHQ9IjEyIiByeD0iMiIvPjxwYXRoIGQ9Ik0xMiAzdjMiLz48cGF0aCBkPSJNMTkgMyAyMSA4Ii8+PHBhdGggZD0iTTUgMyAzIDgiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSIxIi8+PC9zdmc+" alt="Games" />
-        <span>Games</span>
-      </button>
-
-      <button class="nav-button" data-section="apps">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgcng9IjIiLz48cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHJ4PSIyIi8+PHBhdGggZD0iTTEyIDJ2NCIvPjxwYXRoIGQ9Ik0yIDEyaDQiLz48cGF0aCBkPSJNMjIgMTJoLTQiLz48cGF0aCBkPSJNMTIgMTh2NCIvPjwvc3ZnPg==" alt="Apps" />
-        <span>Apps</span>
-      </button>
-
-      <button class="nav-button" data-section="proxy">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xMiAyYTEwIDEwIDAgMSAwIDAgMjAgMTAgMTAgMCAxIDAgMC0yMFoiLz48cGF0aCBkPSJNMTIgMTJhMiAyIDAgMSAwIDAgNCAyIDIgMCAxIDAgMC00WiIvPjxwYXRoIGQ9Ik0xMiA2YTIgMiAwIDEgMCAwIDQgMiAyIDAgMSAwIDAtNFoiLz48cGF0aCBkPSJNNiAxMmEyIDIgMCAxIDAgMCA0IDIgMiAwIDEgMCAwLTRaIi8+PHBhdGggZD0iTTE4IDEyYTIgMiAwIDEgMCAwIDQgMiAyIDAgMSAwIDAtNFoiLz48cGF0aCBkPSJtNi43IDEwLjdtMi4xLTIuMSIvPjxwYXRoIGQ9Ik0xNS4zIDEwLjdtMi4xLTIuMSIvPjxwYXRoIGQ9Ik0xMC43IDE1LjNtLTIuMSAyLjEiLz48cGF0aCBkPSJNMTMuMyAxNS4zbS0yLjEgMi4xIi8+PC9zdmc+" alt="Proxy" />
-        <span>Proxy</span>
-      </button>
-
-      <button class="nav-button" data-section="hacks">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABA0lEQVR4nOXVvUoDQRiF4SCRVKawStDbyB3YW3kLYpfSWu/DG7BPGovtF7RLZ2mT2lLlkcFZGJZddzNZQfTAx8A3L+cwP8yMRr9JOA01tOkBznCPN3zgARc43Md4jhu8+FIYb2OlvcDMcwLW0SToDpNkbhJ7ldY5AQW2PVYQmCI3oOg6g4rLDhhl9P5BABZ4jrVoM2vj2kynuMJTvCGvscRemCtjdXHTuvmyCWoITfUdF7yW9X2stME1jnGESzw2BHRxRT2gHHCLyqaAzsOTye11JfXp/YmAFd7jeI5x8tiNY69i+nKrNGDW8Llsd3iu61zwmqWr2ul7NMQ3ipNQQ3E/pk98tvaqG8pobAAAAABJRU5ErkJggg==" alt="Hacks" />
-        <span>Hacks</span>
-      </button>
-
-      <button class="nav-button" data-section="vm">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxyZWN0IHg9IjIiIHk9IjMiIHdpZHRoPSIyMCIgaGVpZ2h0PSIxNCIgcng9IjIiLz48cGF0aCBkPSJNOCAyMWg4Ii8+PHBhdGggZD0iTTEyIDE3djQiLz48cGF0aCBkPSJtMiA3IDUgNSIvPjxwYXRoIGQ9Im0xNyA3IDUgNSIvPjxwYXRoIGQ9Im0yIDEyIDUgLTUiLz48cGF0aCBkPSJtMTcgMTIgNSAtNSIvPjwvc3ZnPg==" alt="VM" />
-        <span>VM</span>
-      </button>
-
-      <button class="nav-button" data-section="partners">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xNyA1SDkuNWE0LjUgNC41IDAgMCAwIDAgOUgxN2EyLjUgMi41IDAgMSAwIDAtNUg5LjVhLjUuNSAwIDAgMSAwLTFIMTdhMy41IDMuNSAwIDAgMSAwIDdIOS41YTUuNSA1LjUgMCAwIDEgMC0xMUgxNyIvPjwvc3ZnPg==" alt="Partners" />
-        <span>Partners</span>
-      </button>
-
-      <button class="nav-button" data-section="settings">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xMi4yMiAyaC0uNDRhMiAyIDAgMCAwLTIgMi4xOGwtLjE0IDEuMDRhLjkuOSAwIDAgMS0uNTMuNjNsLS45Ny40MWEuOS45IDAgMCAxLS44My0uMDJsLS45NC0uNTlhMiAyIDAgMCAwLTIuOTMuNTVsLS4yMi4zOGEyIDIgMCAwIDAgLjU1IDIuOTNsLjk0LjU5YS45LjkgMCAwIDEgLjQyLjc1bC0uMDEgMS4wNWEuOS45IDAgMCAxLS40Mi43NWwtLjk0LjU5YTIgMiAwIDAgMC0uNTUgMi45M2wuMjIuMzhhMiAyIDAgMCAwIDIuOTMuNTVsLjk0LS41OWEuOS45IDAgMCAxIC44My0uMDJsLjk3LjQxYS45LjkgMCAwIDEgLjUzLjYzbC4xNCAxLjA0YTIgMiAwIDAgMCAyIDIuMThoLjQ0YTIgMiAwIDAgMCAyLTIuMThsLjE0LTEuMDRhLjkuOSAwIDAgMSAuNTMtLjYzbC45Ny0uNDFhLjkuOSAwIDAgMSAuODMuMDJsLjk0LjU5YTIgMiAwIDAgMCAyLjkzLS41NWwuMjItLjM4YTIgMiAwIDAgMC0uNTUtMi45M2wtLjk0LS41OWEuOS45IDAgMCAxLS40Mi0uNzVsLjAxLTEuMDVhLjkuOSAwIDAgMSAuNDItLjc1bC45NC0uNTlhMiAyIDAgMCAwIC41NS0yLjkzbC0uMjItLjM4YTIgMiAwIDAgMC0yLjkzLS41NWwtLjk0LjU5YS45LjkgMCAwIDEtLjgzLjAybC0uOTctLjQxYS45LjkgMCAwIDEtLjUzLS42M2wtLjE0LTEuMDRhMiAyIDAgMCAwLTItMi4xOHoiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIzIi8+PC9zdmc+" alt="Settings" />
-        <span>Settings</span>
-      </button>
-    </div>
-  </div>
-
-    
-  <div class="main-content">
-    <div id="home-section" class="content-frame active">
-      <div class="home-content">
-        <img src="/assets/images/logostar.png" alt="ZXS Logo" />
-        <h1>Welcome to ZXS GAMES</h1>
-        <p>You went to the right place!</p>
-      </div>
-    </div>
-
-      
-    <div id="proxy-section" class="content-frame">
-      <div class="proxy-container">
-        <div class="proxy-header">
-          <div class="proxy-status">Proxy Is working i think!</div>
-        </div>
-        <iframe id="proxy-frame" class="proxy-frame" src="/assets/pages/Proxy.html"></iframe>
-      </div>
-    </div>
-
-    <iframe id="games-section" class="content-frame" src="about:blank" title="Games"></iframe>
-    <iframe id="apps-section" class="content-frame" src="about:blank" title="Apps"></iframe>
-    <iframe id="hacks-section" class="content-frame" src="about:blank" title="Hacks"></iframe>
-    <iframe id="vm-section" class="content-frame" src="about:blank" title="VM"></iframe>
-    <iframe id="partners-section" class="content-frame" src="about:blank" title="Partners"></iframe>
-
-    <div id="settings-section" class="settings-panel">
-      <h1>Settings</h1>
-
-      <div class="settings-section">
-        <h2>Tab Cloak</h2>
-        <div class="settings-option">
-          <p>Change how this tab appears in your browser</p>
-          <input type="text" id="tab-name" placeholder="Enter tab name" />
-          <input type="text" id="favicon-url" placeholder="Enter favicon URL" />
-          <button onclick="applyTabCloak()">Apply Tab Cloak</button>
-        </div>
-      </div>
-
-      <div class="settings-section">
-        <h2>About:blank Launch</h2>
-        <div class="settings-option">
-          <p>Open ZXS Games in about:blank to hide the URL</p>
-          <button onclick="openAboutBlank()">Open in About:blank</button>
-        </div>
-      </div>
-
-      <div class="settings-section">
-        <h2>Panic Key</h2>
-        <div class="settings-option">
-          <p>Press a key to instantly redirect when someone approaches</p>
-          <div>
-            <span>Current Panic Key: </span>
-            <span id="current-panic-key" class="key-display">]</span>
-            <button id="change-panic-key-btn">Change Key</button>
-            <span id="listening-status" class="status-message"></span>
-          </div>
-          <div style="margin-top: 15px;">
-            <span>Redirect URL: </span>
-            <input type="text" id="panic-url" placeholder="Enter URL (e.g., https://google.com)" value="https://google.com" />
-            <button onclick="savePanicSettings()">Save Settings</button>
-          </div>
-          <div style="margin-top: 10px;">
-            <span id="panic-status" class="status-message">Panic key is active</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="settings-section">
-        <h2>Credits</h2>
-        <div class="settings-option">
-          <p>View the people and projects that made ZXS Games possible.</p>
-          <button onclick="window.open('/credits.html','_blank')">Open Credits</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script>
-    const titles = { active: "𝙕𝙓𝙎", inactive: "Dashboard" };
-    const favicons = { active: "/assets/images/favicon.ico", inactive: "/assets/images/canvas.png" };
-    const faviconElement = document.getElementById('favicon');
-
-    function updateTabInfo(isActive) {
-      if (isActive) {
-        document.title = titles.active;
-        faviconElement.href = favicons.active;
-      } else {
-        document.title = titles.inactive;
-        faviconElement.href = favicons.inactive;
-      }
-    }
-    updateTabInfo(true);
-    document.addEventListener('visibilitychange', () => updateTabInfo(!document.hidden));
-    window.addEventListener('focus', () => updateTabInfo(true));
-    window.addEventListener('blur', () => updateTabInfo(false));
-
-    // Particles javasctstoopie
-    particlesJS('particles-js', {
-      particles: {
-        number: { value: 40, density: { enable: true, value_area: 900 } },
-        color: { value: "#22c55e" },
-        shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
-        opacity: { value: 0.25, random: true, anim: { enable: true, speed: 0.5, opacity_min: 0.1, sync: false } },
-        size: { value: 2, random: true, anim: { enable: true, speed: 0.8, size_min: 0.4, sync: false } },
-        line_linked: { enable: true, distance: 120, color: "#22c55e", opacity: 0.18, width: 1 },
-        move: { enable: true, speed: 1.2, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
-        modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } }
-      },
-      retina_detect: true
-    });
-
-    // DOM
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const navButtons = document.querySelectorAll('.nav-button');
-    const contentFrames = document.querySelectorAll('.content-frame');
-    const settingsPanel = document.getElementById('settings-section');
-    const popup = document.getElementById('announcement-popup');
-    const closePopupBtn = document.getElementById('close-popup-btn');
-    const randomMessageEl = document.getElementById('random-message');
-    const batteryPercentageEl = document.getElementById('battery-percentage');
-
-    sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('collapsed'); });
-
-    navButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const section = button.getAttribute('data-section');
-        navButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        showSection(section);
-      });
-    });
-
-    function showSection(section) {
-      contentFrames.forEach(frame => frame.classList.remove('active'));
-      settingsPanel.classList.remove('active');
-
-      if (section === 'home') {
-        document.getElementById('home-section').classList.add('active');
-      } else if (section === 'settings') {
-        settingsPanel.classList.add('active');
-      } else if (section === 'proxy') {
-        document.getElementById('proxy-section').classList.add('active');
-      } else {
-        const frame = document.getElementById(`${section}-section`);
-        if (frame) {
-          if (frame.src === 'about:blank' || frame.src === '') {
-            const pageMappings = {
-              games: '/assets/pages/Games.html',
-              apps: '/assets/pages/apps.html',
-              vm: '/assets/pages/vm/vm.html',
-              hacks: '/assets/pages/hax.html',
-              partners: '/assets/pages/partners.html'
-            };
-            if (pageMappings[section]) frame.src = pageMappings[section];
-          }
-          frame.classList.add('active');
-        }
-      }
-    }
-
-    // random thingss
-    const messages = [
-      "gaming mode activated",
-      "Made with ❤️ by zxs",
-      "Hospooot nooo",
-      "Whoa cool message",
-      "https://dsc.gg/zxsgames",
-      "hellow to mi minecraft server",
-      "i eat rocks",
-      "Minimize this menu bro",
-      "i love gamer gaming",
-      "hawk tuah",
-      "ymntrgbefvdwcsax",
-      "noo gambling is very good -evilcy",
-      "i bet your reading this",
-    ];
-    function displayRandomMessage() {
-      const randomIndex = Math.floor(Math.random() * messages.length);
-      randomMessageEl.textContent = messages[randomIndex];
-    }
-
-    function updateBatteryStatus(battery) {
-      const level = Math.round(battery.level * 100);
-      batteryPercentageEl.textContent = `${level}%`;
-    }
-
-    displayRandomMessage();
-    setInterval(displayRandomMessage, 20000);
-    if (navigator.getBattery) {
-      navigator.getBattery().then(battery => {
-        updateBatteryStatus(battery);
-        battery.addEventListener('levelchange', () => updateBatteryStatus(battery));
-      });
-    }
-
-    function applyTabCloak() {
-      const tabName = document.getElementById('tab-name').value;
-      const faviconUrl = document.getElementById('favicon-url').value;
-      if (tabName) {
-        titles.active = tabName; titles.inactive = tabName; document.title = tabName;
-      }
-      if (faviconUrl) {
-        favicons.active = faviconUrl; favicons.inactive = faviconUrl; faviconElement.href = faviconUrl;
-      }
-      if (!tabName && !faviconUrl) {
-        alert('Please enter both a tab name and favicon URL for full cloaking.');
-      } else {
-        showStatusMessage('Tab cloak applied successfully!');
-      }
-    }
-
-    // About:blank
-    function openAboutBlank() {
-      const gameUrl = window.location.href;
-      const newWindow = window.open('about:blank', '_blank');
-      if (newWindow) {
-        newWindow.document.write(`
-          <html>
-            <head>
-              <title>ZXS GAMES</title>
-              <style>
-                body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
-                iframe { width: 100%; height: 100%; border: none; }
-              </style>
-            </head>
-            <body>
-              <iframe src="${gameUrl}"></iframe>
-            </body>
-          </html>
-<script>
-        `);
-        newWindow.document.close();
-        showStatusMessage('Opened in about:blank successfully!');
-      }
-    }
-
-    function showStatusMessage(message) {
-      const panicStatus = document.getElementById('panic-status');
-      if (!panicStatus) return;
-      panicStatus.textContent = message;
-      setTimeout(() => { panicStatus.textContent = "Panic key is active"; }, 3000);
-    }
-
-    // Panic Key
-    let panicKey = localStorage.getItem('panicKey') || ']';
-    let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
-    let panicKeyActive = true;
-    document.getElementById('current-panic-key').textContent = panicKey;
-    document.getElementById('panic-url').value = panicURL;
-
-    function handlePanicKey(e) {
-      if (panicKeyActive && e.key === panicKey) window.location.href = panicURL;
-    }
-    document.addEventListener('keydown', handlePanicKey);
-
-    const changePanicKeyBtn = document.getElementById('change-panic-key-btn');
-    const listeningStatus = document.getElementById('listening-status');
-    changePanicKeyBtn.addEventListener('click', function() {
-      listeningStatus.textContent = "Listening for key press...";
-      const keyListener = function(e) {
-        e.preventDefault();
-        panicKey = e.key;
-        document.getElementById('current-panic-key').textContent = panicKey;
-        listeningStatus.textContent = "Key set successfully!";
-        document.removeEventListener('keydown', keyListener);
-        setTimeout(() => { listeningStatus.textContent = ""; }, 2000);
-      };
-      document.addEventListener('keydown', keyListener);
-    });
-
-    function savePanicSettings() {
-      panicURL = document.getElementById('panic-url').value;
-      if (panicURL && !panicURL.startsWith('http://') && !panicURL.startsWith('https://')) {
-        panicURL = 'https://' + panicURL;
-        document.getElementById('panic-url').value = panicURL;
-      }
-      localStorage.setItem('panicKey', panicKey);
-      localStorage.setItem('panicURL', panicURL);
-      showStatusMessage("Settings saved successfully!");
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      setTimeout(() => { popup.classList.add('active'); }, 1500);
-      closePopupBtn.addEventListener('click', function () { popup.classList.remove('active'); });
-    });
-
-    document.addEventListener('DOMContentLoaded', function() { showSection('home'); });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && e.shiftKey && e.key === 'H') {
-        e.preventDefault();
-        showSection('home');
-        navButtons.forEach(btn => btn.classList.remove('active'));
-        document.querySelector('[data-section="home"]').classList.add('active');
-      }
-      if (e.ctrlKey && e.shiftKey && e.key === 'P') {
-        e.preventDefault();
-        showSection('proxy');
-        navButtons.forEach(btn => btn.classList.remove('active'));
-        document.querySelector('[data-section="proxy"]').classList.add('active');
-      }
-      if (e.ctrlKey && e.shiftKey && e.key === 'S') {
-        e.preventDefault();
-        showSection('settings');
-        navButtons.forEach(btn => btn.classList.remove('active'));
-        document.querySelector('[data-section="settings"]').classList.add('active');
-      }
-    });
-
-    function injectPanicScriptIntoIframe(iframe) {
-      try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iframeDoc) return;
-        const alreadyInjected = iframeDoc.querySelector('script[data-panic-injected]');
-        if (alreadyInjected) return;
-        const script = iframeDoc.createElement('script');
-        script.src = '/assets/js/panic-core.js';
-        script.defer = true;
-        script.setAttribute('data-panic-injected', 'true');
-        iframeDoc.head.appendChild(script);
-      } catch (err) {
-        console.warn("Skipped cross-origin iframe:", iframe, err);
-      }
-    }
-    function injectIntoAllIframes() {
-      document.querySelectorAll('iframe').forEach((iframe) => {
-        if (iframe.contentWindow) {
-          if (iframe.contentDocument?.readyState === 'complete') {
-            injectPanicScriptIntoIframe(iframe);
-          } else {
-            iframe.addEventListener('load', () => injectPanicScriptIntoIframe(iframe));
-          }
-        }
-      });
-    }
-    document.addEventListener('DOMContentLoaded', injectIntoAllIframes);
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        mutation.addedNodes.forEach((node) => {
-          if (node.tagName === 'IFRAME') {
-            node.addEventListener('load', () => injectPanicScriptIntoIframe(node));
-          }
-        });
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-  </script>
-   <script>
-(function () {
-  var KEY = "anncSeenVersion";
-  var el = document.querySelector("[data-annc]") || document.getElementById("annc") || document.getElementById("announcement") || document.getElementById("announcement-modal");
-  if (!el) return;
-  var currentVersion = el.getAttribute("data-annc-version") || "1";
-  var seen = localStorage.getItem(KEY);
-  function show() {
-    el.removeAttribute("hidden");
-    el.style.display = "";
-    el.classList.add("open");
-    el.setAttribute("aria-hidden", "false");
-  }
-  function hide() {
-    el.classList.remove("open");
-    el.setAttribute("hidden", "");
-    el.style.display = "none";
-    el.setAttribute("aria-hidden", "true");
-  }
-  var closeBtn = el.querySelector("[data-annc-close], .annc-close, [aria-label='Close']");
-  if (closeBtn) {
-    closeBtn.addEventListener("click", hide);
-  }
-  if (seen !== currentVersion) {
-    show();
-    localStorage.setItem(KEY, currentVersion);
-  }
-})();
-</script>
+  <!-- Scripts -->
+  <script src="/assets/js/script.js"></script>
 </body>
 </html>
