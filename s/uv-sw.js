@@ -1,4 +1,4 @@
-importScripts("/s/uv/uv.sw.js");
+importScripts("https://cdn.jsdelivr.net/gh/Darkdragonzxs/ZXS-games@main/s/uv/uv.sw.js");
 
 const sw = new UVServiceWorker();
 
