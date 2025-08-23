@@ -541,276 +541,308 @@ body {
 
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
-// Tab cloak logic
-const titles = { active: "𝙕𝙓𝙎", inactive: "Dashboard" };
-const favicons = { active: "/assets/images/favicon.ico", inactive: "/assets/images/canvas.png" };
-const faviconElement = document.getElementById('favicon');
+    const titles = { active: "𝙕𝙓𝙎", inactive: "Dashboard" };
+    const favicons = { active: "/assets/images/favicon.ico", inactive: "/assets/images/canvas.png" };
+    const faviconElement = document.getElementById('favicon');
 
-function updateTabInfo(isActive) {
-  if (isActive) {
-    document.title = titles.active;
-    faviconElement.href = favicons.active;
-  } else {
-    document.title = titles.inactive;
-    faviconElement.href = favicons.inactive;
-  }
-}
-updateTabInfo(true);
-document.addEventListener('visibilitychange', () => updateTabInfo(!document.hidden));
-window.addEventListener('focus', () => updateTabInfo(true));
-window.addEventListener('blur', () => updateTabInfo(false));
-
-// Particles.js
-particlesJS('particles-js', {
-  particles: {
-    number: { value: 40, density: { enable: true, value_area: 900 } },
-    color: { value: "#22c55e" },
-    shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
-    opacity: { value: 0.25, random: true, anim: { enable: true, speed: 0.5, opacity_min: 0.1, sync: false } },
-    size: { value: 2, random: true, anim: { enable: true, speed: 0.8, size_min: 0.4, sync: false } },
-    line_linked: { enable: true, distance: 120, color: "#22c55e", opacity: 0.18, width: 1 },
-    move: { enable: true, speed: 1.2, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
-  },
-  interactivity: {
-    detect_on: "canvas",
-    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
-    modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } }
-  },
-  retina_detect: true
-});
-
-// DOM elements
-const sidebar = document.getElementById('sidebar');
-const sidebarToggle = document.getElementById('sidebar-toggle');
-const navButtons = document.querySelectorAll('.nav-button');
-const contentFrames = document.querySelectorAll('.content-frame');
-const settingsPanel = document.getElementById('settings-section');
-const popup = document.getElementById('announcement-popup');
-const closePopupBtn = document.getElementById('close-popup-btn');
-const randomMessageEl = document.getElementById('random-message');
-const batteryPercentageEl = document.getElementById('battery-percentage');
-
-sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('collapsed'); });
-
-navButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const section = button.getAttribute('data-section');
-    navButtons.forEach(btn => btn.classList.remove('active'));
-    button.classList.add('active');
-    showSection(section);
-  });
-});
-
-function showSection(section) {
-  contentFrames.forEach(frame => frame.classList.remove('active'));
-  settingsPanel.classList.remove('active');
-
-  if (section === 'home') {
-    document.getElementById('home-section').classList.add('active');
-  } else if (section === 'settings') {
-    settingsPanel.classList.add('active');
-  } else {
-    const frame = document.getElementById(`${section}-section`);
-    if (frame) {
-      if (frame.src === 'about:blank' || frame.src === '') {
-        const pageMappings = {
-          games: '/assets/pages/Games.html',
-          apps: '/assets/pages/apps.html',
-          vm: '/assets/pages/vm/vm.html',
-          hacks: '/assets/pages/hax.html',
-          partners: '/assets/pages/partners.html'
-        };
-        if (pageMappings[section]) frame.src = pageMappings[section];
-      }
-      frame.classList.add('active');
-    }
-  }
-}
-
-// Random message
-const messages = [
-  "gaming mode activated",
-  "Made with ❤️ by zxs",
-  "Hospooot nooo",
-  "Whoa cool message",
-  "https://dsc.gg/zxsgames",
-  "hellow to mi minecraft server",
-  "i eat rocks",
-  "Minimize this menu bro",
-  "i love gamer gaming",
-  "hawk tuah",
-  "ymntrgbefvdwcsax",
-  "noo gambling is very good -evilcy",
-  "i bet your reading this",
-];
-function displayRandomMessage() {
-  const randomIndex = Math.floor(Math.random() * messages.length);
-  randomMessageEl.textContent = messages[randomIndex];
-}
-
-function updateBatteryStatus(battery) {
-  const level = Math.round(battery.level * 100);
-  batteryPercentageEl.textContent = `${level}%`;
-}
-
-displayRandomMessage();
-setInterval(displayRandomMessage, 20000);
-if (navigator.getBattery) {
-  navigator.getBattery().then(battery => {
-    updateBatteryStatus(battery);
-    battery.addEventListener('levelchange', () => updateBatteryStatus(battery));
-  });
-}
-
-// Tab Cloak Settings
-function applyTabCloak() {
-  const tabName = document.getElementById('tab-name').value;
-  const faviconUrl = document.getElementById('favicon-url').value;
-  if (tabName) {
-    titles.active = tabName; titles.inactive = tabName; document.title = tabName;
-  }
-  if (faviconUrl) {
-    favicons.active = faviconUrl; favicons.inactive = faviconUrl; faviconElement.href = faviconUrl;
-  }
-  if (!tabName && !faviconUrl) {
-    alert('Please enter both a tab name and favicon URL for full cloaking.');
-  } else {
-    showStatusMessage('Tab cloak applied successfully!');
-  }
-}
-
-// About:blank
-function openAboutBlank() {
-  const gameUrl = window.location.href;
-  const newWindow = window.open('about:blank', '_blank');
-  if (newWindow) {
-    newWindow.document.write(`
-      <html>
-        <head>
-          <title>ZXS GAMES</title>
-          <style>
-            body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
-            iframe { width: 100%; height: 100%; border: none; }
-          </style>
-        </head>
-        <body>
-          <iframe src="${gameUrl}"></iframe>
-        </body>
-      </html>
-    `);
-    newWindow.document.close();
-    showStatusMessage('Opened in about:blank successfully!');
-  }
-}
-
-function showStatusMessage(message) {
-  const panicStatus = document.getElementById('panic-status');
-  if (!panicStatus) return;
-  panicStatus.textContent = message;
-  setTimeout(() => { panicStatus.textContent = "Panic key is active"; }, 3000);
-}
-
-// Panic Key
-let panicKey = localStorage.getItem('panicKey') || ']';
-let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
-let panicKeyActive = true;
-document.getElementById('current-panic-key').textContent = panicKey;
-document.getElementById('panic-url').value = panicURL;
-
-function handlePanicKey(e) {
-  if (panicKeyActive && e.key === panicKey) window.location.href = panicURL;
-}
-document.addEventListener('keydown', handlePanicKey);
-
-const changePanicKeyBtn = document.getElementById('change-panic-key-btn');
-const listeningStatus = document.getElementById('listening-status');
-changePanicKeyBtn.addEventListener('click', function() {
-  listeningStatus.textContent = "Listening for key press...";
-  const keyListener = function(e) {
-    e.preventDefault();
-    panicKey = e.key;
-    document.getElementById('current-panic-key').textContent = panicKey;
-    listeningStatus.textContent = "Key set successfully!";
-    document.removeEventListener('keydown', keyListener);
-    setTimeout(() => { listeningStatus.textContent = ""; }, 2000);
-  };
-  document.addEventListener('keydown', keyListener);
-});
-
-function savePanicSettings() {
-  panicURL = document.getElementById('panic-url').value;
-  if (panicURL && !panicURL.startsWith('http://') && !panicURL.startsWith('https://')) {
-    panicURL = 'https://' + panicURL;
-    document.getElementById('panic-url').value = panicURL;
-  }
-  localStorage.setItem('panicKey', panicKey);
-  localStorage.setItem('panicURL', panicURL);
-  showStatusMessage("Settings saved successfully!");
-}
-
-// Announcement popup
-document.addEventListener('DOMContentLoaded', function () {
-  setTimeout(() => { popup.classList.add('active'); }, 1500);
-  closePopupBtn.addEventListener('click', function () { popup.classList.remove('active'); });
-});
-
-document.addEventListener('DOMContentLoaded', function() { showSection('home'); });
-
-// Keyboard shortcuts (no proxy)
-document.addEventListener('keydown', function(e) {
-  if (e.ctrlKey && e.shiftKey && e.key === 'H') {
-    e.preventDefault();
-    showSection('home');
-    navButtons.forEach(btn => btn.classList.remove('active'));
-    document.querySelector('[data-section="home"]').classList.add('active');
-  }
-  if (e.ctrlKey && e.shiftKey && e.key === 'S') {
-    e.preventDefault();
-    showSection('settings');
-    navButtons.forEach(btn => btn.classList.remove('active'));
-    document.querySelector('[data-section="settings"]').classList.add('active');
-  }
-});
-
-// Panic script injection for iframes
-function injectPanicScriptIntoIframe(iframe) {
-  try {
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    if (!iframeDoc) return;
-    const alreadyInjected = iframeDoc.querySelector('script[data-panic-injected]');
-    if (alreadyInjected) return;
-    const script = iframeDoc.createElement('script');
-    script.src = '/assets/js/panic-core.js';
-    script.defer = true;
-    script.setAttribute('data-panic-injected', 'true');
-    iframeDoc.head.appendChild(script);
-  } catch (err) {
-    console.warn("Skipped cross-origin iframe:", iframe, err);
-  }
-}
-function injectIntoAllIframes() {
-  document.querySelectorAll('iframe').forEach((iframe) => {
-    if (iframe.contentWindow) {
-      if (iframe.contentDocument?.readyState === 'complete') {
-        injectPanicScriptIntoIframe(iframe);
+    function updateTabInfo(isActive) {
+      if (isActive) {
+        document.title = titles.active;
+        faviconElement.href = favicons.active;
       } else {
-        iframe.addEventListener('load', () => injectPanicScriptIntoIframe(iframe));
+        document.title = titles.inactive;
+        faviconElement.href = favicons.inactive;
       }
     }
-  });
-}
-document.addEventListener('DOMContentLoaded', injectIntoAllIframes);
-const observer = new MutationObserver((mutations) => {
-  for (const mutation of mutations) {
-    mutation.addedNodes.forEach((node) => {
-      if (node.tagName === 'IFRAME') {
-        node.addEventListener('load', () => injectPanicScriptIntoIframe(node));
+    updateTabInfo(true);
+    document.addEventListener('visibilitychange', () => updateTabInfo(!document.hidden));
+    window.addEventListener('focus', () => updateTabInfo(true));
+    window.addEventListener('blur', () => updateTabInfo(false));
+
+    // Particles javasctstoopie
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 40, density: { enable: true, value_area: 900 } },
+        color: { value: "#22c55e" },
+        shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
+        opacity: { value: 0.25, random: true, anim: { enable: true, speed: 0.5, opacity_min: 0.1, sync: false } },
+        size: { value: 2, random: true, anim: { enable: true, speed: 0.8, size_min: 0.4, sync: false } },
+        line_linked: { enable: true, distance: 120, color: "#22c55e", opacity: 0.18, width: 1 },
+        move: { enable: true, speed: 1.2, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+        modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } }
+      },
+      retina_detect: true
+    });
+
+    // DOM
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const navButtons = document.querySelectorAll('.nav-button');
+    const contentFrames = document.querySelectorAll('.content-frame');
+    const settingsPanel = document.getElementById('settings-section');
+    const popup = document.getElementById('announcement-popup');
+    const closePopupBtn = document.getElementById('close-popup-btn');
+    const randomMessageEl = document.getElementById('random-message');
+    const batteryPercentageEl = document.getElementById('battery-percentage');
+
+    sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('collapsed'); });
+
+    navButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const section = button.getAttribute('data-section');
+        navButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        showSection(section);
+      });
+    });
+
+    function showSection(section) {
+      contentFrames.forEach(frame => frame.classList.remove('active'));
+      settingsPanel.classList.remove('active');
+
+      if (section === 'home') {
+        document.getElementById('home-section').classList.add('active');
+      } else if (section === 'settings') {
+        settingsPanel.classList.add('active');
+      } else if (section === 'proxy') {
+        document.getElementById('proxy-section').classList.add('active');
+      } else {
+        const frame = document.getElementById(`${section}-section`);
+        if (frame) {
+          if (frame.src === 'about:blank' || frame.src === '') {
+            const pageMappings = {
+              games: '/assets/pages/Games.html',
+              apps: '/assets/pages/apps.html',
+              vm: '/assets/pages/vm/vm.html',
+              hacks: '/assets/pages/hax.html',
+              partners: '/assets/pages/partners.html'
+            };
+            if (pageMappings[section]) frame.src = pageMappings[section];
+          }
+          frame.classList.add('active');
+        }
+      }
+    }
+
+    // random thingss
+    const messages = [
+      "gaming mode activated",
+      "Made with ❤️ by zxs",
+      "Hospooot nooo",
+      "Whoa cool message",
+      "https://dsc.gg/zxsgames",
+      "hellow to mi minecraft server",
+      "i eat rocks",
+      "Minimize this menu bro",
+      "i love gamer gaming",
+      "hawk tuah",
+      "ymntrgbefvdwcsax",
+      "noo gambling is very good -evilcy",
+      "i bet your reading this",
+    ];
+    function displayRandomMessage() {
+      const randomIndex = Math.floor(Math.random() * messages.length);
+      randomMessageEl.textContent = messages[randomIndex];
+    }
+
+    function updateBatteryStatus(battery) {
+      const level = Math.round(battery.level * 100);
+      batteryPercentageEl.textContent = `${level}%`;
+    }
+
+    displayRandomMessage();
+    setInterval(displayRandomMessage, 20000);
+    if (navigator.getBattery) {
+      navigator.getBattery().then(battery => {
+        updateBatteryStatus(battery);
+        battery.addEventListener('levelchange', () => updateBatteryStatus(battery));
+      });
+    }
+
+    function applyTabCloak() {
+      const tabName = document.getElementById('tab-name').value;
+      const faviconUrl = document.getElementById('favicon-url').value;
+      if (tabName) {
+        titles.active = tabName; titles.inactive = tabName; document.title = tabName;
+      }
+      if (faviconUrl) {
+        favicons.active = faviconUrl; favicons.inactive = faviconUrl; faviconElement.href = faviconUrl;
+      }
+      if (!tabName && !faviconUrl) {
+        alert('Please enter both a tab name and favicon URL for full cloaking.');
+      } else {
+        showStatusMessage('Tab cloak applied successfully!');
+      }
+    }
+
+    // About:blank
+    function openAboutBlank() {
+      const gameUrl = window.location.href;
+      const newWindow = window.open('about:blank', '_blank');
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>ZXS GAMES</title>
+              <style>
+                body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
+                iframe { width: 100%; height: 100%; border: none; }
+              </style>
+            </head>
+            <body>
+              <iframe src="${gameUrl}"></iframe>
+            </body>
+          </html>
+<script>
+        `);
+        newWindow.document.close();
+        showStatusMessage('Opened in about:blank successfully!');
+      }
+    }
+
+    function showStatusMessage(message) {
+      const panicStatus = document.getElementById('panic-status');
+      if (!panicStatus) return;
+      panicStatus.textContent = message;
+      setTimeout(() => { panicStatus.textContent = "Panic key is active"; }, 3000);
+    }
+
+    // Panic Key
+    let panicKey = localStorage.getItem('panicKey') || ']';
+    let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
+    let panicKeyActive = true;
+    document.getElementById('current-panic-key').textContent = panicKey;
+    document.getElementById('panic-url').value = panicURL;
+
+    function handlePanicKey(e) {
+      if (panicKeyActive && e.key === panicKey) window.location.href = panicURL;
+    }
+    document.addEventListener('keydown', handlePanicKey);
+
+    const changePanicKeyBtn = document.getElementById('change-panic-key-btn');
+    const listeningStatus = document.getElementById('listening-status');
+    changePanicKeyBtn.addEventListener('click', function() {
+      listeningStatus.textContent = "Listening for key press...";
+      const keyListener = function(e) {
+        e.preventDefault();
+        panicKey = e.key;
+        document.getElementById('current-panic-key').textContent = panicKey;
+        listeningStatus.textContent = "Key set successfully!";
+        document.removeEventListener('keydown', keyListener);
+        setTimeout(() => { listeningStatus.textContent = ""; }, 2000);
+      };
+      document.addEventListener('keydown', keyListener);
+    });
+
+    function savePanicSettings() {
+      panicURL = document.getElementById('panic-url').value;
+      if (panicURL && !panicURL.startsWith('http://') && !panicURL.startsWith('https://')) {
+        panicURL = 'https://' + panicURL;
+        document.getElementById('panic-url').value = panicURL;
+      }
+      localStorage.setItem('panicKey', panicKey);
+      localStorage.setItem('panicURL', panicURL);
+      showStatusMessage("Settings saved successfully!");
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(() => { popup.classList.add('active'); }, 1500);
+      closePopupBtn.addEventListener('click', function () { popup.classList.remove('active'); });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() { showSection('home'); });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.shiftKey && e.key === 'H') {
+        e.preventDefault();
+        showSection('home');
+        navButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-section="home"]').classList.add('active');
+      }
+      if (e.ctrlKey && e.shiftKey && e.key === 'P') {
+        e.preventDefault();
+        showSection('proxy');
+        navButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-section="proxy"]').classList.add('active');
+      }
+      if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+        e.preventDefault();
+        showSection('settings');
+        navButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-section="settings"]').classList.add('active');
       }
     });
+
+    function injectPanicScriptIntoIframe(iframe) {
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iframeDoc) return;
+        const alreadyInjected = iframeDoc.querySelector('script[data-panic-injected]');
+        if (alreadyInjected) return;
+        const script = iframeDoc.createElement('script');
+        script.src = '/assets/js/panic-core.js';
+        script.defer = true;
+        script.setAttribute('data-panic-injected', 'true');
+        iframeDoc.head.appendChild(script);
+      } catch (err) {
+        console.warn("Skipped cross-origin iframe:", iframe, err);
+      }
+    }
+    function injectIntoAllIframes() {
+      document.querySelectorAll('iframe').forEach((iframe) => {
+        if (iframe.contentWindow) {
+          if (iframe.contentDocument?.readyState === 'complete') {
+            injectPanicScriptIntoIframe(iframe);
+          } else {
+            iframe.addEventListener('load', () => injectPanicScriptIntoIframe(iframe));
+          }
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', injectIntoAllIframes);
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        mutation.addedNodes.forEach((node) => {
+          if (node.tagName === 'IFRAME') {
+            node.addEventListener('load', () => injectPanicScriptIntoIframe(node));
+          }
+        });
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  </script>
+   <script>
+(function () {
+  var KEY = "anncSeenVersion";
+  var el = document.querySelector("[data-annc]") || document.getElementById("annc") || document.getElementById("announcement") || document.getElementById("announcement-modal");
+  if (!el) return;
+  var currentVersion = el.getAttribute("data-annc-version") || "1";
+  var seen = localStorage.getItem(KEY);
+  function show() {
+    el.removeAttribute("hidden");
+    el.style.display = "";
+    el.classList.add("open");
+    el.setAttribute("aria-hidden", "false");
   }
-});
-observer.observe(document.body, { childList: true, subtree: true });
+  function hide() {
+    el.classList.remove("open");
+    el.setAttribute("hidden", "");
+    el.style.display = "none";
+    el.setAttribute("aria-hidden", "true");
+  }
+  var closeBtn = el.querySelector("[data-annc-close], .annc-close, [aria-label='Close']");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", hide);
+  }
+  if (seen !== currentVersion) {
+    show();
+    localStorage.setItem(KEY, currentVersion);
+  }
+})();
 </script>
-      <script src="https://cdn.jsdelivr.net/gh/Darkdragonzxs/ZXS-games@main/assets/js/cdn-page-loader.js" defer></script>
 </body>
 </html>
