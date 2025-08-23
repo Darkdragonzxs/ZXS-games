@@ -1,5 +1,5 @@
-importScripts("/s/uv/uv.bundle.js");
-importScripts("/s/uv/uv.config.js");
+importScripts("https://cdn.jsdelivr.net/gh/Darkdragonzxs/ZXS-games@main/s/uv/uv.bundle.js");
+importScripts("https://cdn.jsdelivr.net/gh/Darkdragonzxs/ZXS-games@main/s/uv/uv.config.js");
 
 class UVServiceWorker extends EventEmitter {
 	constructor(config = __uv$config) {
