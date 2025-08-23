@@ -1,5 +1,5 @@
 // CDN Page Loader for ZXS Games
-// Load page content from jsdelivr CDN, extract text, and display it in the iframe.
+// Loads page content from jsdelivr CDN, extracts <body>, <style>, and <script>, and displays in the iframe.
 
 const CDN_PREFIX = "https://cdn.jsdelivr.net/gh/Darkdragonzxs/ZXS-games@main/assets/pages/";
 
@@ -10,13 +10,17 @@ function loadPageIntoIframe(iframeId, pageName) {
   fetch(CDN_PREFIX + pageName)
     .then(res => res.text())
     .then(html => {
-      // Extract only the <body> content for clean display
+      // Extract <body> content
       const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
       const bodyContent = bodyMatch ? bodyMatch[1] : html;
 
-      // Optional: Extract <style> tags and apply them to iframe
-      const styleMatch = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
-      const styleContent = styleMatch ? styleMatch.map(m => m.replace(/<style[^>]*>|<\/style>/gi, "")).join("\n") : "";
+      // Extract <style> tags
+      const styleMatches = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)];
+      const styleContent = styleMatches.map(m => m[1]).join("\n");
+
+      // Extract <script> tags
+      const scriptMatches = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)];
+      const scriptContent = scriptMatches.map(m => m[1]).join("\n");
 
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       doc.open();
@@ -28,6 +32,9 @@ function loadPageIntoIframe(iframeId, pageName) {
           </head>
           <body style="background: transparent; color: inherit; font-family: inherit;">
             ${bodyContent}
+            <script>
+              try { ${scriptContent} } catch(e) { console.error("CDN iframe script error:", e); }
+            </script>
           </body>
         </html>
       `);
@@ -69,8 +76,7 @@ window.showSection = function(section) {
   }
 };
 
-// Optionally, load the CDN loader script after DOMContentLoaded
+// Initial load for home
 document.addEventListener('DOMContentLoaded', function() {
-  // Initial load for home
   window.showSection('home');
 });
