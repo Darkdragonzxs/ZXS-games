@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZXS Games</title>
+    <title>ZXS gay</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
       <script src="/assets/js/panic-core.js" defer></script>
@@ -59,7 +59,7 @@
             font-family: 'Russo One', 'Orbitron', sans-serif;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 18px;
             color: var(--accent);
             user-select: none;
             letter-spacing: 0.21em;
@@ -74,7 +74,7 @@
             width: 100%;
             max-width: 400px;
             position: relative;
-            margin-bottom: 48px;
+            margin-bottom: 28px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -109,7 +109,7 @@
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(var(--tile-size), 1fr));
-            gap: 36px;
+            gap: 28px;
             padding-bottom: var(--taskbar-height);
             overflow-y: auto;
             flex: 1 1 0;
@@ -145,7 +145,7 @@
             justify-content: flex-start;
             align-items: center;
             box-sizing: border-box;
-            padding: 16px;
+            padding: 0;
         }
         .game-tile:hover, .game-tile:focus {
             background: var(--tile-hover-bg);
@@ -158,23 +158,14 @@
             background: #1b1b1b;
             border: 2.5px dashed var(--accent);
             border-radius: 12px;
-            margin-top: 8px;
-            margin-bottom: 16px;
+            margin-top: 18px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--accent);
             font-size: 2.8rem;
             font-weight: bold;
-        }
-        .game-title-text {
-            font-size: 1.04rem;
-            font-family: 'Orbitron', sans-serif;
-            margin-top: 12px;
-            color: var(--accent);
-            word-break: break-word;
-            line-height: 1.3;
-            padding: 0 8px;
         }
         #scroll-to-top {
             position: fixed;
@@ -360,6 +351,46 @@
             color: var(--bg);
             border-color: var(--accent);
         }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+        .popup-content {
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .popup-content h2 {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .popup-content .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
         @media (max-width: 1300px) {
             .games-list-main { max-width: 100vw; }
         }
@@ -393,6 +424,13 @@
     <div class="window-container" id="window-container"></div>
     <div class="taskbar" id="taskbar">
         <div class="taskbar-items" id="taskbar-items"></div>
+    </div>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h2 id="popup-title"></h2>
+            <span class="close" onclick="closePopup()">&times;</span>
+            <p>This is where the game content would go.</p>
+        </div>
     </div>
     <script>
         const games = [
@@ -525,11 +563,11 @@
                 tile.tabIndex = 0;
                 let imageHTML = '';
                 if (game.image) {
-                    imageHTML = `<img src="${game.image}" alt="${game.title}" style="width:180px;height:180px;border-radius:12px;margin-top:8px;margin-bottom:16px;border:2.5px solid var(--accent);object-fit:cover;">`;
+                    imageHTML = `<img src="${game.image}" alt="${game.title}" style="width:180px;height:180px;border-radius:12px;margin-top:18px;margin-bottom:8px;border:2.5px solid var(--accent);object-fit:cover;">`;
                 } else {
                     imageHTML = `<div class="game-image-placeholder">IMG</div>`;
                 }
-                tile.innerHTML = `${imageHTML}<div class="game-title-text">${game.title}</div>`;
+                tile.innerHTML = `${imageHTML}`;
                 tile.setAttribute('data-title', game.title.toLowerCase());
                 tile.onclick = () => {
                     openGame(game.url, game.title);
@@ -641,6 +679,13 @@
                 }
             };
             taskbarItems.appendChild(item);
+        }
+        function openPopup(gameTitle) {
+            document.getElementById('popup-title').textContent = gameTitle;
+            document.getElementById('popup').style.display = 'flex';
+        }
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
         }
         function openGame(url, title) {
             createWindow(url, title);
