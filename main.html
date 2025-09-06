@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZXS Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet"/>
+  <link rel="icon" href="/logo.png" type="image/png" id="favicon" />
+  <meta name="description" content="A Gaming Site with everything you need." />
+  <style>
+    :root {
+      --accent: #00ff5e;
+      --bg: #020402;
+      --tile-bg: #121212;
+      --tile-hover-bg: #1a1a1a;
+      --text-main: #eaffea;
+      --font-big: 'Russo One', sans-serif;
+      --button-radius: 18px;
+      --topbar-height: 56px;
+      --topbar-bg: #191919ee;
+      --popup-bg: #181818f2;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-big);
+      background: var(--bg);
+      color: var(--accent);
+      min-height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
+    #particles-js {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .dashboard-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      width: 100vw;
+      z-index: 1;
+      position: relative;
+      box-sizing: border-box;
+      padding-top: 5vh;
+      padding-bottom: 4vh;
+    }
+    .main-block {
+      background: var(--tile-bg);
+      border-radius: 32px;
+      box-shadow: 0 2px 32px #000a;
+      padding: 40px 32px;
+      max-width: 550px;
+      width: 98vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 36px;
+      transition: opacity .3s;
+    }
+    .main-logo {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 22px;
+      background: #191919;
+      margin-bottom: 32px;
+      border: 3px solid var(--accent);
+      box-sizing: border-box;
+    }
+    .main-title {
+      font-size: 2.7rem;
+      font-family: var(--font-big);
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 0.24em;
+      text-align: center;
+      margin-bottom: 18px;
+      margin-top: 0;
+      user-select: none;
+    }
+    .main-subtitle {
+      font-size: 1.18rem;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 22px;
+      margin-top: 0;
+      opacity: 0.8;
+    }
+    .random-message {
+      font-size: 1.05rem;
+      color: var(--bg);
+      background: var(--accent);
+      border-radius: 12px;
+      border: none;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      margin-top: 0;
+      min-height: 38px;
+      text-align: center;
+      font-family: var(--font-big);
+      font-weight: 700;
+      box-sizing: border-box;
+      animation: fadeIn 0.6s;
+      transition: background 0.2s, color 0.2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .dashboard-actions {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .dashboard-action {
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: var(--button-radius);
+      font-family: var(--font-big);
+      font-weight: 900;
+      font-size: 1.32rem;
+      padding: 16px 0;
+      border: none;
+      cursor: pointer;
+      margin: 0;
+      margin-bottom: 0;
+      box-shadow: none;
+      transition: background 0.18s, color 0.18s;
+      outline: none;
+      letter-spacing: 0.1em;
+    }
+    .dashboard-action:hover, .dashboard-action:focus {
+      background: var(--tile-hover-bg);
+      color: var(--accent);
+    }
+    .fullscreen-content {
+      display: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg);
+      z-index: 99;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn .4s;
+    }
+    .fullscreen-content.active {
+      display: flex;
+      flex-direction: column;
+    }
+    .fullscreen-iframe {
+      width: 100vw;
+      height: calc(100vh - var(--topbar-height));
+      border: none;
+      background: var(--bg);
+      z-index: 100;
+    }
+    #fullscreen-settings {
+      width: 100vw;
+      height: calc(100vh - var(--topbar-height));
+      background: var(--bg);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 0;
+    }
+    #fullscreen-settings.active {
+      display: flex;
+    }
+    .settings-panel {
+      background: var(--tile-bg);
+      border-radius: 22px;
+      box-shadow: 0 2px 32px #000a;
+      padding: 36px 28px;
+      max-width: 420px;
+      width: 99vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 36px;
+      margin-top: 22px;
+      position: relative;
+    }
+    .settings-panel h2 {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 18px;
+      margin-top: 0;
+      font-weight: 900;
+      text-align: left;
+      letter-spacing: 0.08em;
+      width: 100%;
+      font-family: var(--font-big);
+    }
+    .settings-panel label {
+      font-size: 1.08rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: block;
+      margin-top: 12px;
+      font-family: var(--font-big);
+    }
+    .settings-panel input[type="text"] {
+      width: 100%;
+      margin-bottom: 12px;
+      border-radius: 9px;
+      border: 1.5px solid var(--accent);
+      padding: 10px;
+      background: var(--tile-bg);
+      color: var(--accent);
+      font-family: var(--font-big);
+      font-size: 1.06rem;
+    }
+    .settings-panel button {
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 12px;
+      font-family: var(--font-big);
+      font-size: 1.1rem;
+      padding: 12px 0;
+      border: none;
+      cursor: pointer;
+      margin: 0;
+      box-shadow: none;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+      outline: none;
+      letter-spacing: 0.09em;
+      width: 100%;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    .settings-panel button:hover, .settings-panel button:focus {
+      background: var(--tile-hover-bg);
+      color: var(--accent);
+    }
+    .settings-panel .status {
+      color: var(--accent);
+      font-size: 1.01rem;
+      margin: 9px 0 0 0;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: var(--topbar-height);
+      background: var(--topbar-bg);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      transition: transform .25s, opacity .25s;
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    .topbar.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .topbar-content {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100%;
+    }
+    .topbar-btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 12px;
+      padding: 10px 24px;
+      font-family: var(--font-big);
+      font-size: 1.11rem;
+      font-weight: 900;
+      cursor: pointer;
+      margin: 0 4px;
+      transition: background .18s, color .18s;
+      outline: none;
+      letter-spacing: 0.09em;
+    }
+    .topbar-btn:hover, .topbar-btn:focus {
+      background: var(--bg);
+      color: var(--accent);
+    }
+    /* Announcement popup */
+    .annc-popup-bg {
+      position: fixed;
+      inset: 0;
+      background: var(--popup-bg);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .4s;
+      opacity: 1;
+      pointer-events: all;
+    }
+    .annc-popup-bg.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .annc-popup {
+      background: var(--tile-bg);
+      border-radius: 24px;
+      box-shadow: 0 2px 44px #000d;
+      padding: 38px 34px;
+      max-width: 440px;
+      width: 92vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--accent);
+      font-family: var(--font-big);
+      font-size: 1.1rem;
+      position: relative;
+      animation: fadeIn .45s;
+    }
+    .annc-title {
+      font-size: 2.1rem;
+      color: var(--accent);
+      margin-bottom: 18px;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 0.13em;
+    }
+    .annc-body {
+      text-align: center;
+      color: var(--text-main);
+      font-size: 1.08rem;
+      margin-bottom: 16px;
+      margin-top: 0;
+    }
+    .annc-btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 14px;
+      padding: 12px 34px;
+      font-family: var(--font-big);
+      font-size: 1.25rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: background .18s, color .18s;
+      outline: none;
+      margin-top: 18px;
+      letter-spacing: 0.09em;
+    }
+    .annc-btn:hover, .annc-btn:focus {
+      background: var(--tile-hover-bg);
+      color: var(--accent);
+    }
+    @media (max-width: 900px) {
+      .main-block, .settings-panel, .annc-popup { max-width: 99vw; padding: 18px 7px; }
+      .main-logo { width: 70px; height: 70px; }
+      .main-title { font-size: 1.3rem; }
+      .topbar-content { gap:10px; }
+      .topbar-btn { font-size: 1rem; padding: 8px 12px; }
+      .annc-title { font-size: 1.3rem; }
+      .annc-popup { padding: 14px 6px; }
+    }
+  </style>
+
+  <!-- Announcement Popup -->
+  <div id="annc-popup-bg" class="annc-popup-bg" style="display:none;">
+    <div class="annc-popup">
+      <div class="annc-title">🚀 ZXS GAMES Updated!</div>
+      <div class="annc-body">
+        Welcome to 3.0<br>
+        <b>What's new?</b>
+        <ul style="margin:12px 0 0 0;padding-left:18px;text-align:left;">
+          <li>Minimalistic design</li>
+          <li>new games ui</li>
+          <li>proxy is back</li>
+        </ul>
+      </div>
+      <button class="annc-btn" id="annc-close-btn">OK, got it!</button>
+    </div>
+  </div>
+
+  <div id="particles-js"></div>
+  <div class="dashboard-wrap" id="dashboard">
+    <div class="main-block" id="main-block">
+      <img src="/assets/images/logoV.png" alt="ZXS Logo" class="main-logo" />
+      <h1 class="main-title">ZXS GAMES</h1>
+      <div id="random-message" class="random-message"></div>
+      <div class="main-subtitle">Welcome to ZXS Games</div>
+      <div class="dashboard-actions">
+        <button class="dashboard-action" data-action="games">Games</button>
+        <button class="dashboard-action" data-action="apps">Apps</button>
+        <button class="dashboard-action" data-action="partners">Partners</button>
+        <button class="dashboard-action" data-action="hacks">Hacks</button>
+        <button class="dashboard-action" data-action="vm">VM</button>
+        <button class="dashboard-action" data-action="settings">Settings</button>
+      </div>
+    </div>
+  </div>
+  <div class="fullscreen-content" id="fullscreen-games">
+    <iframe class="fullscreen-iframe" src="/zxs-games-section.html"></iframe>
+  </div>
+  <div class="fullscreen-content" id="fullscreen-apps">
+    <iframe class="fullscreen-iframe" src="/apps.html"></iframe>
+  </div>
+  <div class="fullscreen-content" id="fullscreen-partners">
+    <iframe class="fullscreen-iframe" src="/partners.html"></iframe>
+  </div>
+  <div class="fullscreen-content" id="fullscreen-hacks">
+    <iframe class="fullscreen-iframe" src="/hax.html"></iframe>
+  </div>
+  <div class="fullscreen-content" id="fullscreen-vm">
+    <iframe class="fullscreen-iframe" src="/vm/vm.html"></iframe>
+  </div>
+  <div class="fullscreen-content" id="fullscreen-settings">
+    <div class="settings-panel">
+      <h2>Settings</h2>
+      <label for="tab-name">Tab Name</label>
+      <input type="text" id="tab-name" placeholder="Enter tab name" />
+      <label for="favicon-url">Favicon URL</label>
+      <input type="text" id="favicon-url" placeholder="Enter favicon URL" />
+      <button onclick="applyTabCloak()">Apply Tab Cloak</button>
+      <label for="panic-url">Panic Redirect URL</label>
+      <input type="text" id="panic-url" placeholder="Enter URL (e.g., https://google.com)" value="https://google.com" />
+      <button onclick="savePanicSettings()">Save Panic URL</button>
+      <div style="margin-top:10px;">
+        <span>Current Panic Key: </span>
+        <span id="current-panic-key" style="background:var(--tile-bg);padding:4px 10px;border-radius:6px;border:1.5px solid var(--accent);margin-right:9px;font-weight:700;color:var(--accent);">]</span>
+        <button id="change-panic-key-btn" style="padding:8px 16px;">Change Key</button>
+        <span id="listening-status" style="margin-left:12px;font-size:1rem;color:var(--accent);"></span>
+      </div>
+      <div class="status" id="panic-status" style="margin-top:10px;">Panic key is active</div>
+    </div>
+  </div>
+  <div class="topbar" id="topbar">
+    <div class="topbar-content">
+      <button class="topbar-btn" data-action="home">Home</button>
+      <button class="topbar-btn" data-action="games">Games</button>
+      <button class="topbar-btn" data-action="apps">Apps</button>
+      <button class="topbar-btn" data-action="partners">Partners</button>
+      <button class="topbar-btn" data-action="hacks">Hacks</button>
+      <button class="topbar-btn" data-action="vm">VM</button>
+      <button class="topbar-btn" data-action="settings">Settings</button>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // ---- Announcement Popup Logic ----
+    // Change this version string on every update!
+    const ANNC_VERSION = "2.7";  // <- SET THIS TO YOUR PROJECT VERSION!
+    function showAnnouncementIfNeeded() {
+      const lastSeen = localStorage.getItem("zxs_annc_version");
+      if (lastSeen !== ANNC_VERSION) {
+        document.getElementById("annc-popup-bg").style.display = "flex";
+      }
+    }
+    document.getElementById("annc-close-btn").onclick = function() {
+      document.getElementById("annc-popup-bg").classList.add("hide");
+      setTimeout(function() {
+        document.getElementById("annc-popup-bg").style.display = "none";
+      }, 500);
+      localStorage.setItem("zxs_annc_version", ANNC_VERSION);
+    };
+    document.addEventListener("DOMContentLoaded", showAnnouncementIfNeeded);
+
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 44, density: { enable: true, value_area: 900 } },
+        color: { value: "#00ff5e" },
+        shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
+        opacity: { value: 0.16, random: true },
+        size: { value: 2.5, random: true },
+        line_linked: { enable: true, distance: 125, color: "#00ff5e", opacity: 0.09, width: 1 },
+        move: { enable: true, speed: 1.2, random: true }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+        modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } }
+      },
+      retina_detect: true
+    });
+
+    const messages = [
+      "gaming mode activated",
+      "Made with ❤️ by zxs",
+      "Hospooot nooo",
+      "Whoa cool message",
+      "https://dsc.gg/zxsgames",
+      "hellow to mi minecraft server",
+      "i eat rocks",
+      "Minimize this menu bro",
+      "i love gamer gaming",
+      "hawk tuah",
+      "ymntrgbefvdwcsax",
+      "noo gambling is very good -evilcy",
+      "i bet your reading this",
+    ];
+    function displayRandomMessage() {
+      const randomIndex = Math.floor(Math.random() * messages.length);
+      document.getElementById('random-message').textContent = messages[randomIndex];
+    }
+    displayRandomMessage();
+    setInterval(displayRandomMessage, 13000);
+
+    const options = ["games", "apps", "partners", "hacks", "vm", "settings"];
+    document.querySelectorAll('.dashboard-action').forEach(btn => {
+      btn.onclick = function () {
+        showFullscreen(this.getAttribute('data-action'));
+      };
+    });
+    document.querySelectorAll('.topbar-btn').forEach(btn => {
+      btn.onclick = function () {
+        let act = this.getAttribute('data-action');
+        if(act === "home") showHome();
+        else showFullscreen(act);
+      };
+    });
+    function showFullscreen(option) {
+      options.forEach(opt => {
+        document.getElementById('fullscreen-' + opt).classList.remove('active');
+        if(opt === "settings") {
+          document.getElementById('fullscreen-settings').classList.remove('active');
+        }
+      });
+      document.getElementById('main-block').style.opacity = '0';
+      document.getElementById('main-block').style.pointerEvents = 'none';
+      setTimeout(() => {
+        document.getElementById('main-block').style.display = 'none';
+        if(option === "settings") {
+          document.getElementById('fullscreen-settings').classList.add('active');
+        } else {
+          document.getElementById('fullscreen-' + option).classList.add('active');
+        }
+      }, 300);
+    }
+    function showHome() {
+      options.forEach(opt => {
+        document.getElementById('fullscreen-' + opt).classList.remove('active');
+        if(opt === "settings") {
+          document.getElementById('fullscreen-settings').classList.remove('active');
+        }
+      });
+      document.getElementById('main-block').style.display = 'flex';
+      setTimeout(() => {
+        document.getElementById('main-block').style.opacity = '1';
+        document.getElementById('main-block').style.pointerEvents = 'all';
+      }, 50);
+    }
+
+    let topbar = document.getElementById('topbar');
+    let mouseOverTop = false;
+    let topbarTimeout;
+    document.body.addEventListener('mousemove', function(e) {
+      if (e.clientY < 32) {
+        if (!mouseOverTop) {
+          mouseOverTop = true;
+          topbar.classList.add('visible');
+        }
+        clearTimeout(topbarTimeout);
+        topbarTimeout = setTimeout(() => {
+          mouseOverTop = false;
+          topbar.classList.remove('visible');
+        }, 3000);
+      }
+    });
+    topbar.addEventListener('mouseenter', () => {
+      clearTimeout(topbarTimeout);
+      topbar.classList.add('visible');
+    });
+    topbar.addEventListener('mouseleave', () => {
+      topbarTimeout = setTimeout(() => {
+        topbar.classList.remove('visible');
+        mouseOverTop = false;
+      }, 700);
+    });
+
+    let panicKey = localStorage.getItem('panicKey') || ']';
+    let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
+    let panicKeyActive = true;
+    document.getElementById('current-panic-key').textContent = panicKey;
+    document.getElementById('panic-url').value = panicURL;
+
+    function applyTabCloak() {
+      const tabName = document.getElementById('tab-name').value;
+      const faviconUrl = document.getElementById('favicon-url').value;
+      if (tabName) document.title = tabName;
+      if (faviconUrl) document.getElementById('favicon').href = faviconUrl;
+      if (!tabName && !faviconUrl) {
+        alert('Please enter both a tab name and favicon URL for full cloaking.');
+      } else {
+        showStatusMessage('Tab cloak applied successfully!');
+      }
+    }
+    function showStatusMessage(message) {
+      const panicStatus = document.getElementById('panic-status');
+      if (!panicStatus) return;
+      panicStatus.textContent = message;
+      setTimeout(() => { panicStatus.textContent = "Panic key is active"; }, 3000);
+    }
+    document.getElementById('change-panic-key-btn').onclick = function() {
+      document.getElementById('listening-status').textContent = "Listening for key press...";
+      const keyListener = function(e) {
+        e.preventDefault();
+        panicKey = e.key;
+        document.getElementById('current-panic-key').textContent = panicKey;
+        document.getElementById('listening-status').textContent = "Key set successfully!";
+        document.removeEventListener('keydown', keyListener);
+        setTimeout(() => { document.getElementById('listening-status').textContent = ""; }, 2000);
+      };
+      document.addEventListener('keydown', keyListener);
+    };
+    function savePanicSettings() {
+      panicURL = document.getElementById('panic-url').value;
+      if (panicURL && !panicURL.startsWith('http://') && !panicURL.startsWith('https://')) {
+        panicURL = 'https://' + panicURL;
+        document.getElementById('panic-url').value = panicURL;
+      }
+      localStorage.setItem('panicKey', panicKey);
+      localStorage.setItem('panicURL', panicURL);
+      showStatusMessage("Settings saved successfully!");
+    }
+    document.addEventListener('keydown', function(e) {
+      if (panicKeyActive && e.key === panicKey) window.location.href = panicURL;
+    });
+  </script>
+</body>
+</html>
