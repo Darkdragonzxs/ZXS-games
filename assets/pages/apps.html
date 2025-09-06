@@ -167,13 +167,6 @@
     font-size: 2.8rem;
     font-weight: bold;
   }
-  .game-title-text {
-    font-size: 1.04rem;
-    font-family: 'Orbitron', sans-serif;
-    margin-top: 6px;
-    color: var(--accent);
-    word-break: break-word;
-  }
   #scroll-to-top {
     position: fixed;
     right: 32px;
@@ -357,6 +350,15 @@
     color: var(--bg);
     border-color: var(--accent);
   }
+  .popup-content h2 {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+  }
   @media (max-width: 1300px) {
     .games-list-main { max-width: 100vw; }
   }
@@ -391,36 +393,42 @@
 <div class="taskbar" id="taskbar">
   <div class="taskbar-items" id="taskbar-items"></div>
 </div>
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <h2 id="popup-title"></h2>
+        <span class="close" onclick="closePopup()">&times;</span>
+        <p>This is where the app content would go.</p>
+    </div>
+</div>
 
 <script>
   const games = [
-  { title: "Wikipedia", image: "/assets/images/apps/wikipedia.png" },
-  { title: "Telegram", image: "/assets/images/apps/telegram.png" },
-  { title: "Spotify", image: "/assets/images/apps/spotify.png" },
-  { title: "CapCut", image: "/assets/images/apps/capcut.png" },
-  { title: "ESPN", image: "/assets/images/apps/ESPN.png" },
-  { title: "Hulu", image: "/assets/images/apps/hulu.png" },
-  { title: "Netflix", image: "/assets/images/apps/Netflix.png" },
-  { title: "Xbox Cloud Gaming", image: "/assets/images/apps/xboxcloudgaming.png" },
-  { title: "TextNow", image: "/assets/images/apps/textnow.png" },
-  { title: "LinkedIn", image: "/assets/images/apps/linkedin.png" },
-  { title: "Pinterest", image: "/assets/images/apps/pinterest-logo.png" },
-  { title: "Reddit", image: "/assets/images/apps/Reddit.png" },
-  { title: "Snapchat", image: "/assets/images/apps/snapchat.png" },
-  { title: "Discord", image: "/assets/images/apps/discord.png" },
-  { title: "Invidious", image: "/assets/images/apps/invidious.png" },
-  { title: "Invidious Logo", image: "/assets/images/apps/Invidious-logo.png" },
-  { title: "TikTok", image: "/assets/images/apps/TikTok_Logo.png" },
-  { title: "X", image: "/assets/images/apps/x.png" },
-  { title: "Instagram", image: "/assets/images/apps/instagram.png" },
-  { title: "Facebook", image: "/assets/images/apps/facebook.png" },
-  { title: "Music", image: "/assets/images/apps/music.png" },
-  { title: "Soundboard", image: "/assets/images/apps/soundboard.png" },
-  { title: "Code Editor", image: "/assets/images/apps/codeeditor.png" },
-  { title: "Movies", image: "/assets/images/apps/movies.png" },
-  { title: "ZXS Emulator", image: "/assets/images/apps/zxsemulator.png" },
-  { title: "ZXS AI", image: "/assets/images/apps/zxsai.png" },
-  { title: "ZXS Chat", image: "/assets/images/apps/zxschat.png" },
+    { title: "CapCut", url: "/s/embed.html#https://capcut.com", image: "/assets/images/apps/capcut.png" },
+    { title: "Code Editor", url: "/a/zxscode.html", image: "/assets/images/apps/codeeditor.png" },
+    { title: "Discord", url: "/s/embed.html#https://discord.com", image: "/assets/images/apps/discord.png" },
+    { title: "ESPN", url: "/s/embed.html#https://espn.com", image: "/assets/images/apps/ESPN.png" },
+    { title: "Facebook", url: "/s/embed.html#https://facebook.com", image: "/assets/images/apps/facebook.png" },
+    { title: "Hulu", url: "/s/embed.html#https://hulu.com", image: "/assets/images/apps/hulu.png" },
+    { title: "Instagram", url: "/s/embed.html#https://instagram.com", image: "/assets/images/apps/instagram.png" },
+    { title: "Invidious", url: "/s/embed.html#https://inv.nadeko.net", image: "/assets/images/apps/invidious.png" },
+    { title: "LinkedIn", url: "/s/embed.html#https://linkedin.com", image: "/assets/images/apps/linkedin.png" },
+    { title: "Movies", url: "/a/movies.html", image: "/assets/images/apps/movies.png" },
+    { title: "Music", url: "/a/musicplayer.html", image: "/assets/images/apps/music.png" },
+    { title: "Netflix", url: "/s/embed.html#https://netflix.com", image: "/assets/images/apps/Netflix.png" },
+    { title: "Pinterest", url: "/s/embed.html#https://pintrest.com", image: "/assets/images/apps/pinterest-logo.png" },
+    { title: "Reddit", url: "/s/embed.html#https://redd.it", image: "/assets/images/apps/Reddit.png" },
+    { title: "Snapchat", url: "/s/embed.html#https://snapchat.com", image: "/assets/images/apps/snapchat.png" },
+    { title: "Soundboard", url: "/a/SoundBoard.html", image: "/assets/images/apps/soundboard.png" },
+    { title: "Spotify", url: "/s/embed.html#https://spotify.com", image: "/assets/images/apps/spotify.png" },
+    { title: "Telegram", url: "/s/embed.html#https://telegram.com", image: "/assets/images/apps/telegram.png" },
+    { title: "TextNow", url: "/s/embed.html#https://textnow.com", image: "/assets/images/apps/textnow.png" },
+    { title: "TikTok", url: "/s/embed.html#https://tiktok.com", image: "/assets/images/apps/TikTok_Logo.png" },
+    { title: "Wikipedia", url: "/s/embed.html#https://wikipedia.com", image: "/assets/images/apps/wikipedia.png" },
+    { title: "X", url: "/s/embed.html#https://x.com", image: "/assets/images/apps/x.png" },
+    { title: "Xbox Cloud Gaming", url: "/s/embed.html#https://xbox.com/play", image: "/assets/images/apps/xboxcloudgaming.png" },
+    { title: "ZXS AI", url: "/a/zxsai.html", image: "/assets/images/apps/zxsai.png" },
+    { title: "ZXS Chat", url: "/a/zxschat.html", image: "/assets/images/apps/zxschat.png" },
+    { title: "ZXS Emulator", url: "/a/zxsem.html", image: "/assets/images/apps/zxsemulator.png" }
   ].sort((a, b) => a.title.localeCompare(b.title));
 
   let windows = [];
@@ -463,9 +471,9 @@
       if (game.image) {
         imageHTML = `<img src="${game.image}" alt="${game.title}" style="width:180px;height:180px;border-radius:12px;margin-top:18px;margin-bottom:8px;border:2.5px solid var(--accent);object-fit:cover;">`;
       } else {
-        imageHTML = `<div class="game-image-placeholder">IMG</div>`;
+        imageHTML = `<div class="game-image-placeholder">APP</div>`;
       }
-      tile.innerHTML = `${imageHTML}<div class="game-title-text">${game.title}</div>`;
+      tile.innerHTML = `${imageHTML}`;
       tile.setAttribute('data-title', game.title.toLowerCase());
       tile.onclick = () => {
         openGame(game.url, game.title);
@@ -493,7 +501,6 @@
   function createWindow(url, title) {
     const windowId = 'window-' + windowIdCounter++;
     const windowContainer = document.getElementById('window-container');
-
     const windowElement = document.createElement('div');
     windowElement.className = 'window';
     windowElement.id = windowId;
@@ -532,8 +539,8 @@
   function activateWindow(windowId) {
     windows.forEach(win => {
       const el = document.getElementById(win.id);
-      if (el) { el.style.zIndex = 1000; el.classList.remove('active'); }
-      const tb = document.getElementById('taskbar-' + win.id);
+      if (el) { el.style.zIndex = 1000; el.classList.remove('active'); el.style.display = ''; }
+      const tb = document.getElementById('taskbar-'+win.id);
       if (tb) tb.classList.remove('active');
     });
     const winEl = document.getElementById(windowId);
@@ -541,7 +548,7 @@
       winEl.style.zIndex = ++windowZIndex;
       winEl.classList.add('active');
       activeWindowId = windowId;
-      const tb = document.getElementById('taskbar-' + windowId);
+      const tb = document.getElementById('taskbar-'+windowId);
       if (tb) tb.classList.add('active');
     }
   }
@@ -549,17 +556,12 @@
   function closeWindow(windowId) {
     const el = document.getElementById(windowId);
     if (el) el.remove();
-    windows = windows.filter(w => w.id !== windowId);
-    const tb = document.getElementById('taskbar-' + windowId);
+    windows = [];
+    const tb = document.getElementById('taskbar-'+windowId);
     if (tb) tb.remove();
-    if (windows.length === 0) {
-      document.getElementById('window-container').style.display = 'none';
-      document.getElementById('taskbar').classList.remove('active');
-      document.body.style.overflow = '';
-    } else {
-      const lastWin = windows[windows.length - 1];
-      activateWindow(lastWin.id);
-    }
+    document.getElementById('window-container').style.display = 'none';
+    document.getElementById('taskbar').classList.remove('active');
+    document.body.style.overflow = '';
   }
 
   function minimizeWindow(windowId) {
@@ -567,13 +569,13 @@
     if (el) el.style.display = 'none';
     const winIdx = windows.findIndex(w => w.id === windowId);
     if (winIdx !== -1) windows[winIdx].minimized = true;
+    document.getElementById('window-container').style.display = 'none';
+    document.body.style.overflow = '';
   }
 
   function addToTaskbar(windowId, title) {
     const taskbarItems = document.getElementById('taskbar-items');
-    // Clear previous
     taskbarItems.innerHTML = '';
-    // Add new
     const item = document.createElement('div');
     item.className = 'taskbar-item active';
     item.id = 'taskbar-' + windowId;
@@ -581,17 +583,24 @@
     item.onclick = function() {
       const el = document.getElementById(windowId);
       if (!el || el.style.display === 'none') {
-        // Show window
         document.getElementById('window-container').style.display = 'flex';
         el.style.display = '';
         activateWindow(windowId);
         document.body.style.overflow = 'hidden';
       } else {
-        // Minimize
         minimizeWindow(windowId);
       }
     };
     taskbarItems.appendChild(item);
+  }
+
+  function openPopup(gameTitle) {
+    document.getElementById('popup-title').textContent = gameTitle;
+    document.getElementById('popup').style.display = 'flex';
+  }
+
+  function closePopup() {
+    document.getElementById('popup').style.display = 'none';
   }
 
   function openGame(url, title) {
@@ -619,12 +628,12 @@
   }
 
   gamesListMain.addEventListener('scroll', checkScrollBtn);
-  scrollToTopBtn.addEventListener('click', () => {
-    gamesListMain.scrollTo({ top: 0, behavior: 'smooth' });
+  scrollToTopBtn.addEventListener('click', function(){
+    gamesListMain.scrollTo({top:0, behavior:'smooth'});
   });
 
-  renderGames();
-
+  document.querySelector('.games-section').style.justifyContent = 'center';
+  document.querySelector('.games-section').style.alignItems = 'center';
 </script>
 </body>
 </html>
