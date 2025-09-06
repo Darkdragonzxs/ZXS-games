@@ -315,7 +315,6 @@
     display: flex;
     align-items: center;
     z-index: 10000;
-    border-top: 1px solid var(--accent);
     padding: 0 20px;
     transition: transform 0.3s;
     transform: translateY(100%);
@@ -395,40 +394,36 @@
 </div>
 <div id="popup" class="popup">
     <div class="popup-content">
-        <h2 id="popup-title"></h2>
-        <span class="close" onclick="closePopup()">&times;</span>
-        <p>This is where the app content would go.</p>
-    </div>
 </div>
 
 <script>
   const games = [
-    { title: "CapCut", url: "/s/embed.html#https://capcut.com", image: "/assets/images/apps/capcut.png" },
-    { title: "Code Editor", url: "/a/zxscode.html", image: "/assets/images/apps/codeeditor.png" },
-    { title: "Discord", url: "/s/embed.html#https://discord.com", image: "/assets/images/apps/discord.png" },
-    { title: "ESPN", url: "/s/embed.html#https://espn.com", image: "/assets/images/apps/ESPN.png" },
-    { title: "Facebook", url: "/s/embed.html#https://facebook.com", image: "/assets/images/apps/facebook.png" },
-    { title: "Hulu", url: "/s/embed.html#https://hulu.com", image: "/assets/images/apps/hulu.png" },
-    { title: "Instagram", url: "/s/embed.html#https://instagram.com", image: "/assets/images/apps/instagram.png" },
-    { title: "Invidious", url: "/s/embed.html#https://inv.nadeko.net", image: "/assets/images/apps/invidious.png" },
-    { title: "LinkedIn", url: "/s/embed.html#https://linkedin.com", image: "/assets/images/apps/linkedin.png" },
-    { title: "Movies", url: "/a/movies.html", image: "/assets/images/apps/movies.png" },
-    { title: "Music", url: "/a/musicplayer.html", image: "/assets/images/apps/music.png" },
-    { title: "Netflix", url: "/s/embed.html#https://netflix.com", image: "/assets/images/apps/Netflix.png" },
-    { title: "Pinterest", url: "/s/embed.html#https://pintrest.com", image: "/assets/images/apps/pinterest-logo.png" },
-    { title: "Reddit", url: "/s/embed.html#https://redd.it", image: "/assets/images/apps/Reddit.png" },
-    { title: "Snapchat", url: "/s/embed.html#https://snapchat.com", image: "/assets/images/apps/snapchat.png" },
-    { title: "Soundboard", url: "/a/SoundBoard.html", image: "/assets/images/apps/soundboard.png" },
-    { title: "Spotify", url: "/s/embed.html#https://spotify.com", image: "/assets/images/apps/spotify.png" },
-    { title: "Telegram", url: "/s/embed.html#https://telegram.com", image: "/assets/images/apps/telegram.png" },
-    { title: "TextNow", url: "/s/embed.html#https://textnow.com", image: "/assets/images/apps/textnow.png" },
-    { title: "TikTok", url: "/s/embed.html#https://tiktok.com", image: "/assets/images/apps/TikTok_Logo.png" },
-    { title: "Wikipedia", url: "/s/embed.html#https://wikipedia.com", image: "/assets/images/apps/wikipedia.png" },
-    { title: "X", url: "/s/embed.html#https://x.com", image: "/assets/images/apps/x.png" },
-    { title: "Xbox Cloud Gaming", url: "/s/embed.html#https://xbox.com/play", image: "/assets/images/apps/xboxcloudgaming.png" },
-    { title: "ZXS AI", url: "/a/zxsai.html", image: "/assets/images/apps/zxsai.png" },
-    { title: "ZXS Chat", url: "/a/zxschat.html", image: "/assets/images/apps/zxschat.png" },
-    { title: "ZXS Emulator", url: "/a/zxsem.html", image: "/assets/images/apps/zxsemulator.png" }
+    { title: "CapCut", url: "/s/embed.html#https://capcut.com", image: "/assets/images/apps/capcut.png", file: "/s/embed.html#https://capcut.com" },
+    { title: "Code Editor", url: "/a/zxscode.html", image: "/assets/images/apps/codeeditor.png", file: "/a/zxscode.html" },
+    { title: "Discord", url: "/s/embed.html#https://discord.com", image: "/assets/images/apps/discord.png", file: "/s/embed.html#https://discord.com" },
+    { title: "ESPN", url: "/s/embed.html#https://espn.com", image: "/assets/images/apps/ESPN.png", file: "/s/embed.html#https://espn.com" },
+    { title: "Facebook", url: "/s/embed.html#https://facebook.com", image: "/assets/images/apps/facebook.png", file: "/s/embed.html#https://facebook.com" },
+    { title: "Hulu", url: "/s/embed.html#https://hulu.com", image: "/assets/images/apps/hulu.png", file: "/s/embed.html#https://hulu.com" },
+    { title: "Instagram", url: "/s/embed.html#https://instagram.com", image: "/assets/images/apps/instagram.png", file: "/s/embed.html#https://instagram.com" },
+    { title: "Invidious", url: "/s/embed.html#https://inv.nadeko.net", image: "/assets/images/apps/invidious.png", file: "/s/embed.html#https://inv.nadeko.net" },
+    { title: "LinkedIn", url: "/s/embed.html#https://linkedin.com", image: "/assets/images/apps/linkedin.png", file: "/s/embed.html#https://linkedin.com" },
+    { title: "Movies", url: "/a/movies.html", image: "/assets/images/apps/movies.png", file: "/a/movies.html" },
+    { title: "Music", url: "/a/musicplayer.html", image: "/assets/images/apps/music.png", file: "/a/musicplayer.html" },
+    { title: "Netflix", url: "/s/embed.html#https://netflix.com", image: "/assets/images/apps/Netflix.png", file: "/s/embed.html#https://netflix.com" },
+    { title: "Pinterest", url: "/s/embed.html#https://pintrest.com", image: "/assets/images/apps/pinterest-logo.png", file: "/s/embed.html#https://pintrest.com" },
+    { title: "Reddit", url: "/s/embed.html#https://redd.it", image: "/assets/images/apps/Reddit.png", file: "/s/embed.html#https://redd.it" },
+    { title: "Snapchat", url: "/s/embed.html#https://snapchat.com", image: "/assets/images/apps/snapchat.png", file: "/s/embed.html#https://snapchat.com" },
+    { title: "Soundboard", url: "/a/SoundBoard.html", image: "/assets/images/apps/soundboard.png", file: "/a/SoundBoard.html" },
+    { title: "Spotify", url: "/s/embed.html#https://spotify.com", image: "/assets/images/apps/spotify.png", file: "/s/embed.html#https://spotify.com" },
+    { title: "Telegram", url: "/s/embed.html#https://telegram.com", image: "/assets/images/apps/telegram.png", file: "/s/embed.html#https://telegram.com" },
+    { title: "TextNow", url: "/s/embed.html#https://textnow.com", image: "/assets/images/apps/textnow.png", file: "/s/embed.html#https://textnow.com" },
+    { title: "TikTok", url: "/s/embed.html#https://tiktok.com", image: "/assets/images/apps/TikTok_Logo.png", file: "/s/embed.html#https://tiktok.com" },
+    { title: "Wikipedia", url: "/s/embed.html#https://wikipedia.com", image: "/assets/images/apps/wikipedia.png", file: "/s/embed.html#https://wikipedia.com" },
+    { title: "X", url: "/s/embed.html#https://x.com", image: "/assets/images/apps/x.png", file: "/s/embed.html#https://x.com" },
+    { title: "Xbox Cloud Gaming", url: "/s/embed.html#https://xbox.com/play", image: "/assets/images/apps/xboxcloudgaming.png", file: "/s/embed.html#https://xbox.com/play" },
+    { title: "ZXS AI", url: "/a/zxsai.html", image: "/assets/images/apps/zxsai.png", file: "/a/zxsai.html" },
+    { title: "ZXS Chat", url: "/a/zxschat.html", image: "/assets/images/apps/zxschat.png", file: "/a/zxschat.html" },
+    { title: "ZXS Emulator", url: "/a/zxsem.html", image: "/assets/images/apps/zxsemulator.png", file: "/a/zxsem.html" }
   ].sort((a, b) => a.title.localeCompare(b.title));
 
   let windows = [];
