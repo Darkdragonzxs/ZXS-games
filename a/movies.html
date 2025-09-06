@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -169,8 +168,7 @@
     <div class="input-container">
       <input id="movieMediaId" type="text" placeholder="Enter Movie TMDB ID">
       <select id="movieProvider">
-        <option value="vidsrc">Vidsrc (always works)</option> <!-- yippee -->
-
+        <option value="vidsrc">Vidsrc (always works)</option>
       </select>
       <button onclick="playMovie()">Play Movie</button>
     </div>
@@ -183,7 +181,7 @@
       <input id="seasonNumber" type="number" placeholder="Season" min="1">
       <input id="episodeNumber" type="number" placeholder="Episode" min="1">
       <select id="tvProvider">
-        <option value="vidsrc">Vidsrc</option> <!-- Added Vidsrc option -->
+        <option value="vidsrc">Vidsrc</option>
       </select>
       <button onclick="playTvShow()">Play TV Show</button>
     </div>
@@ -243,18 +241,8 @@
 
       let url = "";
 
-      if (provider === "frembed") {
-        url = `https://frembed.pro/api/film.php?id=${mediaId}`;
-      } else if (provider === "superembed") {
-        url = `https://multiembed.mov/?video_id=${mediaId}&tmdb=1`;
-      } else if (provider === "smashystream") {
-        url = `https://player.smashy.stream/movie/${mediaId}`;
-      } else if (provider === "autoembed") {
-        url = `https://autoembed.co/movie/tmdb/${mediaId}`;
-      } else if (provider === "upcloud") {
-        url = `https://upcloud.stream/movie/${mediaId}`;
-      } else if (provider === "vidsrc") {  // Vidsrc option
-        url = `https://vidsrc.su/embed/movie/${mediaId}`;
+      if (provider === "vidsrc") {
+        url = `https://vidsrc.icu/embed/movie/${mediaId}`;
       }
 
       moviePlayer.src = url;
@@ -274,18 +262,8 @@
 
       let url = "";
 
-      if (provider === "frembed") {
-        url = `https://frembed.pro/api/serie.php?id=${mediaId}&sa=${seasonNumber}&epi=${episodeNumber}`;
-      } else if (provider === "superembed") {
-        url = `https://multiembed.mov/?video_id=${mediaId}&tmdb=1&s=${seasonNumber}&e=${episodeNumber}`;
-      } else if (provider === "smashystream") {
-        url = `https://player.smashy.stream/series/${mediaId}/season/${seasonNumber}/episode/${episodeNumber}`;
-      } else if (provider === "autoembed") {
-        url = `https://autoembed.co/episode/tmdb/${mediaId}/season/${seasonNumber}/episode/${episodeNumber}`;
-      } else if (provider === "upcloud") {
-        url = `https://upcloud.stream/series/${mediaId}/season/${seasonNumber}/episode/${episodeNumber}`;
-      } else if (provider === "vidsrc") {  // Vidsrc option
-        url = `https://vidsrc.su/embed/tv/${mediaId}/${seasonNumber}/${episodeNumber}`;
+      if (provider === "vidsrc") {
+        url = `https://vidsrc.icu/embed/tv/${mediaId}/${seasonNumber}/${episodeNumber}`;
       }
 
       tvPlayer.src = url;
@@ -330,8 +308,3 @@
   </script>
 </body>
 </html>
-
-
-<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
-
-   
