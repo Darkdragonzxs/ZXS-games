@@ -4,9 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ZXS Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet"/>
-  <link rel="icon" href="/logo.png" type="image/png" id="favicon" />
+  <link rel="icon" href="/logo.png" id="favicon" type="image/png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One:wght@400;700;900&display=swap" rel="stylesheet"/>
   <meta name="description" content="A Gaming Site with everything you need." />
+  <!-- Consolidated all CSS into single HTML file with performance improvements -->
   <style>
     :root {
       --accent: #00ff5e;
@@ -19,7 +20,11 @@
       --topbar-height: 56px;
       --topbar-bg: #191919ee;
       --popup-bg: #181818f2;
+      --transition-fast: 0.18s;
+      --transition-medium: 0.3s;
+      --transition-slow: 0.45s;
     }
+    
     html, body {
       margin: 0;
       padding: 0;
@@ -31,6 +36,30 @@
       box-sizing: border-box;
       overflow-x: hidden;
     }
+    
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+    
+    /* Screen reader only content */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    /* Focus styles for accessibility */
+    button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    
     #particles-js {
       position: fixed;
       width: 100vw;
@@ -41,6 +70,7 @@
       opacity: 0.12;
       pointer-events: none;
     }
+    
     .dashboard-wrap {
       display: flex;
       flex-direction: column;
@@ -50,14 +80,14 @@
       width: 100vw;
       z-index: 1;
       position: relative;
-      box-sizing: border-box;
       padding-top: 5vh;
       padding-bottom: 4vh;
     }
+    
     .main-block {
       background: var(--tile-bg);
       border-radius: 32px;
-      box-shadow: 0 2px 32px #000a;
+      box-shadow: 0 2px 32px rgba(0, 0, 0, 0.6);
       padding: 40px 32px;
       max-width: 550px;
       width: 98vw;
@@ -65,8 +95,9 @@
       flex-direction: column;
       align-items: center;
       margin-bottom: 36px;
-      transition: opacity .3s;
+      transition: opacity var(--transition-medium), transform var(--transition-medium);
     }
+    
     .main-logo {
       width: 120px;
       height: 120px;
@@ -75,8 +106,13 @@
       background: #191919;
       margin-bottom: 32px;
       border: 3px solid var(--accent);
-      box-sizing: border-box;
+      transition: transform var(--transition-fast);
     }
+    
+    .main-logo:hover {
+      transform: scale(1.05);
+    }
+    
     .main-title {
       font-size: 2.7rem;
       font-family: var(--font-big);
@@ -88,6 +124,7 @@
       margin-top: 0;
       user-select: none;
     }
+    
     .main-subtitle {
       font-size: 1.18rem;
       color: var(--accent);
@@ -96,6 +133,7 @@
       margin-top: 0;
       opacity: 0.8;
     }
+    
     .random-message {
       font-size: 1.05rem;
       color: var(--bg);
@@ -109,44 +147,72 @@
       text-align: center;
       font-family: var(--font-big);
       font-weight: 700;
-      box-sizing: border-box;
-      animation: fadeIn 0.6s;
-      transition: background 0.2s, color 0.2s;
+      animation: fadeIn 0.6s ease-out;
+      transition: background var(--transition-fast), color var(--transition-fast);
     }
+    
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
+    
     .dashboard-actions {
-      width: 100%;
+      width: 100vw;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: stretch;
-      gap: 16px;
-      margin-top: 12px;
+      align-items: center;
+      gap: 36px;
+      margin: 0;
+      padding: 0;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: var(--tile-bg);
+      z-index: 101;
+      transition: opacity var(--transition-medium);
     }
+    
     .dashboard-action {
       background: var(--accent);
       color: var(--bg);
       border-radius: var(--button-radius);
       font-family: var(--font-big);
       font-weight: 900;
-      font-size: 1.32rem;
-      padding: 16px 0;
+      font-size: 1.4rem;
+      padding: 20px 0;
       border: none;
       cursor: pointer;
       margin: 0;
-      margin-bottom: 0;
-      box-shadow: none;
-      transition: background 0.18s, color 0.18s;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
       outline: none;
       letter-spacing: 0.1em;
+      width: 50vw;
+      max-width: 640px;
+      text-align: center;
     }
-    .dashboard-action:hover, .dashboard-action:focus {
+    
+    .dashboard-action:hover, .dashboard-action:focus-visible {
       background: var(--tile-hover-bg);
       color: var(--accent);
+      transform: translateY(-2px);
     }
+    
+    .dashboard-action:active {
+      transform: translateY(0);
+    }
+    
+    .dashboard-wrap .main-block .dashboard-actions {
+      position: static;
+      width: 100%;
+      min-height: unset;
+      gap: 16px;
+      background: none;
+      z-index: 1;
+      padding: 0;
+    }
+    
     .fullscreen-content {
       display: none;
       position: fixed;
@@ -158,12 +224,14 @@
       z-index: 99;
       justify-content: center;
       align-items: center;
-      animation: fadeIn .4s;
+      animation: fadeIn var(--transition-slow);
     }
+    
     .fullscreen-content.active {
       display: flex;
       flex-direction: column;
     }
+    
     .fullscreen-iframe {
       width: 100vw;
       height: calc(100vh - var(--topbar-height));
@@ -171,37 +239,46 @@
       background: var(--bg);
       z-index: 100;
     }
+    
     #fullscreen-settings {
       width: 100vw;
-      height: calc(100vh - var(--topbar-height));
+      height: 100vh;
       background: var(--bg);
       display: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 150;
+      overflow-y: auto;
       justify-content: center;
       align-items: center;
-      z-index: 100;
-      padding: 0;
     }
+    
     #fullscreen-settings.active {
       display: flex;
     }
+    
     .settings-panel {
       background: var(--tile-bg);
-      border-radius: 22px;
-      box-shadow: 0 2px 32px #000a;
-      padding: 36px 28px;
-      max-width: 420px;
-      width: 99vw;
+      border-radius: 0;
+      box-shadow: 0 2px 32px rgba(0, 0, 0, 0.6);
+      padding: 20px 0;
+      max-width: 900px;
+      width: 96vw;
+      max-height: 90vh;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 36px;
-      margin-top: 22px;
       position: relative;
+      z-index: 151;
+      overflow-y: auto;
     }
+    
     .settings-panel h2 {
       font-size: 2rem;
       color: var(--accent);
-      margin-bottom: 18px;
+      margin-bottom: 36px;
       margin-top: 0;
       font-weight: 900;
       text-align: left;
@@ -209,56 +286,109 @@
       width: 100%;
       font-family: var(--font-big);
     }
-    .settings-panel label {
-      font-size: 1.08rem;
+    
+    .settings-section {
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .settings-row {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .settings-panel label, .settings-panel legend {
+      font-size: 1.18rem;
       color: var(--accent);
       font-weight: 700;
       margin-bottom: 8px;
       display: block;
-      margin-top: 12px;
+      margin-top: 0;
       font-family: var(--font-big);
-    }
-    .settings-panel input[type="text"] {
+      text-align: left;
       width: 100%;
-      margin-bottom: 12px;
+    }
+    
+    .settings-panel input[type="text"], .settings-panel input[type="url"] {
+      width: 100%;
       border-radius: 9px;
       border: 1.5px solid var(--accent);
-      padding: 10px;
+      padding: 13px 14px;
       background: var(--tile-bg);
       color: var(--accent);
       font-family: var(--font-big);
-      font-size: 1.06rem;
+      font-size: 1.18rem;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     }
+    
+    .settings-panel input:focus {
+      border-color: var(--text-main);
+      box-shadow: 0 0 0 2px rgba(0, 255, 94, 0.2);
+    }
+    
     .settings-panel button {
       background: var(--accent);
       color: var(--bg);
       border-radius: 12px;
       font-family: var(--font-big);
-      font-size: 1.1rem;
-      padding: 12px 0;
+      font-size: 1.18rem;
+      padding: 18px 0;
       border: none;
       cursor: pointer;
       margin: 0;
-      box-shadow: none;
-      transition: background 0.18s, color 0.18s, border-color 0.18s;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
       outline: none;
       letter-spacing: 0.09em;
       width: 100%;
-      margin-bottom: 12px;
       font-weight: 700;
     }
-    .settings-panel button:hover, .settings-panel button:focus {
+    
+    .settings-panel button:hover, .settings-panel button:focus-visible {
       background: var(--tile-hover-bg);
       color: var(--accent);
+      transform: translateY(-1px);
     }
+    
     .settings-panel .status {
       color: var(--accent);
-      font-size: 1.01rem;
-      margin: 9px 0 0 0;
+      font-size: 1.18rem;
+      margin-top: 30px;
       text-align: left;
       font-weight: 600;
+      width: 100%;
     }
-
+    
+    .settings-panel .panic-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      margin-top: 13px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    
+    kbd {
+      background: var(--tile-bg);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1.5px solid var(--accent);
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--font-big);
+    }
+    
+    /* Topbar */
     .topbar {
       position: fixed;
       top: 0;
@@ -266,19 +396,22 @@
       width: 100vw;
       height: var(--topbar-height);
       background: var(--topbar-bg);
+      backdrop-filter: blur(10px);
       color: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 200;
-      transition: transform .25s, opacity .25s;
+      transition: transform 0.25s ease-out, opacity 0.25s ease-out;
       transform: translateY(-100%);
       opacity: 0;
     }
+    
     .topbar.visible {
       transform: translateY(0);
       opacity: 1;
     }
+    
     .topbar-content {
       display: flex;
       flex-direction: row;
@@ -288,6 +421,7 @@
       width: 100vw;
       height: 100%;
     }
+    
     .topbar-btn {
       background: var(--accent);
       color: var(--bg);
@@ -299,35 +433,41 @@
       font-weight: 900;
       cursor: pointer;
       margin: 0 4px;
-      transition: background .18s, color .18s;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
       outline: none;
       letter-spacing: 0.09em;
     }
-    .topbar-btn:hover, .topbar-btn:focus {
+    
+    .topbar-btn:hover, .topbar-btn:focus-visible {
       background: var(--bg);
       color: var(--accent);
+      transform: translateY(-1px);
     }
+    
     /* Announcement popup */
     .annc-popup-bg {
       position: fixed;
       inset: 0;
       background: var(--popup-bg);
+      backdrop-filter: blur(5px);
       z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: opacity .4s;
+      transition: opacity var(--transition-slow);
       opacity: 1;
       pointer-events: all;
     }
+    
     .annc-popup-bg.hide {
       opacity: 0;
       pointer-events: none;
     }
+    
     .annc-popup {
       background: var(--tile-bg);
       border-radius: 24px;
-      box-shadow: 0 2px 44px #000d;
+      box-shadow: 0 2px 44px rgba(0, 0, 0, 0.8);
       padding: 38px 34px;
       max-width: 440px;
       width: 92vw;
@@ -338,8 +478,14 @@
       font-family: var(--font-big);
       font-size: 1.1rem;
       position: relative;
-      animation: fadeIn .45s;
+      animation: slideIn var(--transition-slow) ease-out;
     }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    
     .annc-title {
       font-size: 2.1rem;
       color: var(--accent);
@@ -348,6 +494,7 @@
       text-align: center;
       letter-spacing: 0.13em;
     }
+    
     .annc-body {
       text-align: center;
       color: var(--text-main);
@@ -355,6 +502,7 @@
       margin-bottom: 16px;
       margin-top: 0;
     }
+    
     .annc-btn {
       background: var(--accent);
       color: var(--bg);
@@ -365,286 +513,623 @@
       font-size: 1.25rem;
       font-weight: 900;
       cursor: pointer;
-      transition: background .18s, color .18s;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
       outline: none;
       margin-top: 18px;
       letter-spacing: 0.09em;
     }
-    .annc-btn:hover, .annc-btn:focus {
+    
+    .annc-btn:hover, .annc-btn:focus-visible {
       background: var(--tile-hover-bg);
       color: var(--accent);
+      transform: translateY(-2px);
     }
-    @media (max-width: 900px) {
-      .main-block, .settings-panel, .annc-popup { max-width: 99vw; padding: 18px 7px; }
-      .main-logo { width: 70px; height: 70px; }
-      .main-title { font-size: 1.3rem; }
-      .topbar-content { gap:10px; }
-      .topbar-btn { font-size: 1rem; padding: 8px 12px; }
-      .annc-title { font-size: 1.3rem; }
-      .annc-popup { padding: 14px 6px; }
-    }
-  </style>
-
-  <!-- Announcement Popup -->
-  <div id="annc-popup-bg" class="annc-popup-bg" style="display:none;">
-    <div class="annc-popup">
-      <div class="annc-title">🚀 ZXS GAMES Updated!</div>
-      <div class="annc-body">
-        Welcome to 3.0<br>
-        <b>What's new?</b>
-        <ul style="margin:12px 0 0 0;padding-left:18px;text-align:left;">
-          <li>Minimalistic design</li>
-          <li>new games ui</li>
-          <li>proxy is back</li>
-        </ul>
-      </div>
-      <button class="annc-btn" id="annc-close-btn">OK, got it!</button>
-    </div>
-  </div>
-
-  <div id="particles-js"></div>
-  <div class="dashboard-wrap" id="dashboard">
-    <div class="main-block" id="main-block">
-      <img src="/assets/images/logoV.png" alt="ZXS Logo" class="main-logo" />
-      <h1 class="main-title">ZXS GAMES</h1>
-      <div id="random-message" class="random-message"></div>
-      <div class="main-subtitle">Welcome to ZXS Games</div>
-      <div class="dashboard-actions">
-        <button class="dashboard-action" data-action="games">Games</button>
-        <button class="dashboard-action" data-action="apps">Apps</button>
-        <button class="dashboard-action" data-action="partners">Partners</button>
-        <button class="dashboard-action" data-action="hacks">Hacks</button>
-        <button class="dashboard-action" data-action="vm">VM</button>
-        <button class="dashboard-action" data-action="settings">Settings</button>
-      </div>
-    </div>
-  </div>
-  <div class="fullscreen-content" id="fullscreen-games">
-    <iframe class="fullscreen-iframe" src="/zxs-games-section.html"></iframe>
-  </div>
-  <div class="fullscreen-content" id="fullscreen-apps">
-    <iframe class="fullscreen-iframe" src="/apps.html"></iframe>
-  </div>
-  <div class="fullscreen-content" id="fullscreen-partners">
-    <iframe class="fullscreen-iframe" src="/partners.html"></iframe>
-  </div>
-  <div class="fullscreen-content" id="fullscreen-hacks">
-    <iframe class="fullscreen-iframe" src="/hax.html"></iframe>
-  </div>
-  <div class="fullscreen-content" id="fullscreen-vm">
-    <iframe class="fullscreen-iframe" src="/vm/vm.html"></iframe>
-  </div>
-  <div class="fullscreen-content" id="fullscreen-settings">
-    <div class="settings-panel">
-      <h2>Settings</h2>
-      <label for="tab-name">Tab Name</label>
-      <input type="text" id="tab-name" placeholder="Enter tab name" />
-      <label for="favicon-url">Favicon URL</label>
-      <input type="text" id="favicon-url" placeholder="Enter favicon URL" />
-      <button onclick="applyTabCloak()">Apply Tab Cloak</button>
-      <label for="panic-url">Panic Redirect URL</label>
-      <input type="text" id="panic-url" placeholder="Enter URL (e.g., https://google.com)" value="https://google.com" />
-      <button onclick="savePanicSettings()">Save Panic URL</button>
-      <div style="margin-top:10px;">
-        <span>Current Panic Key: </span>
-        <span id="current-panic-key" style="background:var(--tile-bg);padding:4px 10px;border-radius:6px;border:1.5px solid var(--accent);margin-right:9px;font-weight:700;color:var(--accent);">]</span>
-        <button id="change-panic-key-btn" style="padding:8px 16px;">Change Key</button>
-        <span id="listening-status" style="margin-left:12px;font-size:1rem;color:var(--accent);"></span>
-      </div>
-      <div class="status" id="panic-status" style="margin-top:10px;">Panic key is active</div>
-    </div>
-  </div>
-  <div class="topbar" id="topbar">
-    <div class="topbar-content">
-      <button class="topbar-btn" data-action="home">Home</button>
-      <button class="topbar-btn" data-action="games">Games</button>
-      <button class="topbar-btn" data-action="apps">Apps</button>
-      <button class="topbar-btn" data-action="partners">Partners</button>
-      <button class="topbar-btn" data-action="hacks">Hacks</button>
-      <button class="topbar-btn" data-action="vm">VM</button>
-      <button class="topbar-btn" data-action="settings">Settings</button>
-    </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script>
-    // ---- Announcement Popup Logic ----
-    // Change this version string on every update!
-    const ANNC_VERSION = "2.7";  // <- SET THIS TO YOUR PROJECT VERSION!
-    function showAnnouncementIfNeeded() {
-      const lastSeen = localStorage.getItem("zxs_annc_version");
-      if (lastSeen !== ANNC_VERSION) {
-        document.getElementById("annc-popup-bg").style.display = "flex";
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .main-block, .settings-panel, .annc-popup { 
+        max-width: 99vw; 
+        padding: 18px 7px; 
+      }
+      .main-logo { 
+        width: 70px; 
+        height: 70px; 
+      }
+      .main-title { 
+        font-size: 2rem; 
+      }
+      .topbar-content { 
+        gap: 10px; 
+      }
+      .topbar-btn { 
+        font-size: 1rem; 
+        padding: 8px 12px; 
+      }
+      .annc-title { 
+        font-size: 1.3rem; 
+      }
+      .annc-popup { 
+        padding: 14px 6px; 
+      }
+      .settings-panel { 
+        padding: 10px 0; 
+        max-height: 95vh;
+      }
+      .settings-section { 
+        width: 98%; 
+      }
+      
+      /* Touch-friendly mobile topbar */
+      .topbar {
+        transition: transform 0.3s ease-out, opacity 0.3s ease-out;
       }
     }
-    document.getElementById("annc-close-btn").onclick = function() {
-      document.getElementById("annc-popup-bg").classList.add("hide");
-      setTimeout(function() {
-        document.getElementById("annc-popup-bg").style.display = "none";
-      }, 500);
-      localStorage.setItem("zxs_annc_version", ANNC_VERSION);
-    };
-    document.addEventListener("DOMContentLoaded", showAnnouncementIfNeeded);
-
-    particlesJS('particles-js', {
-      particles: {
-        number: { value: 44, density: { enable: true, value_area: 900 } },
-        color: { value: "#00ff5e" },
-        shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
-        opacity: { value: 0.16, random: true },
-        size: { value: 2.5, random: true },
-        line_linked: { enable: true, distance: 125, color: "#00ff5e", opacity: 0.09, width: 1 },
-        move: { enable: true, speed: 1.2, random: true }
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
-        modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } }
-      },
-      retina_detect: true
-    });
-
-    const messages = [
-      "gaming mode activated",
-      "Made with ❤️ by zxs",
-      "Hospooot nooo",
-      "Whoa cool message",
-      "https://dsc.gg/zxsgames",
-      "hellow to mi minecraft server",
-      "i eat rocks",
-      "Minimize this menu bro",
-      "i love gamer gaming",
-      "hawk tuah",
-      "ymntrgbefvdwcsax",
-      "noo gambling is very good -evilcy",
-      "i bet your reading this",
-    ];
-    function displayRandomMessage() {
-      const randomIndex = Math.floor(Math.random() * messages.length);
-      document.getElementById('random-message').textContent = messages[randomIndex];
+    
+    /* Reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      #particles-js {
+        display: none;
+      }
     }
-    displayRandomMessage();
-    setInterval(displayRandomMessage, 13000);
+  </style>
+</head>
+<body>
+  <!-- Enhanced semantic HTML structure and accessibility -->
+  <!-- Announcement Popup -->
+  <div id="annc-popup-bg" class="annc-popup-bg" style="display:none;" role="dialog" aria-labelledby="annc-title" aria-modal="true">
+    <div class="annc-popup">
+      <h2 id="annc-title" class="annc-title">🚀 ZXS GAMES Updated!</h2>
+      <div class="annc-body">
+        Welcome to the latest version.<br>
+        <strong>What's new?</strong>
+        <ul style="margin:12px 0 0 0;padding-left:18px;text-align:left;">
+          <li>Enhanced accessibility with screen reader support</li>
+          <li>Improved performance and smoother animations</li>
+          <li>Better mobile touch support for topbar</li>
+          <li>Optimized particle system with reduced motion support</li>
+          <li>Enhanced keyboard navigation throughout</li>
+        </ul>
+      </div>
+      <button class="annc-btn" id="annc-close-btn" aria-label="Close announcement">OK, got it!</button>
+    </div>
+  </div>
 
-    const options = ["games", "apps", "partners", "hacks", "vm", "settings"];
-    document.querySelectorAll('.dashboard-action').forEach(btn => {
-      btn.onclick = function () {
-        showFullscreen(this.getAttribute('data-action'));
-      };
-    });
-    document.querySelectorAll('.topbar-btn').forEach(btn => {
-      btn.onclick = function () {
-        let act = this.getAttribute('data-action');
-        if(act === "home") showHome();
-        else showFullscreen(act);
-      };
-    });
-    function showFullscreen(option) {
-      options.forEach(opt => {
-        document.getElementById('fullscreen-' + opt).classList.remove('active');
-        if(opt === "settings") {
-          document.getElementById('fullscreen-settings').classList.remove('active');
-        }
-      });
-      document.getElementById('main-block').style.opacity = '0';
-      document.getElementById('main-block').style.pointerEvents = 'none';
-      setTimeout(() => {
-        document.getElementById('main-block').style.display = 'none';
-        if(option === "settings") {
-          document.getElementById('fullscreen-settings').classList.add('active');
-        } else {
-          document.getElementById('fullscreen-' + option).classList.add('active');
-        }
-      }, 300);
-    }
-    function showHome() {
-      options.forEach(opt => {
-        document.getElementById('fullscreen-' + opt).classList.remove('active');
-        if(opt === "settings") {
-          document.getElementById('fullscreen-settings').classList.remove('active');
-        }
-      });
-      document.getElementById('main-block').style.display = 'flex';
-      setTimeout(() => {
-        document.getElementById('main-block').style.opacity = '1';
-        document.getElementById('main-block').style.pointerEvents = 'all';
-      }, 50);
-    }
+  <div id="particles-js" aria-hidden="true"></div>
+  
+  <main class="dashboard-wrap" id="dashboard">
+    <div class="main-block" id="main-block">
+      <img src="/assets/images/logoV.png" alt="ZXS Games Logo" class="main-logo" />
+      <h1 class="main-title">ZXS GAMES</h1>
+      <div id="random-message" class="random-message" aria-live="polite"></div>
+      <p class="main-subtitle">Welcome to ZXS Games</p>
+      <nav class="dashboard-actions" id="dashboard-actions" role="navigation" aria-label="Main navigation">
+        <button class="dashboard-action" data-action="games" aria-describedby="games-desc">
+          <span class="sr-only" id="games-desc">Access gaming section</span>
+          Games
+        </button>
+        <button class="dashboard-action" data-action="apps" aria-describedby="apps-desc">
+          <span class="sr-only" id="apps-desc">Access applications section</span>
+          Apps
+        </button>
+        <button class="dashboard-action" data-action="partners" aria-describedby="partners-desc">
+          <span class="sr-only" id="partners-desc">View partner information</span>
+          Partners
+        </button>
+        <button class="dashboard-action" data-action="hacks" aria-describedby="hacks-desc">
+          <span class="sr-only" id="hacks-desc">Access hacks section</span>
+          Hacks
+        </button>
+        <button class="dashboard-action" data-action="vm" aria-describedby="vm-desc">
+          <span class="sr-only" id="vm-desc">Access virtual machine</span>
+          VM
+        </button>
+        <button class="dashboard-action" data-action="settings" aria-describedby="settings-desc">
+          <span class="sr-only" id="settings-desc">Open settings panel</span>
+          Settings
+        </button>
+      </nav>
+    </div>
+  </main>
 
-    let topbar = document.getElementById('topbar');
-    let mouseOverTop = false;
-    let topbarTimeout;
-    document.body.addEventListener('mousemove', function(e) {
-      if (e.clientY < 32) {
-        if (!mouseOverTop) {
-          mouseOverTop = true;
+  <!-- Added proper semantic structure for content sections -->
+  <section class="fullscreen-content" id="fullscreen-games" aria-hidden="true">
+    <iframe class="fullscreen-iframe" src="/zxs-games-section.html" title="Games Section"></iframe>
+  </section>
+  <section class="fullscreen-content" id="fullscreen-apps" aria-hidden="true">
+    <iframe class="fullscreen-iframe" src="/apps.html" title="Applications Section"></iframe>
+  </section>
+  <section class="fullscreen-content" id="fullscreen-partners" aria-hidden="true">
+    <iframe class="fullscreen-iframe" src="/partners.html" title="Partners Section"></iframe>
+  </section>
+  <section class="fullscreen-content" id="fullscreen-hacks" aria-hidden="true">
+    <iframe class="fullscreen-iframe" src="/hax.html" title="Hacks Section"></iframe>
+  </section>
+  <section class="fullscreen-content" id="fullscreen-vm" aria-hidden="true">
+    <iframe class="fullscreen-iframe" src="/vm/vm.html" title="Virtual Machine"></iframe>
+  </section>
+
+  <!-- Improved settings panel with better form structure and accessibility -->
+  <div id="fullscreen-settings" role="dialog" aria-labelledby="settings-title" aria-modal="true">
+    <div class="settings-panel">
+      <h2 id="settings-title">Settings</h2>
+      <form class="settings-section" id="settings-form">
+        <fieldset class="settings-row">
+          <legend class="sr-only">Tab Customization</legend>
+          <label for="tab-name">Tab Name</label>
+          <input type="text" id="tab-name" placeholder="Enter tab name" autocomplete="off" />
+          <button type="button" onclick="applyTabCloak()">Apply Tab Cloak</button>
+        </fieldset>
+        
+        <fieldset class="settings-row">
+          <legend class="sr-only">Favicon Settings</legend>
+          <label for="favicon-url">Favicon URL</label>
+          <input type="url" id="favicon-url" placeholder="Enter favicon URL" autocomplete="off" />
+        </fieldset>
+        
+        <fieldset class="settings-row">
+          <legend class="sr-only">Panic Settings</legend>
+          <label for="panic-url">Panic Redirect URL</label>
+          <input type="url" id="panic-url" placeholder="Enter URL (e.g., https://google.com)" value="https://google.com" autocomplete="off" />
+          <button type="button" onclick="savePanicSettings()">Save Panic URL</button>
+        </fieldset>
+        
+        <fieldset class="settings-row">
+          <legend>Panic Key Controls</legend>
+          <div class="panic-row">
+            <span>Current Panic Key: </span>
+            <kbd id="current-panic-key" aria-label="Current panic key">]</kbd>
+            <button type="button" id="change-panic-key-btn">Change Key</button>
+            <span id="listening-status" aria-live="polite"></span>
+          </div>
+        </fieldset>
+        
+        <div class="status" id="panic-status" aria-live="polite">Panic key is active</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Enhanced topbar with better navigation structure -->
+  <header class="topbar" id="topbar" role="banner">
+    <nav class="topbar-content" role="navigation" aria-label="Top navigation">
+      <button class="topbar-btn" data-action="home" aria-label="Go to home">Home</button>
+      <button class="topbar-btn" data-action="games" aria-label="Go to games">Games</button>
+      <button class="topbar-btn" data-action="apps" aria-label="Go to apps">Apps</button>
+      <button class="topbar-btn" data-action="partners" aria-label="Go to partners">Partners</button>
+      <button class="topbar-btn" data-action="hacks" aria-label="Go to hacks">Hacks</button>
+      <button class="topbar-btn" data-action="vm" aria-label="Go to VM">VM</button>
+      <button class="topbar-btn" data-action="settings" aria-label="Open settings">Settings</button>
+    </nav>
+  </header>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <!-- Consolidated all JavaScript into single HTML file with performance improvements -->
+  <script>
+    // Enhanced error handling and performance optimizations
+    class ZXSDashboard {
+      constructor() {
+        this.ANNC_VERSION = "3.0";
+        this.panicKey = localStorage.getItem('panicKey') || ']';
+        this.panicURL = localStorage.getItem('panicURL') || 'https://google.com';
+        this.panicKeyActive = true;
+        this.topbarTimeout = null;
+        this.mouseOverTop = false;
+        this.messageInterval = null;
+        
+        this.messages = [
+          "gaming mode activated",
+          "Made with ❤️ by zxs",
+          "Hospooot nooo",
+          "Whoa cool message",
+          "https://dsc.gg/zxsgames",
+          "hellow to mi minecraft server",
+          "i eat rocks",
+          "Minimize this menu bro",
+          "i love gamer gaming",
+          "hawk tuah",
+          "ymntrgbefvdwcsax",
+          "noo gambling is very good -evilcy",
+          "i bet your reading this",
+        ];
+        
+        this.options = ["games", "apps", "partners", "hacks", "vm", "settings"];
+        
+        this.init();
+      }
+      
+      init() {
+        this.initParticles();
+        this.initEventListeners();
+        this.initSettings();
+        this.displayRandomMessage();
+        this.showAnnouncementIfNeeded();
+        
+        // Start message rotation
+        this.messageInterval = setInterval(() => this.displayRandomMessage(), 13000);
+      }
+      
+      initParticles() {
+        // Check for reduced motion preference
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          return;
+        }
+        
+        try {
+          particlesJS('particles-js', {
+            particles: {
+              number: { 
+                value: window.innerWidth < 768 ? 25 : 44, 
+                density: { enable: true, value_area: 900 } 
+              },
+              color: { value: "#00ff5e" },
+              shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
+              opacity: { value: 0.16, random: true },
+              size: { value: 2.5, random: true },
+              line_linked: { 
+                enable: true, 
+                distance: 125, 
+                color: "#00ff5e", 
+                opacity: 0.09, 
+                width: 1 
+              },
+              move: { 
+                enable: true, 
+                speed: window.innerWidth < 768 ? 0.8 : 1.2, 
+                random: true 
+              }
+            },
+            interactivity: {
+              detect_on: "canvas",
+              events: { 
+                onhover: { enable: true, mode: "repulse" }, 
+                onclick: { enable: true, mode: "push" }, 
+                resize: true 
+              },
+              modes: { 
+                repulse: { distance: 100, duration: 0.4 }, 
+                push: { particles_nb: 2 } 
+              }
+            },
+            retina_detect: true
+          });
+        } catch (error) {
+          console.warn('[ZXS] Particles.js failed to load:', error);
+        }
+      }
+      
+      initEventListeners() {
+        // Dashboard actions
+        document.querySelectorAll('.dashboard-action').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            this.handleActionClick(e.target.getAttribute('data-action'));
+          });
+          
+          // Keyboard support
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              this.handleActionClick(e.target.getAttribute('data-action'));
+            }
+          });
+        });
+        
+        // Topbar actions
+        document.querySelectorAll('.topbar-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const action = e.target.getAttribute('data-action');
+            if (action === "home") {
+              this.showHome();
+            } else {
+              this.handleActionClick(action);
+            }
+          });
+        });
+        
+        // Topbar visibility
+        this.initTopbarLogic();
+        
+        // Panic key
+        document.addEventListener('keydown', (e) => {
+          if (this.panicKeyActive && e.key === this.panicKey) {
+            window.location.href = this.panicURL;
+          }
+          
+          // ESC key to close modals
+          if (e.key === 'Escape') {
+            this.closeModals();
+          }
+        });
+        
+        // Announcement popup
+        const anncCloseBtn = document.getElementById('annc-close-btn');
+        if (anncCloseBtn) {
+          anncCloseBtn.addEventListener('click', () => this.closeAnnouncement());
+        }
+        
+        // Settings
+        const changePanicKeyBtn = document.getElementById('change-panic-key-btn');
+        if (changePanicKeyBtn) {
+          changePanicKeyBtn.addEventListener('click', () => this.changePanicKey());
+        }
+        
+        // Window resize optimization
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            if (window.pJSDom && window.pJSDom[0]) {
+              window.pJSDom[0].pJS.fn.canvasSize();
+            }
+          }, 250);
+        });
+      }
+      
+      initTopbarLogic() {
+        const topbar = document.getElementById('topbar');
+        
+        // Mouse/touch events for topbar
+        document.body.addEventListener('mousemove', (e) => {
+          if (e.clientY < 32) {
+            this.showTopbar();
+          }
+        });
+        
+        // Touch support for mobile
+        document.body.addEventListener('touchstart', (e) => {
+          if (e.touches[0].clientY < 50) {
+            this.showTopbar();
+          }
+        });
+        
+        topbar.addEventListener('mouseenter', () => {
+          clearTimeout(this.topbarTimeout);
+          topbar.classList.add('visible');
+        });
+        
+        topbar.addEventListener('mouseleave', () => {
+          this.hideTopbarDelayed();
+        });
+      }
+      
+      showTopbar() {
+        const topbar = document.getElementById('topbar');
+        if (!this.mouseOverTop) {
+          this.mouseOverTop = true;
           topbar.classList.add('visible');
         }
-        clearTimeout(topbarTimeout);
-        topbarTimeout = setTimeout(() => {
-          mouseOverTop = false;
+        clearTimeout(this.topbarTimeout);
+        this.topbarTimeout = setTimeout(() => {
+          this.mouseOverTop = false;
           topbar.classList.remove('visible');
         }, 3000);
       }
-    });
-    topbar.addEventListener('mouseenter', () => {
-      clearTimeout(topbarTimeout);
-      topbar.classList.add('visible');
-    });
-    topbar.addEventListener('mouseleave', () => {
-      topbarTimeout = setTimeout(() => {
-        topbar.classList.remove('visible');
-        mouseOverTop = false;
-      }, 700);
-    });
-
-    let panicKey = localStorage.getItem('panicKey') || ']';
-    let panicURL = localStorage.getItem('panicURL') || 'https://google.com';
-    let panicKeyActive = true;
-    document.getElementById('current-panic-key').textContent = panicKey;
-    document.getElementById('panic-url').value = panicURL;
-
+      
+      hideTopbarDelayed() {
+        this.topbarTimeout = setTimeout(() => {
+          document.getElementById('topbar').classList.remove('visible');
+          this.mouseOverTop = false;
+        }, 700);
+      }
+      
+      handleActionClick(action) {
+        document.getElementById('dashboard-actions').style.display = 'none';
+        this.showFullscreen(action);
+      }
+      
+      showFullscreen(option) {
+        // Hide all fullscreen content
+        this.options.forEach(opt => {
+          const element = document.getElementById('fullscreen-' + opt);
+          if (element) {
+            element.classList.remove('active');
+            element.setAttribute('aria-hidden', 'true');
+          }
+        });
+        
+        const settingsElement = document.getElementById('fullscreen-settings');
+        if (settingsElement) {
+          settingsElement.classList.remove('active');
+        }
+        
+        // Hide main block
+        const mainBlock = document.getElementById('main-block');
+        mainBlock.style.opacity = '0';
+        mainBlock.style.pointerEvents = 'none';
+        
+        setTimeout(() => {
+          mainBlock.style.display = 'none';
+          
+          if (option === "settings") {
+            settingsElement.classList.add('active');
+            // Focus management for accessibility
+            const firstInput = settingsElement.querySelector('input');
+            if (firstInput) firstInput.focus();
+          } else {
+            const targetElement = document.getElementById('fullscreen-' + option);
+            if (targetElement) {
+              targetElement.classList.add('active');
+              targetElement.setAttribute('aria-hidden', 'false');
+            }
+          }
+        }, 300);
+      }
+      
+      showHome() {
+        // Hide all fullscreen content
+        this.options.forEach(opt => {
+          const element = document.getElementById('fullscreen-' + opt);
+          if (element) {
+            element.classList.remove('active');
+            element.setAttribute('aria-hidden', 'true');
+          }
+        });
+        
+        const settingsElement = document.getElementById('fullscreen-settings');
+        if (settingsElement) {
+          settingsElement.classList.remove('active');
+        }
+        
+        const mainBlock = document.getElementById('main-block');
+        mainBlock.style.display = 'flex';
+        
+        setTimeout(() => {
+          mainBlock.style.opacity = '1';
+          mainBlock.style.pointerEvents = 'all';
+          document.getElementById('dashboard-actions').style.display = 'flex';
+          
+          // Focus management
+          const firstButton = document.querySelector('.dashboard-action');
+          if (firstButton) firstButton.focus();
+        }, 50);
+      }
+      
+      closeModals() {
+        const anncPopup = document.getElementById('annc-popup-bg');
+        if (anncPopup && anncPopup.style.display !== 'none') {
+          this.closeAnnouncement();
+          return;
+        }
+        
+        const settings = document.getElementById('fullscreen-settings');
+        if (settings && settings.classList.contains('active')) {
+          this.showHome();
+          return;
+        }
+      }
+      
+      displayRandomMessage() {
+        try {
+          const randomIndex = Math.floor(Math.random() * this.messages.length);
+          const messageElement = document.getElementById('random-message');
+          if (messageElement) {
+            messageElement.textContent = this.messages[randomIndex];
+          }
+        } catch (error) {
+          console.warn('[ZXS] Failed to update random message:', error);
+        }
+      }
+      
+      showAnnouncementIfNeeded() {
+        const lastSeen = localStorage.getItem("zxs_annc_version");
+        if (lastSeen !== this.ANNC_VERSION) {
+          const popup = document.getElementById("annc-popup-bg");
+          if (popup) {
+            popup.style.display = "flex";
+            // Focus management
+            const closeBtn = document.getElementById("annc-close-btn");
+            if (closeBtn) closeBtn.focus();
+          }
+        }
+      }
+      
+      closeAnnouncement() {
+        const popup = document.getElementById("annc-popup-bg");
+        if (popup) {
+          popup.classList.add("hide");
+          setTimeout(() => {
+            popup.style.display = "none";
+          }, 500);
+          localStorage.setItem("zxs_annc_version", this.ANNC_VERSION);
+        }
+      }
+      
+      initSettings() {
+        const currentPanicKeyElement = document.getElementById('current-panic-key');
+        const panicUrlElement = document.getElementById('panic-url');
+        
+        if (currentPanicKeyElement) {
+          currentPanicKeyElement.textContent = this.panicKey;
+        }
+        if (panicUrlElement) {
+          panicUrlElement.value = this.panicURL;
+        }
+      }
+      
+      changePanicKey() {
+        const statusElement = document.getElementById('listening-status');
+        if (statusElement) {
+          statusElement.textContent = "Listening for key press...";
+        }
+        
+        const keyListener = (e) => {
+          e.preventDefault();
+          this.panicKey = e.key;
+          
+          const currentKeyElement = document.getElementById('current-panic-key');
+          if (currentKeyElement) {
+            currentKeyElement.textContent = this.panicKey;
+          }
+          
+          if (statusElement) {
+            statusElement.textContent = "Key set successfully!";
+            setTimeout(() => {
+              statusElement.textContent = "";
+            }, 2000);
+          }
+          
+          document.removeEventListener('keydown', keyListener);
+        };
+        
+        document.addEventListener('keydown', keyListener);
+      }
+      
+      showStatusMessage(message) {
+        const panicStatus = document.getElementById('panic-status');
+        if (panicStatus) {
+          panicStatus.textContent = message;
+          setTimeout(() => {
+            panicStatus.textContent = "Panic key is active";
+          }, 3000);
+        }
+      }
+    }
+    
+    // Global functions for onclick handlers (maintaining compatibility)
     function applyTabCloak() {
       const tabName = document.getElementById('tab-name').value;
       const faviconUrl = document.getElementById('favicon-url').value;
+      
       if (tabName) document.title = tabName;
-      if (faviconUrl) document.getElementById('favicon').href = faviconUrl;
+      if (faviconUrl) {
+        const favicon = document.getElementById('favicon');
+        if (favicon) favicon.href = faviconUrl;
+      }
+      
       if (!tabName && !faviconUrl) {
         alert('Please enter both a tab name and favicon URL for full cloaking.');
       } else {
-        showStatusMessage('Tab cloak applied successfully!');
+        dashboard.showStatusMessage('Tab cloak applied successfully!');
       }
     }
-    function showStatusMessage(message) {
-      const panicStatus = document.getElementById('panic-status');
-      if (!panicStatus) return;
-      panicStatus.textContent = message;
-      setTimeout(() => { panicStatus.textContent = "Panic key is active"; }, 3000);
-    }
-    document.getElementById('change-panic-key-btn').onclick = function() {
-      document.getElementById('listening-status').textContent = "Listening for key press...";
-      const keyListener = function(e) {
-        e.preventDefault();
-        panicKey = e.key;
-        document.getElementById('current-panic-key').textContent = panicKey;
-        document.getElementById('listening-status').textContent = "Key set successfully!";
-        document.removeEventListener('keydown', keyListener);
-        setTimeout(() => { document.getElementById('listening-status').textContent = ""; }, 2000);
-      };
-      document.addEventListener('keydown', keyListener);
-    };
+    
     function savePanicSettings() {
-      panicURL = document.getElementById('panic-url').value;
+      let panicURL = document.getElementById('panic-url').value;
+      
       if (panicURL && !panicURL.startsWith('http://') && !panicURL.startsWith('https://')) {
         panicURL = 'https://' + panicURL;
         document.getElementById('panic-url').value = panicURL;
       }
-      localStorage.setItem('panicKey', panicKey);
+      
+      dashboard.panicURL = panicURL;
+      localStorage.setItem('panicKey', dashboard.panicKey);
       localStorage.setItem('panicURL', panicURL);
-      showStatusMessage("Settings saved successfully!");
+      dashboard.showStatusMessage("Settings saved successfully!");
     }
-    document.addEventListener('keydown', function(e) {
-      if (panicKeyActive && e.key === panicKey) window.location.href = panicURL;
-    });
+    
+    // Initialize dashboard when DOM is ready
+    let dashboard;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        dashboard = new ZXSDashboard();
+      });
+    } else {
+      dashboard = new ZXSDashboard();
+    }
   </script>
 </body>
 </html>
