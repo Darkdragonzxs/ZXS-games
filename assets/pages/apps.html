@@ -8,7 +8,6 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="/assets/js/panic-core.js" defer></script>
 <style>
-  /* Your existing CSS styles here, unchanged for brevity */
   :root {
     --bg: #020402;
     --accent: #00ff5e;
@@ -557,7 +556,6 @@
       document.getElementById('taskbar').classList.remove('active');
       document.body.style.overflow = '';
     } else {
-      // Activate last window
       const lastWin = windows[windows.length - 1];
       activateWindow(lastWin.id);
     }
@@ -568,7 +566,6 @@
     if (el) el.style.display = 'none';
     const winIdx = windows.findIndex(w => w.id === windowId);
     if (winIdx !== -1) windows[winIdx].minimized = true;
-    // Keep window container visible if at least one window exists
   }
 
   function addToTaskbar(windowId, title) {
@@ -625,7 +622,6 @@
     gamesListMain.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Initialize rendering
   renderGames();
 
 </script>
