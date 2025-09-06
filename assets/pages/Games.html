@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZXS Games</title>
+    <title>ZXS gays</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
       <script src="/assets/js/panic-core.js" defer></script>
@@ -59,7 +59,7 @@
             font-family: 'Russo One', 'Orbitron', sans-serif;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 32px;
             color: var(--accent);
             user-select: none;
             letter-spacing: 0.21em;
@@ -74,7 +74,7 @@
             width: 100%;
             max-width: 400px;
             position: relative;
-            margin-bottom: 28px;
+            margin-bottom: 48px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -109,7 +109,7 @@
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(var(--tile-size), 1fr));
-            gap: 28px;
+            gap: 36px;
             padding-bottom: var(--taskbar-height);
             overflow-y: auto;
             flex: 1 1 0;
@@ -145,7 +145,7 @@
             justify-content: flex-start;
             align-items: center;
             box-sizing: border-box;
-            padding: 0;
+            padding: 16px;
         }
         .game-tile:hover, .game-tile:focus {
             background: var(--tile-hover-bg);
@@ -158,8 +158,8 @@
             background: #1b1b1b;
             border: 2.5px dashed var(--accent);
             border-radius: 12px;
-            margin-top: 18px;
-            margin-bottom: 8px;
+            margin-top: 8px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -170,9 +170,11 @@
         .game-title-text {
             font-size: 1.04rem;
             font-family: 'Orbitron', sans-serif;
-            margin-top: 6px;
+            margin-top: 12px;
             color: var(--accent);
             word-break: break-word;
+            line-height: 1.3;
+            padding: 0 8px;
         }
         #scroll-to-top {
             position: fixed;
@@ -523,7 +525,7 @@
                 tile.tabIndex = 0;
                 let imageHTML = '';
                 if (game.image) {
-                    imageHTML = `<img src="${game.image}" alt="${game.title}" style="width:180px;height:180px;border-radius:12px;margin-top:18px;margin-bottom:8px;border:2.5px solid var(--accent);object-fit:cover;">`;
+                    imageHTML = `<img src="${game.image}" alt="${game.title}" style="width:180px;height:180px;border-radius:12px;margin-top:8px;margin-bottom:16px;border:2.5px solid var(--accent);object-fit:cover;">`;
                 } else {
                     imageHTML = `<div class="game-image-placeholder">IMG</div>`;
                 }
