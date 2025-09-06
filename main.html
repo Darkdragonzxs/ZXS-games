@@ -7,7 +7,6 @@
   <link rel="icon" href="/logo.png" id="favicon" type="image/png"/>
   <link href="https://fonts.googleapis.com/css2?family=Russo+One:wght@400;700;900&display=swap" rel="stylesheet"/>
   <meta name="description" content="A Gaming Site with everything you need." />
-  <!-- Consolidated all CSS into single HTML file with performance improvements -->
   <style>
     :root {
       --accent: #00ff5e;
@@ -621,10 +620,6 @@
           <span class="sr-only" id="partners-desc">View partner information</span>
           Partners
         </button>
-        <button class="dashboard-action" data-action="hacks" aria-describedby="hacks-desc">
-          <span class="sr-only" id="hacks-desc">Access hacks section</span>
-          Hacks
-        </button>
         <button class="dashboard-action" data-action="vm" aria-describedby="vm-desc">
           <span class="sr-only" id="vm-desc">Access virtual machine</span>
           VM
@@ -646,9 +641,6 @@
   </section>
   <section class="fullscreen-content" id="fullscreen-partners" aria-hidden="true">
     <iframe class="fullscreen-iframe" src="/assets/pages/partners.html" title="Partners Section"></iframe>
-  </section>
-  <section class="fullscreen-content" id="fullscreen-hacks" aria-hidden="true">
-    <iframe class="fullscreen-iframe" src="/assets/pages/hax.html" title="Hacks Section"></iframe>
   </section>
   <section class="fullscreen-content" id="fullscreen-vm" aria-hidden="true">
     <iframe class="fullscreen-iframe" src="/assets/pages/vm/vm.html" title="Virtual Machine"></iframe>
@@ -701,7 +693,6 @@
       <button class="topbar-btn" data-action="games" aria-label="Go to games">Games</button>
       <button class="topbar-btn" data-action="apps" aria-label="Go to apps">Apps</button>
       <button class="topbar-btn" data-action="partners" aria-label="Go to partners">Partners</button>
-      <button class="topbar-btn" data-action="hacks" aria-label="Go to hacks">Hacks</button>
       <button class="topbar-btn" data-action="vm" aria-label="Go to VM">VM</button>
       <button class="topbar-btn" data-action="settings" aria-label="Open settings">Settings</button>
     </nav>
@@ -936,7 +927,6 @@
           settingsElement.classList.remove('active');
         }
         
-        // Hide main block
         const mainBlock = document.getElementById('main-block');
         mainBlock.style.opacity = '0';
         mainBlock.style.pointerEvents = 'none';
@@ -946,7 +936,6 @@
           
           if (option === "settings") {
             settingsElement.classList.add('active');
-            // Focus management for accessibility
             const firstInput = settingsElement.querySelector('input');
             if (firstInput) firstInput.focus();
           } else {
@@ -960,7 +949,6 @@
       }
       
       showHome() {
-        // Hide all fullscreen content
         this.options.forEach(opt => {
           const element = document.getElementById('fullscreen-' + opt);
           if (element) {
@@ -982,7 +970,6 @@
           mainBlock.style.pointerEvents = 'all';
           document.getElementById('dashboard-actions').style.display = 'flex';
           
-          // Focus management
           const firstButton = document.querySelector('.dashboard-action');
           if (firstButton) firstButton.focus();
         }, 50);
@@ -1020,7 +1007,6 @@
           const popup = document.getElementById("annc-popup-bg");
           if (popup) {
             popup.style.display = "flex";
-            // Focus management
             const closeBtn = document.getElementById("annc-close-btn");
             if (closeBtn) closeBtn.focus();
           }
@@ -1089,7 +1075,6 @@
       }
     }
     
-    // Global functions for onclick handlers (maintaining compatibility)
     function applyTabCloak() {
       const tabName = document.getElementById('tab-name').value;
       const faviconUrl = document.getElementById('favicon-url').value;
@@ -1121,7 +1106,6 @@
       dashboard.showStatusMessage("Settings saved successfully!");
     }
     
-    // Initialize dashboard when DOM is ready
     let dashboard;
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
