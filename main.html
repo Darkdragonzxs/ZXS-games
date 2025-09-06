@@ -34,10 +34,12 @@
       width: 100vw;
       box-sizing: border-box;
       overflow-x: hidden;
+      max-width: 100vw;
     }
     
     *, *::before, *::after {
       box-sizing: inherit;
+      max-width: 100%;
     }
     
     /* Screen reader only content */
@@ -259,8 +261,8 @@
     
     .settings-panel {
       background: var(--tile-bg);
-      border-radius: 0;
-      box-shadow: 0 2px 32px rgba(0, 0, 0, 0.6);
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
       padding: 20px 0;
       max-width: 900px;
       width: 96vw;
@@ -272,6 +274,7 @@
       position: relative;
       z-index: 151;
       overflow-y: auto;
+      overflow-x: hidden;
     }
     
     .settings-panel h2 {
@@ -404,6 +407,7 @@
       transition: transform 0.25s ease-out, opacity 0.25s ease-out;
       transform: translateY(-100%);
       opacity: 0;
+      overflow-x: hidden;
     }
     
     .topbar.visible {
@@ -553,9 +557,8 @@
       .settings-panel { 
         padding: 10px 0; 
         max-height: 95vh;
-      }
-      .settings-section { 
-        width: 98%; 
+        border-radius: 12px;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
       }
       
       /* Touch-friendly mobile topbar */
@@ -620,6 +623,10 @@
           <span class="sr-only" id="partners-desc">View partner information</span>
           Partners
         </button>
+        <button class="dashboard-action" data-action="proxy" aria-describedby="proxy-desc">
+          <span class="sr-only" id="proxy-desc">Access pr.xy service</span>
+          Proxy
+        </button>
         <button class="dashboard-action" data-action="vm" aria-describedby="vm-desc">
           <span class="sr-only" id="vm-desc">Access virtual machine</span>
           VM
@@ -641,6 +648,9 @@
   </section>
   <section class="fullscreen-content" id="fullscreen-partners" aria-hidden="true">
     <iframe class="fullscreen-iframe" src="/assets/pages/partners.html" title="Partners Section"></iframe>
+  </section>
+  <section class="fullscreen-content" id="fullscreen-proxy" aria-hidden="true">
+    <iframe class="fullscreen-iframe" src="/assets/pages/prox.html" title="Pr.xy Service"></iframe>
   </section>
   <section class="fullscreen-content" id="fullscreen-vm" aria-hidden="true">
     <iframe class="fullscreen-iframe" src="/assets/pages/vm/vm.html" title="Virtual Machine"></iframe>
@@ -693,6 +703,7 @@
       <button class="topbar-btn" data-action="games" aria-label="Go to games">Games</button>
       <button class="topbar-btn" data-action="apps" aria-label="Go to apps">Apps</button>
       <button class="topbar-btn" data-action="partners" aria-label="Go to partners">Partners</button>
+      <button class="topbar-btn" data-action="proxy" aria-label="Go to proxy">Pr.xy</button>
       <button class="topbar-btn" data-action="vm" aria-label="Go to VM">VM</button>
       <button class="topbar-btn" data-action="settings" aria-label="Open settings">Settings</button>
     </nav>
@@ -728,7 +739,7 @@
           "i bet your reading this",
         ];
         
-        this.options = ["games", "apps", "partners", "hacks", "vm", "settings"];
+        this.options = ["games", "apps", "partners", "proxy", "vm", "settings"];
         
         this.init();
       }
