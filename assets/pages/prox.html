@@ -1,668 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZXS Proxy Browser</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Russo+One&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="/assets/js/panic-core.js" defer></script>
-    <style>
-        :root {
-            --bg: #020402;
-            --accent: #00ff5e;
-            --tile-bg: #121212;
-            --tile-hover-bg: #1a1a1a;
-            --text-main: #eaffea;
-            --taskbar-height: 46px;
-        }
+  <meta charset="UTF-8">
+  <title>Neon Proxy Browser</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 800;
+      background: #0a0a0a;
+      color: #a8ffbf;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background: #111;
+      box-shadow: 0 2px 8px rgba(168, 255, 191, 0.1);
+    }
 
-        html, body {
-            font-family: 'Orbitron', 'Russo One', sans-serif;
-            background: var(--bg);
-            color: var(--text-main);
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
+    .toolbar button {
+      color: #a8ffbf;
+      background: #1a1a1a;
+      border: none;
+      font-size: 22px;
+      margin: 0 6px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        #particles-js {
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
+    .toolbar button:hover:enabled {
+      transform: scale(1.2);
+      box-shadow: 0 0 10px #a8ffbf;
+    }
 
-        /* Added start screen styling */
-        .start-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--bg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: opacity 0.5s ease;
-        }
+    .toolbar button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
 
-        .start-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+    #addressBar {
+      flex: 1;
+      margin-left: 6px;
+      background: #1a1a1a;
+      border: 2px solid #2f4f3f;
+      color: #a8ffbf;
+      font-size: 16px;
+      padding: 10px 14px;
+      border-radius: 20px;
+      outline: none;
+      transition: box-shadow 0.3s ease;
+    }
 
-        .start-title {
-            font-size: 3rem;
-            font-family: 'Russo One', 'Orbitron', sans-serif;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 32px;
-            color: var(--accent);
-            user-select: none;
-            letter-spacing: 0.21em;
-        }
+    #addressBar:focus {
+      box-shadow: 0 0 12px #a8ffbf;
+    }
 
-        .start-button {
-            background: var(--tile-bg);
-            border: 2px solid var(--accent);
-            color: var(--accent);
-            padding: 16px 32px;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            transition: all 0.3s;
-            letter-spacing: 0.1em;
-        }
+    #addressBar::placeholder {
+      color: #5f7f6b;
+    }
 
-        .start-button:hover {
-            background: var(--accent);
-            color: var(--bg);
-            transform: scale(1.05);
-        }
+    #view {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #0a0a0a;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
 
-        .browser-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            position: relative;
-            z-index: 1;
-        }
-
-        .browser-header {
-            background: var(--tile-bg);
-            border-bottom: 1px solid var(--accent);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .nav-btn {
-            background: var(--bg);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-
-        .nav-btn:hover {
-            background: var(--accent);
-            color: var(--bg);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .url-input {
-            flex: 1;
-            background: var(--bg);
-            border: 1px solid var(--accent);
-            color: var(--text-main);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .url-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 8px rgba(0, 255, 94, 0.3);
-        }
-
-        .new-tab-btn {
-            background: var(--accent);
-            border: none;
-            color: var(--bg);
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-
-        .new-tab-btn:hover {
-            background: var(--tile-hover-bg);
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-
-        .tabs-container {
-            background: var(--tile-bg);
-            border-bottom: 1px solid var(--accent);
-            display: flex;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .tabs-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tab {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            border-right: 1px solid var(--accent);
-            cursor: pointer;
-            min-width: 200px;
-            max-width: 250px;
-            background: var(--bg);
-            transition: all 0.2s;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .tab.active {
-            background: var(--tile-bg);
-            border-bottom: 2px solid var(--accent);
-        }
-
-        .tab:hover {
-            background: var(--tile-hover-bg);
-        }
-
-        .tab-title {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-size: 14px;
-            color: var(--text-main);
-        }
-
-        .tab-close {
-            background: none;
-            border: none;
-            color: var(--accent);
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-            font-size: 16px;
-            line-height: 1;
-            transition: all 0.2s;
-        }
-
-        .tab-close:hover {
-            background: var(--accent);
-            color: var(--bg);
-        }
-
-        .browser-content {
-            flex: 1;
-            position: relative;
-        }
-
-        .tab-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .tab-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--accent);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .loading-spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid var(--tile-bg);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .start-title {
-                font-size: 2rem;
-            }
-            
-            .start-button {
-                font-size: 1rem;
-                padding: 12px 24px;
-            }
-            
-            .browser-header {
-                padding: 8px 12px;
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            
-            .nav-controls {
-                order: 2;
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .url-input {
-                order: 1;
-                width: 100%;
-                margin-bottom: 8px;
-            }
-            
-            .new-tab-btn {
-                order: 3;
-                width: 100%;
-            }
-        }
-    </style>
+    #view.loaded {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
-    <div id="particles-js"></div>
-    
-    <!-- Added start screen -->
-    <div class="start-screen" id="startScreen">
-        <h1 class="start-title">ZXS PROXY</h1>
-        <button class="start-button" onclick="startBrowser()">START BROWSING</button>
-    </div>
+  <div class="toolbar">
+    <button id="backBtn">⯇</button>
+    <button id="forwardBtn">⯈</button>
+    <button id="reloadBtn">⟳</button>
+    <input id="addressBar" type="text" placeholder="Enter URL or search...">
+  </div>
+  <iframe id="view"></iframe>
 
-    <div class="browser-container" id="browserContainer" style="display: none;">
-        <div class="browser-header">
-            <div class="nav-controls">
-                <button class="nav-btn" id="backBtn" disabled>←</button>
-                <button class="nav-btn" id="forwardBtn" disabled>→</button>
-                <button class="nav-btn" id="refreshBtn">⟳</button>
-            </div>
-            <input type="text" class="url-input" id="urlInput" placeholder="Enter URL...">
-            <button class="new-tab-btn" id="newTabBtn">+ New Tab</button>
+<script>
+  const iframe = document.getElementById('view');
+  const addressBar = document.getElementById('addressBar');
+  const backBtn = document.getElementById('backBtn');
+  const forwardBtn = document.getElementById('forwardBtn');
+  const reloadBtn = document.getElementById('reloadBtn');
+
+  let historyStack = [];
+  let historyIndex = -1;
+
+  function isLikelyUrl(input) {
+    return /^https?:\/\//i.test(input) || /^[\w.-]+\.[a-z]{2,}/i.test(input);
+  }
+
+  function normalizeUrl(input) {
+    if (/^https?:\/\//i.test(input)) return input;
+    return "https://" + input;
+  }
+
+  function updateButtons() {
+    backBtn.disabled = historyIndex <= 0;
+    forwardBtn.disabled = historyIndex >= historyStack.length - 1;
+  }
+
+  function renderHome(pushHistory = true) {
+    iframe.removeAttribute("src");
+    iframe.removeAttribute("srcdoc");
+    iframe.srcdoc = `
+      <style>
+        body { background:#0a0a0a; color:#a8ffbf; font-family:'Fredoka',sans-serif; font-weight:800; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
+        h1 { font-size:32px; margin-bottom:10px; text-shadow:0 0 6px #a8ffbf; }
+        p { font-size:18px; margin-bottom:30px; color:#7fbf9f; }
+        .shortcuts { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:20px; width:80%; max-width:600px; }
+        .shortcut { background:#1a1a1a; color:#a8ffbf; padding:14px 18px; border-radius:20px; text-align:center; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease; }
+        .shortcut:hover { transform:translateY(-4px); box-shadow:0 0 12px #a8ffbf; }
+      </style>
+      <body>
+        <h1>Welcome Home</h1>
+        <p>Choose your destination:</p>
+        <div class="shortcuts">
+          <div class="shortcut" onclick="parent.loadPage('https://search.brave.com', true, true)">Brave</div>
+          <div class="shortcut" onclick="parent.loadPage('https://wikipedia.org', true, true)">Wikipedia</div>
+          <div class="shortcut" onclick="parent.loadPage('https://github.com', true, true)">GitHub</div>
+          <div class="shortcut" onclick="parent.loadPage('https://reddit.com', true, true)">Reddit</div>
+          <div class="shortcut" onclick="parent.loadPage('https://youtube.com', true, true)">YouTube</div>
         </div>
-        
-        <div class="tabs-container" id="tabsContainer">
-            <!-- Tabs will be added here dynamically -->
-        </div>
-        
-        <div class="browser-content" id="browserContent">
-            <!-- Tab contents will be added here dynamically -->
-        </div>
-    </div>
+      </body>
+    `;
+    addressBar.value = "zxs://home";
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            particlesJS('particles-js', {
-                "particles": {
-                    "number": { "value": 80, "density": { "enable": true, "value_area": 800 }},
-                    "color": { "value": "#00ff5e" },
-                    "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000" }, "polygon": { "nb_sides": 5 }},
-                    "opacity": { "value": 0.5 },
-                    "size": { "value": 3, "random": true },
-                    "line_linked": { "enable": true, "distance": 150, "color": "#00ff5e", "opacity": 0.19, "width": 1 },
-                    "move": { "enable": true, "speed": 2.5 }
-                },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": {
-                        "onhover": { "enable": true, "mode": "repulse" },
-                        "onclick": { "enable": true, "mode": "push" },
-                        "resize": true
-                    }
-                },
-                "retina_detect": true
-            });
-        });
+    if (pushHistory && historyStack[historyIndex] !== "zxs://home") {
+      historyStack = historyStack.slice(0, historyIndex + 1);
+      historyStack.push("zxs://home");
+      historyIndex++;
+    }
+    updateButtons();
+  }
 
-        function startBrowser() {
-            document.getElementById('startScreen').classList.add('hidden');
-            document.getElementById('browserContainer').style.display = 'flex';
-            setTimeout(() => {
-                new ProxyBrowser();
-            }, 500);
-        }
+  // trustUrl = true means skip search logic
+  function loadPage(input, pushHistory = true, trustUrl = false) {
+    let url = input.trim();
 
-        class ProxyBrowser {
-            constructor() {
-                this.tabs = [];
-                this.activeTabId = null;
-                this.tabCounter = 0;
-                this.history = new Map(); // Store history for each tab
-                
-                this.initializeElements();
-                this.bindEvents();
-                this.createNewTab('https://search.brave.com');
-            }
-            
-            initializeElements() {
-                this.tabsContainer = document.getElementById('tabsContainer');
-                this.browserContent = document.getElementById('browserContent');
-                this.urlInput = document.getElementById('urlInput');
-                this.newTabBtn = document.getElementById('newTabBtn');
-                this.backBtn = document.getElementById('backBtn');
-                this.forwardBtn = document.getElementById('forwardBtn');
-                this.refreshBtn = document.getElementById('refreshBtn');
-            }
-            
-            bindEvents() {
-                this.newTabBtn.addEventListener('click', () => {
-                    this.createNewTab();
-                });
-                
-                this.urlInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        this.navigateActiveTab(this.urlInput.value);
-                    }
-                });
-                
-                this.backBtn.addEventListener('click', () => {
-                    this.goBack();
-                });
-                
-                this.forwardBtn.addEventListener('click', () => {
-                    this.goForward();
-                });
-                
-                this.refreshBtn.addEventListener('click', () => {
-                    this.refreshActiveTab();
-                });
-            }
-            
-            createNewTab(url = '') {
-                const tabId = ++this.tabCounter;
-                const tab = {
-                    id: tabId,
-                    url: url,
-                    title: url ? this.getDomainFromUrl(url) : 'New Tab'
-                };
-                
-                this.tabs.push(tab);
-                this.history.set(tabId, { urls: [], currentIndex: -1 });
-                
-                this.renderTab(tab);
-                this.renderTabContent(tab);
-                this.switchToTab(tabId);
-                
-                if (url) {
-                    this.navigateTab(tabId, url);
-                }
-            }
-            
-            renderTab(tab) {
-                const tabElement = document.createElement('div');
-                tabElement.className = 'tab';
-                tabElement.dataset.tabId = tab.id;
-                
-                tabElement.innerHTML = `
-                    <span class="tab-title">${tab.title}</span>
-                    <button class="tab-close">×</button>
-                `;
-                
-                tabElement.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('tab-close')) {
-                        this.switchToTab(tab.id);
-                    }
-                });
-                
-                tabElement.querySelector('.tab-close').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    this.closeTab(tab.id);
-                });
-                
-                this.tabsContainer.appendChild(tabElement);
-            }
-            
-            renderTabContent(tab) {
-                const contentElement = document.createElement('div');
-                contentElement.className = 'tab-content';
-                contentElement.dataset.tabId = tab.id;
-                
-                contentElement.innerHTML = `
-                    <div class="loading">
-                        <div class="loading-spinner"></div>
-                        Loading...
-                    </div>
-                    <iframe class="tab-iframe" style="display: none;"></iframe>
-                `;
-                
-                this.browserContent.appendChild(contentElement);
-            }
-            
-            switchToTab(tabId) {
-                // Update active tab
-                this.activeTabId = tabId;
-                
-                // Update tab appearance
-                document.querySelectorAll('.tab').forEach(tab => {
-                    tab.classList.toggle('active', tab.dataset.tabId == tabId);
-                });
-                
-                // Update content visibility
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.classList.toggle('active', content.dataset.tabId == tabId);
-                });
-                
-                // Update URL input
-                const activeTab = this.tabs.find(tab => tab.id === tabId);
-                if (activeTab) {
-                    this.urlInput.value = activeTab.url;
-                }
-                
-                this.updateNavigationButtons();
-            }
-            
-            navigateActiveTab(url) {
-                if (this.activeTabId) {
-                    this.navigateTab(this.activeTabId, url);
-                }
-            }
-            
-            navigateTab(tabId, url) {
-                if (!url) return;
-                
-                // Add https:// if not present
-                if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                    url = 'https://' + url;
-                }
-                
-                const tab = this.tabs.find(t => t.id === tabId);
-                if (!tab) return;
-                
-                // Update tab data
-                tab.url = url;
-                tab.title = this.getDomainFromUrl(url);
-                
-                // Update history
-                const history = this.history.get(tabId);
-                history.urls = history.urls.slice(0, history.currentIndex + 1);
-                history.urls.push(url);
-                history.currentIndex = history.urls.length - 1;
-                
-                // Update UI
-                this.updateTabTitle(tabId, tab.title);
-                if (tabId === this.activeTabId) {
-                    this.urlInput.value = url;
-                }
-                
-                // Load in iframe
-                const contentElement = document.querySelector(`[data-tab-id="${tabId}"]`);
-                const iframe = contentElement.querySelector('.tab-iframe');
-                const loading = contentElement.querySelector('.loading');
-                
-                loading.style.display = 'block';
-                iframe.style.display = 'none';
-                
-                iframe.src = `/s/embed.html#${url}`;
-                
-                iframe.onload = () => {
-                    loading.style.display = 'none';
-                    iframe.style.display = 'block';
-                };
-                
-                this.updateNavigationButtons();
-            }
-            
-            closeTab(tabId) {
-                if (this.tabs.length === 1) {
-                    // Don't close the last tab, just navigate to blank
-                    this.navigateTab(tabId, '');
-                    return;
-                }
-                
-                // Remove tab data
-                this.tabs = this.tabs.filter(tab => tab.id !== tabId);
-                this.history.delete(tabId);
-                
-                // Remove DOM elements
-                document.querySelector(`[data-tab-id="${tabId}"].tab`).remove();
-                document.querySelector(`[data-tab-id="${tabId}"].tab-content`).remove();
-                
-                // Switch to another tab if this was active
-                if (this.activeTabId === tabId) {
-                    const remainingTab = this.tabs[0];
-                    if (remainingTab) {
-                        this.switchToTab(remainingTab.id);
-                    }
-                }
-            }
-            
-            updateTabTitle(tabId, title) {
-                const tabElement = document.querySelector(`[data-tab-id="${tabId}"].tab`);
-                if (tabElement) {
-                    tabElement.querySelector('.tab-title').textContent = title;
-                }
-            }
-            
-            getDomainFromUrl(url) {
-                try {
-                    return new URL(url).hostname;
-                } catch {
-                    return url.length > 20 ? url.substring(0, 20) + '...' : url;
-                }
-            }
-            
-            goBack() {
-                if (!this.activeTabId) return;
-                
-                const history = this.history.get(this.activeTabId);
-                if (history.currentIndex > 0) {
-                    history.currentIndex--;
-                    const url = history.urls[history.currentIndex];
-                    
-                    const tab = this.tabs.find(t => t.id === this.activeTabId);
-                    tab.url = url;
-                    tab.title = this.getDomainFromUrl(url);
-                    
-                    this.updateTabTitle(this.activeTabId, tab.title);
-                    this.urlInput.value = url;
-                    
-                    const iframe = document.querySelector(`[data-tab-id="${this.activeTabId}"] .tab-iframe`);
-                    iframe.src = `/s/embed.html#${url}`;
-                    
-                    this.updateNavigationButtons();
-                }
-            }
-            
-            goForward() {
-                if (!this.activeTabId) return;
-                
-                const history = this.history.get(this.activeTabId);
-                if (history.currentIndex < history.urls.length - 1) {
-                    history.currentIndex++;
-                    const url = history.urls[history.currentIndex];
-                    
-                    const tab = this.tabs.find(t => t.id === this.activeTabId);
-                    tab.url = url;
-                    tab.title = this.getDomainFromUrl(url);
-                    
-                    this.updateTabTitle(this.activeTabId, tab.title);
-                    this.urlInput.value = url;
-                    
-                    const iframe = document.querySelector(`[data-tab-id="${this.activeTabId}"] .tab-iframe`);
-                    iframe.src = `/s/embed.html#${url}`;
-                    
-                    this.updateNavigationButtons();
-                }
-            }
-            
-            refreshActiveTab() {
-                if (!this.activeTabId) return;
-                
-                const tab = this.tabs.find(t => t.id === this.activeTabId);
-                if (tab && tab.url) {
-                    const iframe = document.querySelector(`[data-tab-id="${this.activeTabId}"] .tab-iframe`);
-                    iframe.src = `/s/embed.html#${tab.url}`;
-                }
-            }
-            
-            updateNavigationButtons() {
-                if (!this.activeTabId) return;
-                
-                const history = this.history.get(this.activeTabId);
-                this.backBtn.disabled = history.currentIndex <= 0;
-                this.forwardBtn.disabled = history.currentIndex >= history.urls.length - 1;
-            }
-        }
-    </script>
+    if (!url || url === "zxs://home") {
+      renderHome(pushHistory);
+      return;
+    }
+
+    if (!trustUrl) {
+      if (isLikelyUrl(url)) {
+        url = normalizeUrl(url);
+      } else {
+        url = "https://search.brave.com/search?q=" + encodeURIComponent(url);
+      }
+    }
+
+    iframe.removeAttribute("srcdoc");
+    iframe.src = "about:blank";
+    void iframe.offsetHeight; // force reflow
+    iframe.classList.remove("loaded");
+
+    iframe.src = "/s/embed.html#" + url;
+    addressBar.value = url;
+
+    if (pushHistory && historyStack[historyIndex] !== url) {
+      historyStack = historyStack.slice(0, historyIndex + 1);
+      historyStack.push(url);
+      historyIndex++;
+    }
+
+    updateButtons();
+  }
+
+  addressBar.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      const val = addressBar.value.trim();
+      if (val) loadPage(val, true, false);
+    }
+  });
+
+  backBtn.addEventListener("click", () => {
+    if (historyIndex > 0) {
+      historyIndex--;
+      loadPage(historyStack[historyIndex], false, true);
+    }
+  });
+
+  forwardBtn.addEventListener("click", () => {
+    if (historyIndex < historyStack.length - 1) {
+      historyIndex++;
+      loadPage(historyStack[historyIndex], false, true);
+    }
+  });
+
+  reloadBtn.addEventListener("click", () => {
+    if (historyIndex >= 0) {
+      loadPage(historyStack[historyIndex], false, true);
+    }
+  });
+
+  iframe.addEventListener("load", () => {
+    iframe.classList.add("loaded");
+  });
+
+  // Initial load
+  renderHome(true);
+</script>
 </body>
 </html>
