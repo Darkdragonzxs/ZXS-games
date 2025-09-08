@@ -5,8 +5,8 @@
     <title>Loading...</title>
     <style>
         body {
-            background: #111;
-            color: #33ff33;
+            background: #0d0d0d;
+            color: #a8f0a5; /* pastel green */
             font-family: 'Fira Mono', 'Consolas', monospace;
             display: flex;
             flex-direction: column;
@@ -15,64 +15,34 @@
             min-height: 100vh;
             margin: 0;
         }
-        .terminal-box {
-            background: rgba(16, 16, 16, 0.97);
-            border: 2px solid #33ff33;
-            border-radius: 8px;
-            box-shadow: 0 0 40px #33ff3355;
-            padding: 40px 32px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 350px;
-        }
         .loader {
-            margin-bottom: 20px;
-            width: 40px;
-            height: 40px;
-            border: 4px solid #222;
-            border-top: 4px solid #33ff33;
+            width: 70px;
+            height: 70px;
+            border: 6px solid rgba(168, 240, 165, 0.2);
+            border-top: 6px solid #a8f0a5;
             border-radius: 50%;
-            animation: spin 0.7s linear infinite;
+            animation: spin 1.5s linear infinite;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         .loading-text {
-            font-size: 1.4rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px #33ff33a0;
-            animation: blink 1s steps(2, start) infinite;
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-top: 18px;
+            color: #c3f7c0;
+            animation: fade 2s ease-in-out infinite;
         }
-        @keyframes blink {
+        @keyframes fade {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        .terminal-bar {
-            width: 100%;
-            height: 12px;
-            background: linear-gradient(90deg, #33ff33 0%, #222 100%);
-            border-radius: 5px;
-            margin-bottom: 24px;
-            box-shadow: 0 0 8px #33ff33a0;
+            50% { opacity: 0.4; }
         }
         .tips {
-            margin-top: 12px;
-            font-size: 0.98rem;
-            color: #33ff33b0;
+            margin-top: 8px;
+            font-size: 1rem;
+            color: #a8f0a580;
             text-align: center;
-        }
-        .matrix {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
         }
     </style>
     <script src="uv/uv.bundle.js" defer></script>
@@ -81,42 +51,8 @@
     <script src="embed.js" defer></script>
 </head>
 <body>
-    <canvas class="matrix"></canvas>
-    <div class="terminal-box">
-        <div class="terminal-bar"></div>
-        <div class="loader"></div>
-        <div class="loading-text">Initializing system...</div>
-        <div class="tips">Tip: Stay calm. The system is loading.<br>Welcome, agent.</div>
-    </div>
-    <script>
-    // Matrix effect
-    const canvas = document.querySelector('.matrix');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%^&*()*&^%+-/';
-    const fontSize = 18;
-    const columns = Math.floor(canvas.width / fontSize);
-    const drops = Array(columns).fill(1);
-
-    function drawMatrix() {
-        ctx.fillStyle = 'rgba(17, 17, 17, 0.2)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.font = `${fontSize}px Fira Mono, Consolas, monospace`;
-        ctx.fillStyle = '#33ff33';
-        for(let i = 0; i < drops.length; i++) {
-            const text = letters[Math.floor(Math.random() * letters.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
-                drops[i] = 0;
-            drops[i]++;
-        }
-    }
-    setInterval(drawMatrix, 50);
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-    </script>
+    <div class="loader"></div>
+    <div class="loading-text">Loading...</div>
+    <div class="tips">Please wait a moment.</div>
 </body>
 </html>
