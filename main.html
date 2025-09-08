@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ZXS Dashboard</title>
+  <title>ZXS Games</title>
   <link rel="icon" href="/logo.png" id="favicon" type="image/png"/>
   <link href="https://fonts.googleapis.com/css2?family=Russo+One:wght@400;700;900&display=swap" rel="stylesheet"/>
   <meta name="description" content="A Gaming Site with everything you need." />
@@ -1143,5 +1143,44 @@
       dashboard = new ZXSDashboard();
     }
   </script>
+<script>
+(function() {
+    let originalTitle = document.title;
+    let originalFavicon = null;
+
+    // Grab the current favicon
+    function getFavicon() {
+        return document.querySelector("link[rel~='icon']");
+    }
+
+    // Swap favicon
+    function setFavicon(url) {
+        let link = getFavicon();
+        if (link) {
+            link.href = url;
+        } else {
+            link = document.createElement("link");
+            link.rel = "icon";
+            link.href = url;
+            document.head.appendChild(link);
+        }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            originalTitle = document.title;
+            let faviconEl = getFavicon();
+            if (faviconEl) originalFavicon = faviconEl.href;
+
+            document.title = "Google";
+            setFavicon("https://www.google.com/favicon.ico");
+        } else {
+            document.title = originalTitle;
+            if (originalFavicon) setFavicon(originalFavicon);
+        }
+    });
+})();
+</script>
+
 </body>
 </html>
