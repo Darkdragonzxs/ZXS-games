@@ -1,3 +1,7 @@
+// Improved loading overlay for embedded fullscreen pages (Games, Apps, etc)
+// - Overlay is absolutely positioned and does NOT push content down
+// - Overlay always shows for 1-3 seconds (random) even if iframe loads instantly
+
 (function () {
   const fullscreenSections = [
     { sectionId: "fullscreen-games", iframeSelector: "iframe.fullscreen-iframe" },
@@ -7,7 +11,6 @@
     { sectionId: "fullscreen-vm", iframeSelector: "iframe.fullscreen-iframe" },
   ];
 
-  // Create the loading overlay element
   function createLoadingOverlay() {
     const overlay = document.createElement("div");
     overlay.className = "zxs-loading-overlay";
@@ -23,14 +26,13 @@
     return overlay;
   }
 
-  // Inject styles for loading overlay and progress bar
   function injectLoadingStyles() {
     if (document.getElementById("zxs-loading-style")) return;
     const style = document.createElement("style");
     style.id = "zxs-loading-style";
     style.textContent = `
       .zxs-loading-overlay {
-        position: absolute;
+        position: fixed;
         z-index: 9999;
         top: 0; left: 0; right: 0; bottom: 0;
         width: 100vw; height: 100vh;
@@ -78,7 +80,7 @@
         width: 0%;
         background: linear-gradient(90deg,#00ff5e 0%,#00ffa4 100%);
         border-radius: 10px;
-        transition: width 0.20s;
+        transition: width 0.25s;
       }
       @media (max-width: 600px) {
         .zxs-loading-bar-wrap { width: 90vw; min-width: 110px; }
@@ -89,20 +91,23 @@
     document.head.appendChild(style);
   }
 
-  function startProgressBar(barEl) {
+  // Animate the progress bar while loading (up to 95%)
+  function startProgressBar(barEl, duration) {
     let progress = 0;
-    let interval;
+    let start = Date.now();
+    let timer;
     function step() {
-      progress += Math.random() * 7 + 2; 
-      if (progress > 95) progress = 95; 
-      barEl.style.width = progress + "%";
-      if (progress < 95) {
-        interval = setTimeout(step, Math.random() * 180 + 90);
+      let elapsed = Date.now() - start;
+      let percent = Math.min(95, (elapsed / duration) * 95);
+      barEl.style.width = percent + "%";
+      if (elapsed < duration) {
+        timer = setTimeout(step, 100);
       }
     }
     step();
+    // Return a function to finish the bar
     return function finishBar() {
-      clearTimeout(interval);
+      clearTimeout(timer);
       barEl.style.width = "100%";
     };
   }
@@ -113,38 +118,69 @@
     const iframe = section.querySelector(iframeSelector);
     if (!iframe) return;
 
+    // Create and add overlay
     const overlay = createLoadingOverlay();
-    section.style.position = "relative";
-    section.appendChild(overlay);
+    overlay.style.opacity = "0";
+    overlay.style.pointerEvents = "none";
+    document.body.appendChild(overlay);
 
+    // Progress bar logic
     const barEl = overlay.querySelector(".zxs-loading-bar");
-    let finishProgressBar = startProgressBar(barEl);
+    let finishProgressBar = () => {};
 
+    // Show overlay when section is activated
+    let loadingTimeout = null;
+    let loaded = false;
+
+    function showOverlay() {
+      overlay.style.opacity = "1";
+      overlay.style.pointerEvents = "all";
+      loaded = false;
+      // Random duration between 1-3 seconds
+      const duration = 1000 + Math.random() * 2000;
+      barEl.style.width = "0%";
+      finishProgressBar = startProgressBar(barEl, duration);
+
+      loadingTimeout = setTimeout(() => {
+        // When time is up, if iframe has loaded, hide overlay
+        if (loaded) {
+          finishProgressBar();
+          overlay.style.opacity = "0";
+          overlay.style.pointerEvents = "none";
+        }
+      }, duration);
+    }
+
+    function hideOverlay() {
+      loaded = true;
+      finishProgressBar();
+      // Only hide overlay if timeout has passed
+      if (loadingTimeout) {
+        setTimeout(() => {
+          overlay.style.opacity = "0";
+          overlay.style.pointerEvents = "none";
+        }, 200); // Let progress bar fill
+      }
+    }
+
+    // Mutation observer to detect "active" fullscreen section
     const observer = new MutationObserver(() => {
       if (section.classList.contains("active")) {
-        overlay.style.opacity = "1";
-        overlay.style.pointerEvents = "all";
-        barEl.style.width = "0%";
-        finishProgressBar = startProgressBar(barEl);
+        showOverlay();
+      } else {
+        overlay.style.opacity = "0";
+        overlay.style.pointerEvents = "none";
+        loaded = false;
+        clearTimeout(loadingTimeout);
       }
     });
     observer.observe(section, { attributes: true, attributeFilter: ["class"] });
 
-    iframe.addEventListener("load", () => {
-      finishProgressBar();
-      setTimeout(() => {
-        overlay.style.opacity = "0";
-        overlay.style.pointerEvents = "none";
-      }, 300);
-    });
+    // Hide overlay when iframe loads, but only after timeout
+    iframe.addEventListener("load", hideOverlay);
 
-    if (section.classList.contains("active") && iframe.contentWindow.document.readyState !== "complete") {
-      overlay.style.opacity = "1";
-      overlay.style.pointerEvents = "all";
-    } else {
-      overlay.style.opacity = "0";
-      overlay.style.pointerEvents = "none";
-    }
+    // If section is already active on page load
+    if (section.classList.contains("active")) showOverlay();
   }
 
   function initLoadingHelper() {
