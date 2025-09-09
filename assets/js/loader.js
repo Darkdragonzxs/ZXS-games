@@ -1,7 +1,3 @@
-// Improved loading overlay for embedded fullscreen pages (Games, Apps, etc)
-// - Overlay is absolutely positioned and does NOT push content down
-// - Overlay always shows for 1-3 seconds (random) even if iframe loads instantly
-
 (function () {
   const fullscreenSections = [
     { sectionId: "fullscreen-games", iframeSelector: "iframe.fullscreen-iframe" },
@@ -127,40 +123,25 @@
     // Progress bar logic
     const barEl = overlay.querySelector(".zxs-loading-bar");
     let finishProgressBar = () => {};
-
-    // Show overlay when section is activated
     let loadingTimeout = null;
-    let loaded = false;
 
     function showOverlay() {
       overlay.style.opacity = "1";
       overlay.style.pointerEvents = "all";
-      loaded = false;
       // Random duration between 1-3 seconds
       const duration = 1000 + Math.random() * 2000;
       barEl.style.width = "0%";
       finishProgressBar = startProgressBar(barEl, duration);
 
+      // Always hide overlay after timeout
       loadingTimeout = setTimeout(() => {
-        // When time is up, if iframe has loaded, hide overlay
-        if (loaded) {
-          finishProgressBar();
-          overlay.style.opacity = "0";
-          overlay.style.pointerEvents = "none";
-        }
+        finishProgressBar();
+        overlay.style.opacity = "0";
+        overlay.style.pointerEvents = "none";
       }, duration);
-    }
 
-    function hideOverlay() {
-      loaded = true;
-      finishProgressBar();
-      // Only hide overlay if timeout has passed
-      if (loadingTimeout) {
-        setTimeout(() => {
-          overlay.style.opacity = "0";
-          overlay.style.pointerEvents = "none";
-        }, 200); // Let progress bar fill
-      }
+      // If iframe loads first, just finish bar, but keep overlay until timeout
+      iframe.addEventListener("load", finishProgressBar, { once: true });
     }
 
     // Mutation observer to detect "active" fullscreen section
@@ -170,14 +151,11 @@
       } else {
         overlay.style.opacity = "0";
         overlay.style.pointerEvents = "none";
-        loaded = false;
         clearTimeout(loadingTimeout);
+        barEl.style.width = "0%";
       }
     });
     observer.observe(section, { attributes: true, attributeFilter: ["class"] });
-
-    // Hide overlay when iframe loads, but only after timeout
-    iframe.addEventListener("load", hideOverlay);
 
     // If section is already active on page load
     if (section.classList.contains("active")) showOverlay();
