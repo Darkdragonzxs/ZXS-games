@@ -598,12 +598,10 @@
           <legend class="sr-only">Tab Customization</legend>
           <label for="tab-name">Tab Name</label>
           <input type="text" id="tab-name" placeholder="Enter tab name" autocomplete="off" />
-          <button type="button" onclick="applyTabCloak()">Apply Tab Cloak</button>
-        </fieldset>
-        <fieldset class="settings-row">
           <legend class="sr-only">Favicon Settings</legend>
           <label for="favicon-url">Favicon URL</label>
           <input type="url" id="favicon-url" placeholder="Enter favicon URL" autocomplete="off" />
+          <button type="button" onclick="applyTabCloak()">Apply Tab Cloak</button>
         </fieldset>
         <fieldset class="settings-row">
           <legend class="sr-only">Panic Settings</legend>
@@ -637,7 +635,6 @@
   </header>
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
-    // --- DASHBOARD.HTML CLOAKING LOGIC ---
     const titles = { active: "𝙕𝙓𝙎", inactive: "Dashboard" };
     const favicons = { active: "/assets/images/favicon.ico", inactive: "/assets/images/canvas.png" };
     const faviconElement = document.getElementById('favicon');
@@ -675,8 +672,6 @@
       panicStatus.textContent = message;
       setTimeout(() => { panicStatus.textContent = "Panic key is active"; }, 3000);
     }
-    // --- END CLOAKING LOGIC ---
-    // --- MAIN DASHBOARD FUNCTIONALITY ---
     class ZXSDashboard {
       constructor() {
         this.ANNC_VERSION = "3.0";
