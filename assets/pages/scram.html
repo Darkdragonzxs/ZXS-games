@@ -4,36 +4,10 @@
   <meta charset="utf-8">
   <title>Scramjet Proxy</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #111;
-      color: #0f0;
-      margin: 0;
-      padding: 1em;
-    }
-    #urlBar {
-      width: 80%;
-      padding: 0.5em;
-      border: none;
-      outline: none;
-      background: #222;
-      color: #0f0;
-      font-size: 1em;
-    }
-    #goBtn {
-      padding: 0.5em 1em;
-      background: #0f0;
-      color: #111;
-      border: none;
-      cursor: pointer;
-    }
-    iframe {
-      width: 100%;
-      height: 90vh;
-      border: none;
-      margin-top: 1em;
-      background: white;
-    }
+    body { background:#111; color:#0f0; font-family:sans-serif; margin:0; padding:1em; }
+    #urlBar { width:80%; padding:0.5em; background:#222; color:#0f0; border:none; }
+    #goBtn { padding:0.5em 1em; background:#0f0; color:#111; border:none; cursor:pointer; }
+    iframe { width:100%; height:90vh; border:none; margin-top:1em; background:#fff; }
   </style>
 </head>
 <body>
@@ -42,11 +16,10 @@
   <button id="goBtn">Go</button>
   <iframe id="proxyFrame"></iframe>
 
-  <!-- Load Scramjet controller as a global -->
+  <!-- Load Scramjet global controller -->
   <script src="/scram/scramjet.controller.js"></script>
 
   <script>
-    // Use the global ScramjetController (provided by scramjet.controller.js)
     const scramjet = new ScramjetController({
       files: {
         wasm: "/scram/scramjet.wasm.wasm",
@@ -55,7 +28,6 @@
         client: "/scram/scramjet.client.js"
       }
     });
-
     scramjet.init();
 
     if ("serviceWorker" in navigator) {
@@ -73,7 +45,9 @@
       if (!url.startsWith("http://") && !url.startsWith("https://")) {
         url = "https://" + url;
       }
-      frame.src = scramjet.rewriteUrl(url); // rewrite through Scramjet
+      // Two options to rewrite:
+      // frame.src = scramjet.rewriteUrl(url);   // Scramjet’s API
+      frame.src = "/scram/service/" + encodeURIComponent(url); // Bolt-style
     });
   </script>
 </body>
