@@ -1,6 +1,5 @@
-importScripts(
-  '/b/s/scramjet.all.js'
-);
+// Import the Scramjet worker.js from /b/s/
+importScripts('/b/s/scramjet.worker.js');
 
 const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const scramjet = new ScramjetServiceWorker();
@@ -21,14 +20,13 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith((async () => {
     try {
-      // Load Scramjet config once
       if (!scramjetConfigLoaded) {
         await scramjet.loadConfig();
         scramjetConfigLoaded = true;
       }
 
-      // Ignore fetching the SW JS/WASM files themselves
-      if (request.url.includes('/b/s/scramjet.') && !request.url.endsWith('scramjet.wasm.wasm')) {
+      // Ignore fetching SW/worker JS and WASM files themselves
+      if (request.url.includes('/b/s/') && request.url.endsWith('.js') && !request.url.endsWith('scramjet.wasm.wasm')) {
         return fetch(request);
       }
 
@@ -42,7 +40,7 @@ self.addEventListener('fetch', (event) => {
         return response;
       }
 
-      // Fallback: try cache, then network
+      // Fallback: cache first, then network
       const cache = await caches.open(CACHE_NAME);
       const cachedResponse = await cache.match(request);
       if (cachedResponse) return cachedResponse;
