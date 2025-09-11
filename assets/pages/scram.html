@@ -1,41 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Scramjet Proxy</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #111;
+      color: #33ff33;
+    }
+    header {
+      padding: 10px;
+      background: #000;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-family: monospace;
+    }
+    button {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      background: #33ff33;
+      color: #000;
+    }
+    iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
+    #swError {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ff3333;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 14px;
+      display: none;
+      z-index: 9999;
+      box-shadow: 0 0 10px #ff0000;
+    }
+  </style>
 </head>
 <body>
-  <h1>Scramjet Proxy</h1>
-
-  <form id="proxyForm">
-    <input type="text" id="urlInput" placeholder="Enter URL or search..." style="width: 300px;">
-    <button type="submit">Go</button>
-  </form>
-
-  <iframe id="proxyFrame" style="width:100%; height:90vh; border:none;"></iframe>
+  <header>
+    <input id="urlInput" type="text" placeholder="Enter a URL or search term">
+    <button onclick="loadURL()">Go</button>
+  </header>
+  <iframe id="proxyFrame"></iframe>
+  <div id="swError">Service Worker failed to load or proxy the page!</div>
 
   <script src="/b/s/scramjet.client.js"></script>
   <script>
+    const swErrorDiv = document.getElementById("swError");
+
+    // Register Scramjet service worker
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/b/s/scramjet.worker.js", { scope: "/b/s/" })
         .then(() => console.log("Scramjet SW registered"))
-        .catch(err => console.error("SW failed:", err));
+        .catch(err => {
+          console.error("SW failed:", err);
+          swErrorDiv.style.display = "block"; // show corner error
+        });
+    } else {
+      swErrorDiv.style.display = "block"; // show error if SW not supported
     }
 
-    document.getElementById("proxyForm").addEventListener("submit", e => {
-      e.preventDefault();
+    function loadURL() {
       let input = document.getElementById("urlInput").value.trim();
+      if (!input) return;
 
-      // Auto add https:// if it's missing
-      if (!input.startsWith("http")) {
-        if (input.includes(".")) {
-          input = "https://" + input;
-        } else {
-          input = "https://duckduckgo.com/?q=" + encodeURIComponent(input);
-        }
+      let finalUrl;
+
+      if (input.startsWith("http://") || input.startsWith("https://") || input.includes(".")) {
+        finalUrl = input.startsWith("http") ? input : "https://" + input;
+      } else {
+        finalUrl = "https://duckduckgo.com/?q=" + encodeURIComponent(input);
       }
 
-      // Here’s the Scramjet way: you just set the iframe src to the *raw* URL
-      document.getElementById("proxyFrame").src = input;
+      // Prefix with Scramjet SW scope
+      const iframe = document.getElementById("proxyFrame");
+      iframe.src = "/b/s/" + finalUrl;
+
+      // Add iframe error listener in case SW fails
+      iframe.onerror = () => {
+        swErrorDiv.textContent = "Failed to load the page via Scramjet!";
+        swErrorDiv.style.display = "block";
+      };
+    }
+
+    document.getElementById("urlInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") loadURL();
     });
   </script>
 </body>
