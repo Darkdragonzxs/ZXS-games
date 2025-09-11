@@ -4,58 +4,12 @@
   <meta charset="UTF-8">
   <title>Scramjet Proxy</title>
   <style>
-    body {
-      margin: 0;
-      font-family: monospace;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      background: #111;
-      color: #33ff33;
-    }
-    header {
-      padding: 10px;
-      background: #000;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    input {
-      flex: 1;
-      padding: 8px;
-      border-radius: 6px;
-      border: none;
-      outline: none;
-      font-family: monospace;
-    }
-    button {
-      padding: 8px 14px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      background: #33ff33;
-      color: #000;
-    }
-    iframe {
-      flex: 1;
-      border: none;
-      width: 100%;
-    }
-    #swError {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #ff3333;
-      color: #fff;
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 14px;
-      display: none;
-      z-index: 9999;
-      box-shadow: 0 0 10px #ff0000;
-    }
+    body { margin:0; font-family: monospace; display:flex; flex-direction:column; height:100vh; background:#111; color:#33ff33;}
+    header { padding:10px; background:#000; display:flex; gap:10px; align-items:center; }
+    input { flex:1; padding:8px; border-radius:6px; border:none; outline:none; font-family: monospace;}
+    button { padding:8px 14px; border-radius:6px; border:none; cursor:pointer; font-weight:bold; background:#33ff33; color:#000;}
+    iframe { flex:1; border:none; width:100%; }
+    #swError { position:fixed; bottom:20px; right:20px; background:#ff3333; color:#fff; padding:10px 15px; border-radius:8px; font-family:monospace; font-size:14px; display:none; z-index:9999; box-shadow:0 0 10px #ff0000;}
   </style>
 </head>
 <body>
@@ -70,43 +24,40 @@
   <script>
     const swErrorDiv = document.getElementById("swError");
 
-    // Register Scramjet service worker
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/b/s/scramjet.worker.js", { scope: "/b/s/" })
-        .then(() => console.log("Scramjet SW registered"))
+    // Register the SW with root scope so it controls this page and iframe
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/assets/sw.js', { scope: '/' })
+        .then(() => console.log('Scramjet SW registered'))
         .catch(err => {
-          console.error("SW failed:", err);
-          swErrorDiv.style.display = "block"; // show corner error
+          console.error('SW failed:', err);
+          swErrorDiv.style.display = 'block';
         });
     } else {
-      swErrorDiv.style.display = "block"; // show error if SW not supported
+      swErrorDiv.style.display = 'block';
     }
 
     function loadURL() {
-      let input = document.getElementById("urlInput").value.trim();
+      let input = document.getElementById('urlInput').value.trim();
       if (!input) return;
 
       let finalUrl;
-
-      if (input.startsWith("http://") || input.startsWith("https://") || input.includes(".")) {
-        finalUrl = input.startsWith("http") ? input : "https://" + input;
+      if (input.startsWith('http://') || input.startsWith('https://') || input.includes('.')) {
+        finalUrl = input.startsWith('http') ? input : 'https://' + input;
       } else {
-        finalUrl = "https://duckduckgo.com/?q=" + encodeURIComponent(input);
+        finalUrl = 'https://duckduckgo.com/?q=' + encodeURIComponent(input);
       }
 
-      // Prefix with Scramjet SW scope
-      const iframe = document.getElementById("proxyFrame");
-      iframe.src = "/b/s/" + finalUrl;
+      const iframe = document.getElementById('proxyFrame');
+      iframe.src = '/b/s/' + finalUrl;
 
-      // Add iframe error listener in case SW fails
       iframe.onerror = () => {
-        swErrorDiv.textContent = "Failed to load the page via Scramjet!";
-        swErrorDiv.style.display = "block";
+        swErrorDiv.textContent = 'Failed to load the page via Scramjet!';
+        swErrorDiv.style.display = 'block';
       };
     }
 
-    document.getElementById("urlInput").addEventListener("keydown", e => {
-      if (e.key === "Enter") loadURL();
+    document.getElementById('urlInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') loadURL();
     });
   </script>
 </body>
