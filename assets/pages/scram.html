@@ -1,54 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>Scramjet Proxy</title>
   <style>
-    body { background:#111; color:#0f0; font-family:sans-serif; margin:0; padding:1em; }
-    #urlBar { width:80%; padding:0.5em; background:#222; color:#0f0; border:none; }
-    #goBtn { padding:0.5em 1em; background:#0f0; color:#111; border:none; cursor:pointer; }
-    iframe { width:100%; height:90vh; border:none; margin-top:1em; background:#fff; }
+    body {
+      background: #111;
+      color: #33ff33;
+      font-family: monospace;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      padding: 10px;
+      background: #000;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    input {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+      font-family: monospace;
+    }
+    button {
+      padding: 8px 14px;
+      background: #33ff33;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
-  <h1>Scramjet Proxy</h1>
-  <input id="urlBar" placeholder="Enter a URL (e.g. https://example.com)">
-  <button id="goBtn">Go</button>
+  <header>
+    <input id="urlInput" type="text" placeholder="Enter a URL (e.g. https://example.com)">
+    <button onclick="go()">Go</button>
+  </header>
   <iframe id="proxyFrame"></iframe>
 
-  <!-- Load Scramjet global controller -->
-  <script src="/scram/scramjet.controller.js"></script>
-
+  <script src="/b/s/scramjet.client.js"></script>
   <script>
-    const scramjet = new ScramjetController({
-      files: {
-        wasm: "/scram/scramjet.wasm.wasm",
-        sync: "/scram/scramjet.sync.js",
-        shared: "/scram/scramjet.shared.js",
-        client: "/scram/scramjet.client.js"
-      }
-    });
-    scramjet.init();
-
+    // Register the Scramjet service worker
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js")
-        .then(() => console.log("✅ Scramjet SW registered"))
-        .catch(err => console.error("❌ SW registration failed:", err));
+      navigator.serviceWorker.register("/b/s/scramjet.worker.js", { scope: "/b/s/" })
+        .then(() => console.log("Scramjet SW registered"))
+        .catch(err => console.error("SW failed:", err));
     }
 
-    const urlBar = document.getElementById("urlBar");
-    const goBtn = document.getElementById("goBtn");
-    const frame = document.getElementById("proxyFrame");
+    // Load site in iframe
+    function go() {
+      const urlInput = document.getElementById("urlInput").value.trim();
+      if (!urlInput) return;
 
-    goBtn.addEventListener("click", () => {
-      let url = urlBar.value.trim();
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        url = "https://" + url;
-      }
-      // Two options to rewrite:
-      // frame.src = scramjet.rewriteUrl(url);   // Scramjet’s API
-      frame.src = "/scram/service/" + encodeURIComponent(url); // Bolt-style
-    });
+      // Add https:// if missing
+      let finalUrl = urlInput.match(/^https?:\/\//) ? urlInput : "https://" + urlInput;
+      document.getElementById("proxyFrame").src = finalUrl;
+    }
   </script>
 </body>
 </html>
