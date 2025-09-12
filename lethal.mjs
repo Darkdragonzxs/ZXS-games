@@ -1,9 +1,9 @@
 // Ultraviolet
-await import('https://cdn.jsdelivr.net/npm/@titaniumnetwork-dev/ultraviolet/dist/uv.bundle.js');
+await import('/s/uv/uv.bundle.js');
 // UV Config
 await import('/s/uv/uv.config.js');
 // Bare Mux
-import * as BareMux from '/index.mjs';
+import * as BareMux from '/baremux/index.mjs';
 
 const connection = new BareMux.BareMuxConnection("/bareworker.js");
 
