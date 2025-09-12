@@ -105,3 +105,20 @@ export async function getProxied(input) {
 
     return proxiedURL;
 }
+let retries = 0;
+const maxRetries = 5;
+async function initializeWorker() {
+    try {
+        await connection.setTransport(transportURL, [{ wisp: wispURL }]);
+        console.log("Worker connected successfully");
+    } catch (error) {
+        if (retries < maxRetries) {
+            retries++;
+            console.log(`Retrying connection... Attempt ${retries}`);
+            setTimeout(initializeWorker, 1000);
+        } else {
+            console.error("Failed to connect to worker after multiple attempts", error);
+        }
+    }
+}
+initializeWorker();
