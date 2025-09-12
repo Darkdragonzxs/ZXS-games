@@ -1,181 +1,87 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Lethal Searcher (root lethal-js)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>Lethal Searcher</title>
   <style>
-    :root{
-      --bg:#0b0b0b; --fg:#33ff33; --muted:#7af07a55;
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #111;
+      color: #33ff33;
+      font-family: monospace;
     }
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:monospace}
-    .wrap{display:flex;flex-direction:column;height:100%}
-    header{padding:14px 18px;display:flex;gap:8px;align-items:center}
-    input[type="text"]{
-      background:#000;border:2px solid var(--fg);color:var(--fg);padding:8px 10px;border-radius:6px;
-      min-width:280px;outline:none;font-size:14px;
+    header {
+      padding: 10px;
+      background: #000;
+      border-bottom: 2px solid #33ff33;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
     }
-    button{
-      background:var(--fg);color:#000;border:none;padding:8px 10px;border-radius:6px;cursor:pointer;font-weight:700;
+    input {
+      padding: 6px 10px;
+      border: 2px solid #33ff33;
+      border-radius: 4px;
+      background: #000;
+      color: #33ff33;
+      width: 300px;
+      font-size: 14px;
     }
-    .controls{display:flex;gap:8px;align-items:center}
-    iframe{flex:1;border:none;width:100%;}
-    .info{padding:6px 14px;font-size:13px;color:var(--muted)}
-    .notice{padding:8px 14px;background:#071;opacity:0.06;color:var(--fg);font-size:13px}
+    button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      background: #33ff33;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h2 style="margin:0 12px 0 0">Lethal Searcher</h2>
-      <form id="searchForm" class="controls" action="javascript:;">
-        <input id="query" type="text" placeholder="Enter URL or search terms" autocomplete="off" />
-        <button id="goBtn" type="submit">Go</button>
-        <button id="openTop" type="button" title="Open proxied URL in new tab">Open</button>
-      </form>
-    </header>
-
-    <div class="info">
-      Tip: enter a full URL (https://...) or a search term (will use Google). Replace the WISP URL in script if you run your own wisp server.
-    </div>
-    <div class="notice" id="notice" style="display:none"></div>
-
-    <iframe id="frame" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
-  </div>
+  <header>
+    <form id="searchForm">
+      <input id="query" type="text" placeholder="Enter URL or search..." />
+      <button type="submit">Go</button>
+    </form>
+  </header>
+  <iframe id="frame"></iframe>
 
   <script type="module">
-    import { setTransport, setWisp, makeURL, getProxied } from '/lethal.mjs';
+    import { setTransport, setWisp, makeURL, getProxied } from './lethal.mjs';
 
-    // ---------- CONFIG ----------
-    setTransport('epoxy'); // as README suggests; change if you need
-    // replace with your wisp server if you have one
-    setWisp('wss://wisp.mercurywork.shop/wisp/');
-
-    // ---------- UI elements ----------
+    const frame = document.getElementById('frame');
     const form = document.getElementById('searchForm');
     const queryInput = document.getElementById('query');
-    const frame = document.getElementById('frame');
-    const openTopBtn = document.getElementById('openTop');
-    const notice = document.getElementById('notice');
 
-    let lastProxiedURL = '';
+    // configure lethal-js
+    setTransport('epoxy');
+    setWisp('wss://wisp.mercurywork.shop/wisp/'); // replace with your own if needed
 
-    function showNotice(msg, timeout=4000) {
-      notice.textContent = msg;
-      notice.style.display = 'block';
-      if (timeout) setTimeout(()=> notice.style.display='none', timeout);
-    }
-
-    // Determine target URL from input (if not URL, search Google)
-    function queryToTarget(q) {
-      q = q.trim();
-      if (!q) return null;
-      if (/^https?:\/\//i.test(q)) return q;
-      // if looks like domain without scheme, add https
-      if (/^[\w.-]+\.[a-z]{2,6}([\/\?\#].*)?$/i.test(q)) return 'https://' + q;
-      // otherwise treat as search query
-      return 'https://www.google.com/search?q=' + encodeURIComponent(q);
-    }
-
-    // Proxy and load into iframe
-    async function proxyAndLoad(target) {
-      try {
-        showNotice('Proxing → ' + target, 1500);
-        console.log('Making proxied URL for:', target);
-
-        // makeURL accepts either string or object depending on lethal.js version; README uses string
-        const proxied = await getProxied(makeURL(target));
-        console.log('Proxied URL:', proxied);
-        lastProxiedURL = proxied;
-
-        frame.src = proxied;
-      } catch (err) {
-        console.error('Proxy failed', err);
-        showNotice('Proxy failed: ' + (err && err.message || err));
-      }
-    }
-
-    // handle top-level form submit
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const q = queryInput.value;
-      const target = queryToTarget(q);
-      if (!target) return;
-      await proxyAndLoad(target);
-    });
+      const query = queryInput.value.trim();
+      if (!query) return;
 
-    // "Open" button opens proxied URL in a new tab (useful if iframe refuses)
-    openTopBtn.addEventListener('click', () => {
-      if (lastProxiedURL) window.open(lastProxiedURL, '_blank');
-      else showNotice('No proxied URL yet. Search first.');
-    });
-
-    // Try to rewrite links inside the iframe so clicks stay proxied.
-    // NOTE: This will only work if the iframe document is same-origin to this page or proxied target allows script access.
-    // If it's cross-origin you cannot modify its DOM from the parent page.
-    frame.addEventListener('load', async () => {
-      // Give helpful info
-      console.log('iframe loaded:', frame.src);
-      showNotice('Loaded proxied page (attempting to intercept links)...', 1800);
-
-      // Attempt to inject a script that rewrites internal anchor clicks to come back to us.
-      // This only works if same-origin; wrap in try/catch.
-      try {
-        const doc = frame.contentDocument;
-        if (!doc) throw new Error('no contentDocument (likely cross-origin)');
-
-        // Inject a small script into the iframe that intercepts clicks on <a> and posts the href to parent.
-        // We also add base tag to ensure relative links resolve properly.
-        const injScript = doc.createElement('script');
-        injScript.type = 'module';
-        injScript.textContent = `
-          (function(){
-            // If already installed, skip
-            if (window.__lethal_link_handler_installed) return;
-            window.__lethal_link_handler_installed = true;
-            document.addEventListener('click', (ev)=>{
-              // find nearest anchor
-              let a = ev.target;
-              while (a && a.tagName !== 'A') a = a.parentElement;
-              if (!a || !a.href) return;
-              // ignore anchors that are javascript:, mailto:, tel:, or same-document hashes
-              const href = a.getAttribute('href') || '';
-              if (href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:') ) return;
-              // Prevent default navigation and send message to parent to proxy & load
-              ev.preventDefault();
-              // send absolute href to parent
-              const absolute = (new URL(a.href, location.href)).href;
-              parent.postMessage({ __lethal_click: true, href: absolute }, '*');
-            }, true);
-          })();
-        `;
-        doc.documentElement.appendChild(injScript);
-
-        console.log('injected link interceptor into iframe (same-origin).');
-        showNotice('Link interception installed (same-origin).', 1500);
-      } catch (err) {
-        console.warn('Could not inject into iframe — likely cross-origin. Link interception unavailable.', err);
-        showNotice('Link interception unavailable (cross-origin). Use the search box or "Open" button.', 4000);
+      // Decide if it's a URL or search
+      let target = query;
+      if (!/^https?:\/\//i.test(query)) {
+        target = 'https://www.google.com/search?q=' + encodeURIComponent(query);
       }
-    });
 
-    // Parent listens for postMessages from iframe (the injected script sends them).
-    window.addEventListener('message', async (ev) => {
-      // basic validation
-      if (!ev.data || !ev.data.__lethal_click) return;
-      const href = ev.data.href;
-      console.log('Received link click from iframe:', href);
-      if (!href) return;
-      // Proxy and load the link.
-      await proxyAndLoad(href);
+      // Proxy the URL and load it into the iframe
+      const proxied = await getProxied(makeURL(target));
+      frame.src = proxied;
     });
-
-    // optional: load a default page on open
-    (async () => {
-      const defaultTarget = 'https://example.com';
-      // don't auto-load if you prefer blank start; comment out next line if so:
-      // await proxyAndLoad(defaultTarget);
-    })();
   </script>
 </body>
 </html>
