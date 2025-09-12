@@ -3,7 +3,7 @@ await import('https://cdn.jsdelivr.net/npm/@titaniumnetwork-dev/ultraviolet/dist
 // UV Config
 await import('/s/uv/uv.config.js');
 // Bare Mux
-import * as BareMux from 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux/dist/index.mjs';
+import * as BareMux from '/index.mjs';
 
 const connection = new BareMux.BareMuxConnection("/bareworker.js");
 
@@ -58,8 +58,8 @@ async function updateBareMux() {
 
 // Transport options
 const transportOptions = {
-    "epoxy": "https://cdn.jsdelivr.net/npm/@mercuryworkshop/epoxy-transport/dist/index.mjs",
-    "libcurl": "https://cdn.jsdelivr.net/npm/@mercuryworkshop/libcurl-transport/dist/index.mjs"
+    "epoxy": "/epoxy/index.mjs/",
+    "libcurl": "/lib/index.mjs/"
 }
 /**
  * Select the transport method for the connection
