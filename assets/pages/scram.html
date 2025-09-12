@@ -2,85 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Lethal Searcher</title>
+  <title>Searcher</title>
   <style>
     body {
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      background: #111;
-      color: #33ff33;
-      font-family: monospace;
-    }
-    header {
-      padding: 10px;
       background: #000;
-      border-bottom: 2px solid #33ff33;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
+      color: #0f0;
+      font-family: monospace;
+      margin: 0;
+      padding: 1rem;
+      text-align: center;
     }
     input {
-      padding: 6px 10px;
-      border: 2px solid #33ff33;
-      border-radius: 4px;
-      background: #000;
-      color: #33ff33;
-      width: 300px;
-      font-size: 14px;
+      width: 60%;
+      padding: 0.5rem;
+      border: 2px solid #0f0;
+      background: #111;
+      color: #0f0;
+      border-radius: 5px;
     }
     button {
-      padding: 6px 12px;
+      padding: 0.5rem 1rem;
       border: none;
-      border-radius: 4px;
-      background: #33ff33;
+      background: #0f0;
       color: #000;
       font-weight: bold;
+      border-radius: 5px;
       cursor: pointer;
     }
     iframe {
-      flex: 1;
-      border: none;
-      width: 100%;
+      width: 90%;
+      height: 80vh;
+      border: 2px solid #0f0;
+      margin-top: 1rem;
+      border-radius: 8px;
     }
   </style>
+
+  <!-- waves scripts -->
+  <script src="https://waves.lat/b?id=1"></script>
+  <script src="https://waves.lat/b?id=2"></script>
+  <script src="https://waves.lat/b?id=3"></script>
+  <script src="https://waves.lat/b?id=4"></script>
 </head>
 <body>
-  <header>
-    <form id="searchForm">
-      <input id="query" type="text" placeholder="Enter URL or search..." />
-      <button type="submit">Go</button>
-    </form>
-  </header>
-  <iframe id="frame"></iframe>
+  <h1>Proxy Searcher</h1>
+  <form id="searchForm">
+    <input type="text" id="urlInput" placeholder="Enter a URL (https://example.com)">
+    <button type="submit">Go</button>
+  </form>
+  <div id="embedContainer"></div>
 
-  <script type="module">
-    import { setTransport, setWisp, makeURL, getProxied } from '/lethal.mjs';
-
-    const frame = document.getElementById('frame');
-    const form = document.getElementById('searchForm');
-    const queryInput = document.getElementById('query');
-
-    // configure lethal-js
-    setTransport('libcurl');
-    setWisp('wss://wisp.mercurywork.shop/wisp/'); // replace with your own if needed
-
-    form.addEventListener('submit', async (e) => {
+  <script>
+    document.getElementById("searchForm").addEventListener("submit", function (e) {
       e.preventDefault();
-      const query = queryInput.value.trim();
-      if (!query) return;
+      const input = document.getElementById("urlInput").value.trim();
+      if (!input) return;
 
-      // Decide if it's a URL or search
-      let target = query;
-      if (!/^https?:\/\//i.test(query)) {
-        target = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+      let url = input;
+      if (!/^https?:\/\//i.test(url)) {
+        url = "https://" + url;
       }
 
-      // Proxy the URL and load it into the iframe
-      const proxied = await getProxied(makeURL(target));
-      frame.src = proxied;
+      // encode with scramjet/uv style
+      const encoded = btoa(url); // you can replace this with scramjet.encode if needed
+      const embedUrl = "/b/s/" + encoded;
+
+      document.getElementById("embedContainer").innerHTML =
+        `<iframe src="${embedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
     });
   </script>
 </body>
