@@ -47,7 +47,7 @@
 <body>
   <h1>Proxy Searcher</h1>
   <form id="searchForm">
-    <input type="text" id="urlInput" placeholder="Enter a URL (https://example.com)">
+    <input type="text" id="urlInput" placeholder="Enter a URL (example.com)">
     <button type="submit">Go</button>
   </form>
   <div id="embedContainer"></div>
@@ -55,16 +55,16 @@
   <script>
     document.getElementById("searchForm").addEventListener("submit", function (e) {
       e.preventDefault();
-      const input = document.getElementById("urlInput").value.trim();
-      if (!input) return;
+      let url = document.getElementById("urlInput").value.trim();
+      if (!url) return;
 
-      let url = input;
+      // auto prepend https:// if missing
       if (!/^https?:\/\//i.test(url)) {
         url = "https://" + url;
       }
 
-      // encode with scramjet/uv style
-      const encoded = btoa(url); // you can replace this with scramjet.encode if needed
+      // encode with btoa for now (replace with scramjet.encode if needed)
+      const encoded = btoa(url);
       const embedUrl = "/b/s/" + encoded;
 
       document.getElementById("embedContainer").innerHTML =
