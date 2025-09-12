@@ -1,8 +1,4 @@
-// Ultraviolet
-await import('https://cdn.jsdelivr.net/npm/@titaniumnetwork-dev/ultraviolet/dist/uv.bundle.js');
-// UV Config
-await import('./uv.config.js');
-// Bare Mux
+// Import BareMux for connection handling
 import * as BareMux from 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux/dist/index.mjs';
 
 const connection = new BareMux.BareMuxConnection("/bareworker.js");
@@ -10,8 +6,8 @@ const connection = new BareMux.BareMuxConnection("/bareworker.js");
 let wispURL = null; // Not exported because it needs to be set through `setWisp`
 let transportURL = null; // Not exported because it needs to be set through `setTransport`
 
-// Service Worker for Ultraviolet
-const stockSW = "./ultraworker.js";
+// Service Worker for Scramjet
+const stockSW = "./sw.js"; // You should create a custom service worker for Scramjet
 const swAllowedHostnames = ["localhost", "127.0.0.1"];
 async function registerSW() {
     if (!navigator.serviceWorker) {
@@ -29,12 +25,11 @@ async function registerSW() {
 await registerSW(); // Register the service worker
 console.log('lethal.js: Service Worker registered');
 
-
 /**
  * Convert and any search/url bar input into a formatted URL ready for use
  * @param {string} input - The inputed search terms, URl, or query
  * @param {string} template - The search engine prefix
- * @returns {string} - The proccessed output URL 
+ * @returns {string} - The processed output URL 
  */
 export function makeURL(input, template = 'https://www.google.com/search?q=%s') {
     try {
@@ -56,25 +51,27 @@ async function updateBareMux() {
     }
 }
 
-// Transport options
+// Transport options for Scramjet (instead of UV)
 const transportOptions = {
-    "epoxy": "https://cdn.jsdelivr.net/npm/@mercuryworkshop/epoxy-transport/dist/index.mjs",
+    "scramjet": "https://cdn.jsdelivr.net/npm/scramjet-transport/dist/index.mjs", // Use Scramjet's URL
     "libcurl": "https://cdn.jsdelivr.net/npm/@mercuryworkshop/libcurl-transport/dist/index.mjs"
 }
+
 /**
  * Select the transport method for the connection
- * @param {string} transport - The transport method to use (`'epoxy'`, `'libcurl'`, path to MJS or URL)
-*/
+ * @param {string} transport - The transport method to use (`'scramjet'`, `'libcurl'`, path to MJS or URL)
+ */
 export async function setTransport(transport) {
     console.log(`lethal.js: Setting transport to ${transport}`);
-    // Epoxy or libcurl options
+    // Scramjet or libcurl options
     transportURL = transportOptions[transport];
     if (!transportURL) {
-        transportURL = transport;
+        transportURL = transport;  // If custom transport, it should be URL or path to MJS
     }
 
     await updateBareMux();
 }
+
 export function getTransport() {
     return transportURL;
 }
@@ -90,20 +87,21 @@ export async function setWisp(wisp) {
 
     await updateBareMux();
 }
+
 export function getWisp() {
     return wispURL;
 }
 
-// Main Ultraviolet function
 /**
  * Get the Proxied URL for a given input
- * @param {string} input - The inputed search terms, URl, or query
+ * @param {string} input - The inputted search terms, URL, or query
  * @returns {string} - The proxied URL (viewable in an iframe)
  */
 export async function getProxied(input) {
     let url = makeURL(input, 'https://www.google.com/search?q=%s');
 
-    let viewUrl = __uv$config.prefix + __uv$config.encodeUrl(url);
+    // You can add proxy logic here for Scramjet if needed
+    let proxiedURL = `${wispURL}${url}`;
 
-    return viewUrl;
+    return proxiedURL;
 }
