@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!----------------------!
  ! SJ-Static | by VAPOR
@@ -13,18 +14,18 @@
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
    :root {
-  --bg: #0a1f0a;
-  --secondary-bg: #1e3d1c;
-  --third-bg: #2b5130;
-  --fourth-bg: #1e3d2a;
-  --primary: #6bd15b;
-  --secondary: #4bd17a;
-  --text-color: #d9ffd7;
-  --secondary-text-color: #d9ffd7;
-  --button-bg: #1b3f1f;
-  --button-hover: #2f6a2a;
-  --gradient-start: #9aff8a;
-  --gradient-end: #4ade80;
+  --bg: #0a111d;
+  --secondary-bg: #2b384d;
+  --third-bg: #444f60;
+  --fourth-bg: #212630;
+  --primary: #a4b8db;
+  --secondary: #7d93ba;
+  --text-color: #d5dce8;
+  --secondary-text-color: #d5dce8;
+  --button-bg: #2b384d;
+  --button-hover: #3c4a5d;
+  --gradient-start: #8aeee9;
+  --gradient-end: #6366f1;
 }
 
 * {
@@ -673,118 +674,8 @@ img {
           `
         );
       } catch (e) {
-        // naw
       }
     });
-   // FONT AAAAA
-function applyCustomFont(fontFamily) {
-    const oldFontStyle = document.getElementById('custom-font-style');
-    if (oldFontStyle) oldFontStyle.remove();
-
-    if (fontFamily === 'Default' || !fontFamily) {
-        return;
-    }
-
-    const fontNameForUrl = fontFamily.replace(/ /g, '+');
-    const fontUrl = `https://fonts.googleapis.com/css2?family=${fontNameForUrl}:wght@400;700&display=swap`;
-
-    const fontStyle = document.createElement('style');
-    fontStyle.id = 'custom-font-style';
-    fontStyle.innerHTML = `
-        @import url('${fontUrl}');
-        * {
-            font-family: '${fontFamily}', sans-serif;
-        }
-    `;
-    document.head.appendChild(fontStyle);
-}
-
-function loadPresetTheme(themeName) {
-  const root = document.documentElement;
-  const existingStylesheet = document.getElementById("themeStylesheet");
-  const themeVars = ['--primary', '--secondary', '--bg', '--secondary-bg', '--third-bg', '--fourth-bg', '--text-color', '--secondary-text-color', '--button-bg', '--button-hover'];
-  themeVars.forEach(varName => root.style.removeProperty(varName));
-
-  if (existingStylesheet) {
-    existingStylesheet.remove();
-  }
-
-  const themeElement = document.createElement("link");
-  themeElement.id = "themeStylesheet";
-  themeElement.rel = "stylesheet";
-  themeElement.href = `/styles/themes/${themeName}.css`;
-  
-  themeElement.onload = () => {
-    window.dispatchEvent(new Event("themeLoaded"));
-  };
-
-  document.head.appendChild(themeElement);
-};
-
-function applyCustomThemeColors(themeObject) {
-  const root = document.documentElement;
-  const existingStylesheet = document.getElementById("themeStylesheet");
-
-  if (existingStylesheet) {
-    existingStylesheet.remove();
-  }
-  
-  for (const [key, value] of Object.entries(themeObject)) {
-    root.style.setProperty(key, value);
-  }
-};
-
-function initializeTheme() {
-    const livePreviewJson = localStorage.getItem('livePreviewTheme');
-    if (livePreviewJson) {
-        try {
-            const liveData = JSON.parse(livePreviewJson);
-            applyCustomThemeColors(liveData.colors);
-            applyCustomFont(liveData.settings.font || 'Default');
-            window.dispatchEvent(new Event("themeLoaded"));
-        } catch (e) {
-            console.error("Failed to parse live preview theme.", e);
-            loadSavedTheme();
-        }
-    } else {
-        loadSavedTheme();
-    }
-}
-
-function loadSavedTheme() {
-    const activeTheme = localStorage.getItem("theme") || "vapor";
-    const customThemeJson = localStorage.getItem("customTheme");
-    const customSettingsJson = localStorage.getItem("customThemeSettings");
-
-    if (activeTheme === "custom" && customThemeJson) {
-        try {
-            const customThemeObject = JSON.parse(customThemeJson);
-            applyCustomThemeColors(customThemeObject);
-
-            if (customSettingsJson) {
-                const customSettings = JSON.parse(customSettingsJson);
-                applyCustomFont(customSettings.font || 'Default');
-            } else {
-                applyCustomFont('Default');
-            }
-            
-            window.dispatchEvent(new Event("themeLoaded"));
-        } catch (e) {
-            console.error("failed to parse custom theme!!!", e);
-            loadPresetTheme("vapor");
-            applyCustomFont('Default');
-        }
-    } else {
-        loadPresetTheme(activeTheme);
-        applyCustomFont('Default');
-    }
-}
-
-window.addEventListener("DOMContentLoaded", initializeTheme);
-
-window.addEventListener("storage", () => {
-    initializeTheme();
-});
   </script>
 </body>
 
