@@ -12,423 +12,286 @@
   <link rel="stylesheet" href="https://vapor.my/styles/defaults.css" />
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
-   :root {
-  --bg: #0a1f0a;
-  --secondary-bg: #1e3d1c;
-  --third-bg: #2b5130;
-  --fourth-bg: #1e3d2a;
-  --primary: #6bd15b;
-  --secondary: #4bd17a;
-  --text-color: #d9ffd7;
-  --secondary-text-color: #d9ffd7;
-  --button-bg: #1b3f1f;
-  --button-hover: #2f6a2a;
-  --gradient-start: #9aff8a;
-  --gradient-end: #4ade80;
+   /* Pastel Green Theme with Animations - CSS only (override + enhancements)
+      Note: This focuses on a pastel green palette and richer animations.
+      It also includes aggressive overrides to discourage external theming where possible. */
+
+   /* 1) Pastel green palette (override defaults) */
+:root {
+  --bg: #eaf6ea;           /* pale pastel green background */
+  --secondary-bg: #d2f0dc;
+  --third-bg: #c7e9d5;
+  --fourth-bg: #b5e6cf;
+  --primary: #7bd29a;        /* soft green accent */
+  --secondary: #63c88a;      /* softer secondary green */
+  --text-color: #1b2f22;      /* dark text on light bg for readability */
+  --secondary-text-color: #2c5a38;
+  --button-bg: #cfeedb;        /* light green buttons */
+  --button-hover: #a7e6c3;
+  --gradient-start: #d9f8e1;
+  --gradient-end: #bdebd0;
 }
 
-* {
+ /* 2) General ergonomic/readability tweaks (new + preserve existing) */
+html, body {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  width: 100vw;
+  height: 100vh;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter";
-  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
-}
-
-body {
-  height: 100vh;
   background: var(--bg);
-  color: var(--text-color);
-  font-family: "Inter", sans-serif;
   overflow: hidden;
+  color: var(--text-color);
+  /* Subtle animated background gradient for depth */
+  background: linear-gradient(135deg, var(--bg) 0%, var(--secondary-bg) 40%, var(--third-bg) 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 30s ease infinite;
   transition: background-color 0.3s ease;
 }
 
-img {
-  pointer-events: none;
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-::-moz-selection {
-  color: var(--bg);
-  background: var(--text-color);
-}
+img { pointer-events: none; }
 
-::selection {
-  color: var(--bg);
-  background: var(--text-color);
-}
+/* Subtle text selection for aesthetics on pastel bg */
+::-moz-selection { color: var(--bg); background: var(--text-color); }
+::selection { color: var(--bg); background: var(--text-color); }
 
-::-webkit-scrollbar {
-  width: 5px;
-  padding: 2px;
-}
+/* Scrollbar tweaks for a softer UI */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { border-radius: 6px; background: var(--fourth-bg); transition: 0.3s; }
+::-webkit-scrollbar-thumb:hover { background: var(--third-bg); }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background: var(--fourth-bg);
-  transition: 0.3s;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--third-bg);
-}
-
-.badge {
-  text-transform: uppercase;
-  font-size: 12px;
-  background: #ffffff30;
-  border-radius: 5px;
-  opacity: 0.8;
-  padding: 1px 3px;
-}
+/* Base UI surface styling (kept, but softened) */
+.badge { text-transform: uppercase; font-size: 12px; background: #ffffff30; border-radius: 6px; opacity: 0.92; padding: 1px 4px; }
 
 .redbadge {
   text-transform: uppercase;
   font-size: 12px;
   color: #e54848;
   background: #e5484860;
-  border-radius: 5px;
-  opacity: 0.8;
-  padding: 1px 3px;
+  border-radius: 6px;
+  opacity: 0.9;
+  padding: 1px 4px;
 }
-    body,
-    html,
-    #app {
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-        sans-serif;
-      width: 100vw;
-      height: 100vh;
-      margin: 0;
-      padding: 0;
-      background: var(--bg);
-      overflow: hidden;
-    }
 
-    @keyframes fade {
-      from {
-        opacity: 0;
-      }
+/* 3) Core layout rules (unchanged but prepared for overrides) */
+body,
+html,
+#app {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  overflow: hidden;
+}
 
-      to {
-        opacity: 1;
-      }
-    }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+/* Flex helpers */
+.flex { display: flex; }
+.col { flex-direction: column; }
 
-    .flex {
-      display: flex;
-    }
+/* 4) Main app chrome styling with pastel accents */
+.browser-container {
+  width: 100%;
+  height: 100%;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+  padding-top: 0;
+  box-sizing: border-box;
+}
 
-    .col {
-      flex-direction: column;
-    }
+.browser-container a { color: var(--primary); }
 
-    .browser-container {
-      width: 100%;
-      height: 100%;
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      padding: 0.5em;
-      padding-top: 0;
-      box-sizing: border-box;
-    }
+/* Inputs/Buttons look-and-feel (ergonomic) */
+.browser-container input,
+.browser-container button {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-    .browser-container a {
-      color: var(--primary);
-    }
+h1 { font-family: inherit; }
 
-    .browser-container input,
-    .browser-container button {
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-        sans-serif;
-    }
+/* The main content area (iframe) */
+.browser-container iframe {
+  background-color: #fff;
+  border: none;
+  border-radius: 12px;
+  flex: 1;
+  width: 100%;
+  /* gentle entrance animation for iframes */
+  animation: fadeIn 0.5s ease both;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .browser-container h1 {
-      font-family: "Inter", system-ui, -apple-system,
-        BlinkMacSystemFont, sans-serif;
-      margin-bottom: 0;
-      color: var(--text-color);
-    }
+/* Address bar styling (bolder tap targets) */
+input.bar {
+  font-family: "Inter";
+  padding: 0.6rem 1rem;
+  border: none;
+  outline: none;
+  color: var(--text-color);
+  height: auto;
+  border-radius: 8px;
+  flex: 1;
+  background: var(--button-bg);
+  font-size: 1.05rem;
+  transition: 0.2s ease;
+}
+input.bar:focus { background-color: var(--button-hover); }
 
-    .browser-container iframe {
-      background-color: #fff;
-      border: none;
-      border-radius: 12px;
-      flex: 1;
-      width: 100%;
-    }
+/* Navigation/buttons layout */
+.nav {
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  gap: 0.5rem;
+}
+.nav button {
+  color: var(--text-color);
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  background: var(--button-bg);
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-size: 1.1rem;
+  /* add a subtle tilt on hover for feedback */
+  transform-origin: center;
+}
+.nav button:hover { background-color: var(--button-hover); transform: translateY(-1px) scale(1.02); }
 
-    input.bar {
-      font-family: "Inter";
-      padding: 0.6rem 1rem;
-      border: none;
-      outline: none;
-      color: var(--text-color);
-      height: auto;
-      border-radius: 8px;
-      flex: 1;
-      background: var(--button-bg);
-      font-size: 1.1rem;
-      transition: 0.2s ease;
-    }
+/* Tabs (row of open pages) */
+.tabs {
+  padding-top: 0.6rem;
+  padding-bottom: 0rem;
+  gap: 0.3rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+.tabs::-webkit-scrollbar { height: 4px; }
+.tabs::-webkit-scrollbar-thumb { background: var(--third-bg); border-radius: 2px; }
 
-    input.bar:focus {
-      background-color: var(--button-hover);
-    }
+/* Individual tab styling with animations for nicer feel */
+.tab {
+  color: var(--text-color);
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  background: var(--button-bg);
+  padding: 0.5rem 1rem;
+  width: 245px;
+  min-width: 245px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: 0.25s ease;
+  font-size: 1rem;
+  /* soft entrance and hover feedback */
+  animation: slideIn 0.4s ease forwards;
+  transform-origin: center;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tab.active { background-color: var(--button-hover); box-shadow: 0 0 0 2px rgba(123,210,154,.35); }
+.tab:hover:not(.active) { background-color: var(--third-bg); transform: translateY(-2px); }
 
-    p {
-      margin: 0;
-      margin-top: 0.2em;
-    }
+/* Favicon + title inside tab */
+.tab-favicon { width: 18px; height: 18px; flex-shrink: 0; border-radius: 4px; }
+.tab-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    .nav {
-      padding-top: 0.6rem;
-      padding-bottom: 0.6rem;
-      gap: 0.5rem;
-    }
+/* Close button in tabs */
+.tab-close {
+  background: none;
+  border: none;
+  color: var(--secondary-text-color);
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: 0.2s ease;
+  font-size: 1.2rem;
+}
+.tab-close:hover { background-color: var(--third-bg); color: var(--text-color); }
 
-    .nav button {
-      color: var(--text-color);
-      outline: none;
-      border: none;
-      border-radius: 8px;
-      background: var(--button-bg);
-      padding: 0.6rem 1rem;
-      cursor: pointer;
-      transition: 0.2s ease;
-      font-size: 1.1rem;
-    }
+/* New tab button styling */
+.new-tab {
+  color: var(--text-color);
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  background: var(--button-bg);
+  padding: 0.7rem;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: 0.2s ease;
+  font-size: 1.3rem;
+}
+.new-tab:hover { background-color: var(--button-hover); }
 
-    .nav button:hover {
-      background-color: var(--button-hover);
-    }
+/* 5) Focus accessibility helpers (keyboard nav) */
+:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+button:focus-visible,
+input.bar:focus-visible,
+.tab:focus-visible,
+.tab-close:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 4px rgba(123,210,154,.25);
+}
 
-    .tabs {
-      padding-top: 0.6rem;
-      padding-bottom: 0rem;
-      gap: 0.3rem;
-      overflow-x: auto;
-      overflow-y: hidden;
-      white-space: nowrap;
-    }
+/* 6) Animations to enliven interactions (additional) */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+  50% { box-shadow: 0 0 14px rgba(123,210,154,0.9); }
+}
+.iframe-container { animation: fadeIn 0.6s ease both; }
 
-    .tabs::-webkit-scrollbar {
-      height: 4px;
-    }
+/* Gentle hover glow for actionable controls */
+.nav button, .new-tab, .tab-close { box-shadow: 0 1px 0 rgba(0,0,0,.04); }
 
-    .tabs::-webkit-scrollbar-track {
-      background: transparent;
-    }
+/* 7) Make themes less impactful (override external theme CSS where possible) */
+html, body { background: linear-gradient(135deg, var(--bg) 0%, var(--secondary-bg) 40%, var(--third-bg) 100%) !important; color: var(--text-color) !important; }
 
-    .tabs::-webkit-scrollbar-thumb {
-      background: var(--third-bg);
-      border-radius: 2px;
-    }
+/* Force common UI colors to pastel overrides (even if a theme tries to override) */
+a { color: var(--primary) !important; }
+.browser-container a { color: var(--primary) !important; }
 
-    .tab {
-      color: var(--text-color);
-      outline: none;
-      border: none;
-      border-radius: 8px;
-      background: var(--button-bg);
-      padding: 0.5rem 1rem;
-      width: 245px;
-      min-width: 245px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: 0.2s ease;
-      font-size: 1rem;
-    }
-
-    .tab.active {
-      background-color: var(--button-hover);
-    }
-
-    .tab:hover:not(.active) {
-      background-color: var(--third-bg);
-    }
-
-    .tab-favicon {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-      border-radius: 4px;
-    }
-
-    .tab-title {
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .tab-close {
-      background: none;
-      border: none;
-      color: var(--secondary-text-color);
-      cursor: pointer;
-      padding: 0;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      flex-shrink: 0;
-      transition: 0.2s ease;
-      font-size: 1.2rem;
-    }
-
-    .tab-close:hover {
-      background-color: var(--third-bg);
-      color: var(--text-color);
-    }
-
-    .new-tab {
-      color: var(--text-color);
-      outline: none;
-      border: none;
-      border-radius: 8px;
-      background: var(--button-bg);
-      padding: 0.7rem;
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: 0.2s ease;
-      font-size: 1.3rem;
-    }
-
-    .new-tab:hover {
-      background-color: var(--button-hover);
-    }
-
-    .iframe-container {
-      flex: 1;
-      position: relative;
-    }
-
-    .iframe-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .iframe-container iframe.hidden {
-      display: none;
-    }
-
-    .sortable-ghost {
-      opacity: 0.5 !important;
-    }
-
-    .sortable-drag {
-      transform: rotate(2deg);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .version {
-      color: var(--secondary-text-color) !important;
-      font-size: 1rem;
-      margin-left: auto;
-    }
-
-    .version b {
-      color: var(--text-color);
-    }
-
-    .config-btn {
-      display: none;
-    }
-
-    /* Ergonomic enhancements (append-only) */
-    /* Base readability enhancements */
-    html, body {
-      font-size: 16px;
-      line-height: 1.5;
-    }
-    body {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    /* Focus accessibility for keyboards (visible focus) */
-    :focus-visible {
-      outline: 3px solid var(--secondary);
-      outline-offset: 2px;
-      border-radius: 6px;
-    }
-    button:focus-visible,
-    input.bar:focus-visible,
-    .tab:focus-visible,
-    .tab-close:focus-visible {
-      outline: 3px solid var(--secondary);
-      outline-offset: 2px;
-      border-radius: 6px;
-    }
-
-    /* Larger, easier-to-tap targets for controls */
-    .nav button,
-    .new-tab,
-    .tab-close {
-      min-width: 44px;
-      height: 44px;
-      padding: 0.6rem 0.8rem;
-    }
-    input.bar {
-      height: 44px;
-      font-size: 1.05rem;
-      padding: 0.6rem 1rem;
-    }
-
-    /* Tab sizing and readability in the tab strip */
-    .tab {
-      min-width: 180px;
-      padding: 0.6rem 0.9rem;
-      /* preserve existing visuals but ensure it's comfy to tap */
-    }
-
-    /* Reduced motion for users who prefer it */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation: none !important;
-        transition: none !important;
-      }
-    }
-
-    /* Responsive tweaks for small viewports */
-    @media (max-width: 700px) {
-      .tab {
-        width: 200px;
-      }
-      .version {
-        display: none;
-      }
-      input.bar {
-        width: 100%;
-      }
-    }
+/* Optional: hide theme-related UI if present (best-effort) */
+#themeStylesheet, link#themeStylesheet { display: none !important; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
   <script src="/baremux/index.js"></script>
@@ -454,6 +317,7 @@ img {
 
 
     const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+
 
     const store = {
       url: "https://",
@@ -744,115 +608,6 @@ img {
         // naw
       }
     });
-   // FONT AAAAA
-function applyCustomFont(fontFamily) {
-    const oldFontStyle = document.getElementById('custom-font-style');
-    if (oldFontStyle) oldFontStyle.remove();
-
-    if (fontFamily === 'Default' || !fontFamily) {
-        return;
-    }
-
-    const fontNameForUrl = fontFamily.replace(/ /g, '+');
-    const fontUrl = `https://fonts.googleapis.com/css2?family=${fontNameForUrl}:wght@400;700&display=swap`;
-
-    const fontStyle = document.createElement('style');
-    fontStyle.id = 'custom-font-style';
-    fontStyle.innerHTML = `
-        @import url('${fontUrl}');
-        * {
-            font-family: '${fontFamily}', sans-serif;
-        }
-    `;
-    document.head.appendChild(fontStyle);
-}
-
-function loadPresetTheme(themeName) {
-  const root = document.documentElement;
-  const existingStylesheet = document.getElementById("themeStylesheet");
-  const themeVars = ['--primary', '--secondary', '--bg', '--secondary-bg', '--third-bg', '--fourth-bg', '--text-color', '--secondary-text-color', '--button-bg', '--button-hover'];
-  themeVars.forEach(varName => root.style.removeProperty(varName));
-
-  if (existingStylesheet) {
-    existingStylesheet.remove();
-  }
-
-  const themeElement = document.createElement("link");
-  themeElement.id = "themeStylesheet";
-  themeElement.rel = "stylesheet";
-  themeElement.href = `/styles/themes/${themeName}.css`;
-  
-  themeElement.onload = () => {
-    window.dispatchEvent(new Event("themeLoaded"));
-  };
-
-  document.head.appendChild(themeElement);
-};
-
-function applyCustomThemeColors(themeObject) {
-  const root = document.documentElement;
-  const existingStylesheet = document.getElementById("themeStylesheet");
-
-  if (existingStylesheet) {
-    existingStylesheet.remove();
-  }
-  
-  for (const [key, value] of Object.entries(themeObject)) {
-    root.style.setProperty(key, value);
-  }
-};
-
-function initializeTheme() {
-    const livePreviewJson = localStorage.getItem('livePreviewTheme');
-    if (livePreviewJson) {
-        try {
-            const liveData = JSON.parse(livePreviewJson);
-            applyCustomThemeColors(liveData.colors);
-            applyCustomFont(liveData.settings.font || 'Default');
-            window.dispatchEvent(new Event("themeLoaded"));
-        } catch (e) {
-            console.error("Failed to parse live preview theme.", e);
-            loadSavedTheme();
-        }
-    } else {
-        loadSavedTheme();
-    }
-}
-
-function loadSavedTheme() {
-    const activeTheme = localStorage.getItem("theme") || "vapor";
-    const customThemeJson = localStorage.getItem("customTheme");
-    const customSettingsJson = localStorage.getItem("customThemeSettings");
-
-    if (activeTheme === "custom" && customThemeJson) {
-        try {
-            const customThemeObject = JSON.parse(customThemeJson);
-            applyCustomThemeColors(customThemeObject);
-
-            if (customSettingsJson) {
-                const customSettings = JSON.parse(customSettingsJson);
-                applyCustomFont(customSettings.font || 'Default');
-            } else {
-                applyCustomFont('Default');
-            }
-            
-            window.dispatchEvent(new Event("themeLoaded"));
-        } catch (e) {
-            console.error("failed to parse custom theme!!!", e);
-            loadPresetTheme("vapor");
-            applyCustomFont('Default');
-        }
-    } else {
-        loadPresetTheme(activeTheme);
-        applyCustomFont('Default');
-    }
-}
-
-window.addEventListener("DOMContentLoaded", initializeTheme);
-
-window.addEventListener("storage", () => {
-    initializeTheme();
-});
   </script>
 </body>
 
