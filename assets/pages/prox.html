@@ -1,150 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SJ zxs</title>
+  <meta charset="UTF-8">
+  <title>ZXS Proxy</title>
   <style>
-    :root {
-      --bg: #0e1b14;
-      --secondary-bg: #1a2f25;
-      --third-bg: #244f36;
-      --fourth-bg: #1a3a2a;
-      --primary: #69c27a;
-      --secondary: #58b075;
-      --text-color: #e6f7ea;
-      --button-bg: #254e38;
-      --button-hover: #315c45;
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
+    body {
       margin: 0;
-      padding: 0;
-      font-family: "Inter", system-ui, sans-serif;
-      color: var(--text-color);
-      background: linear-gradient(135deg, var(--bg) 0%, var(--secondary-bg) 40%, var(--third-bg) 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 30s ease infinite;
-      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: #0f0;
+      text-align: center;
     }
-
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    header {
+      padding: 10px;
+      font-size: 20px;
+      font-weight: bold;
     }
-
-    .browser-container {
-      height: 100vh;
-      width: 100vw;
-      display: flex;
-      flex-direction: column;
+    #time {
+      font-size: 16px;
+      margin: 5px;
     }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.6rem 0.8rem;
-      height: 58px;
-      background: rgba(0,0,0,0.08);
+    #battery {
+      font-size: 14px;
+      margin: 5px;
     }
-
-    .nav button {
-      color: var(--text-color);
-      background: var(--button-bg);
-      border: none;
-      border-radius: 8px;
-      padding: 0.6rem 1rem;
+    form {
+      margin: 20px;
+    }
+    input[type="text"] {
+      width: 60%;
+      padding: 8px;
+      font-size: 16px;
+      border: 2px solid #0f0;
+      border-radius: 6px;
+      background: #000;
+      color: #0f0;
+    }
+    button {
+      padding: 8px 12px;
+      margin-left: 8px;
+      font-size: 16px;
+      border: 2px solid #0f0;
+      border-radius: 6px;
+      background: #000;
+      color: #0f0;
       cursor: pointer;
-      font-size: 1.05rem;
-      transition: transform 0.2s ease, background 0.2s ease;
-      min-width: 44px;
-      height: 40px;
     }
-    .nav button:hover { background: var(--button-hover); transform: translateY(-1px); }
-
-    .bar {
-      flex: 1;
-      min-width: 0;
-      height: 40px;
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      background: var(--button-bg);
-      color: var(--text-color);
-      font-size: 1.0rem;
-    }
-    .bar:focus { background: var(--button-hover); }
-
-    .iframe-container {
-      position: relative;
-      flex: 1 1 auto;
-      min-height: 0;
-    }
-
-    .iframe-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
+    iframe {
       width: 100%;
-      height: 100%;
+      height: calc(100vh - 150px);
       border: none;
-      border-radius: 12px;
-      background: #fff;
-      animation: fadeIn 0.5s ease both;
     }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
-
 <body>
-  <div class="browser-container">
-    <div class="nav">
-      <button onclick="goBack()">⟵</button>
-      <button onclick="goForward()">⟶</button>
-      <button onclick="reloadFrame()">⟳</button>
-      <input class="bar" id="address-bar" autocomplete="off" placeholder="Enter URL or search"
-        onkeyup="event.keyCode === 13 && handleSubmit()" />
-    </div>
-    <div class="iframe-container">
-      <iframe id="uv-frame" src="/s/embed.html#https://example.com"></iframe>
-    </div>
-  </div>
+  <header>
+    zxs proxy
+    <div id="time"></div>
+    <div id="battery"></div>
+  </header>
+
+  <form id="searchForm">
+    <input type="text" id="query" placeholder="Search or enter URL..." />
+    <button type="submit">Go</button>
+  </form>
+
+  <iframe id="viewer"></iframe>
 
   <script>
-    const iframe = document.getElementById("uv-frame");
-    const addressBar = document.getElementById("address-bar");
+    // Time updater
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('time').textContent = now.toLocaleTimeString();
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
 
-    function handleSubmit() {
-      let url = addressBar.value.trim();
-      if (!url) return;
+    // Battery status
+    if (navigator.getBattery) {
+      navigator.getBattery().then(battery => {
+        function updateBattery() {
+          document.getElementById('battery').textContent =
+            `Battery: ${(battery.level * 100).toFixed(0)}%` +
+            (battery.charging ? " (Charging)" : "");
+        }
+        battery.addEventListener('levelchange', updateBattery);
+        battery.addEventListener('chargingchange', updateBattery);
+        updateBattery();
+      });
+    }
 
-      // Detect search vs URL
-      if (!url.startsWith("http") && !url.includes(".")) {
-        url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
-      } else if (!url.startsWith("http")) {
-        url = "https://" + url;
+    const form = document.getElementById('searchForm');
+    const queryInput = document.getElementById('query');
+    const viewer = document.getElementById('viewer');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = queryInput.value.trim();
+      if (!q) {
+        viewer.src = "/assets/pages/newtabpage.html";
+        return;
       }
 
-      iframe.src = "/s/embed.html#" + url;
-    }
+      let url;
+      try {
+        url = new URL(q);
+      } catch {
+        if (q.includes(".")) {
+          url = new URL("http://" + q);
+        } else {
+          url = new URL("https://www.google.com/search?q=" + encodeURIComponent(q));
+        }
+      }
+      viewer.src = "/b/s/" + url.href;
+    });
 
-    function reloadFrame() {
-      iframe.src = iframe.src;
-    }
-
-    function goBack() {
-      iframe.contentWindow.history.back();
-    }
-
-    function goForward() {
-      iframe.contentWindow.history.forward();
-    }
+    // Default load = newtab page
+    viewer.src = "/assets/pages/newtabpage.html";
   </script>
 </body>
 </html>
