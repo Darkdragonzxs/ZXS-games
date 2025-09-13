@@ -91,8 +91,8 @@
   <iframe id="view" title="Browser view"></iframe>
 
 <script>
-  // Single-file browser UI that routes navigations through /scramjet/(requested url)
-  // while preserving the original behavior and visuals. Custom theming has been removed.
+  // Single-file browser UI with proxy route fallback:
+  // Try /scramjet/<url> first, else load the real URL directly.
 
   const addressBar = document.getElementById('addressBar');
   const backBtn = document.getElementById('backBtn');
@@ -100,7 +100,7 @@
   const reloadBtn = document.getElementById('reloadBtn');
   const iframe = document.getElementById('view');
 
-  // History stack to mimic multiple navigations in a single frame
+  // History stack to mimic navigation
   let historyStack = [];
   let historyIndex = -1;
 
@@ -121,7 +121,7 @@
     forwardBtn.disabled = historyIndex >= historyStack.length - 1;
   }
 
-  // Home page shown inside the iframe (no external navigation)
+  // Home view (embedded with srcdoc)
   function renderHome(pushHistory = true) {
     const homeContent = `
       <style>
@@ -157,8 +157,7 @@
     updateButtons();
   }
 
-  // Navigate to a URL or search result
-  // trustUrl true means skip the "likely URL" heuristic
+  // Normalize and request via proxy, with fallback
   function loadPage(input, pushHistory = true, trustUrl = false) {
     let url = input.trim();
     if (!url || url === "zxs://home") {
@@ -174,18 +173,38 @@
       }
     }
 
-    // Route via scramjet
-    iframe.removeAttribute('srcdoc');
-    iframe.src = '/scramjet/' + encodeURIComponent(url);
-    addressBar.value = url;
+    // Proxied path
+    const proxyPath = '/scramjet/' + encodeURIComponent(url);
 
-    if (pushHistory && historyStack[historyIndex] !== url) {
-      historyStack = historyStack.slice(0, historyIndex + 1);
-      historyStack.push(url);
-      historyIndex++;
-    }
+    // Try the proxied path first
+    fetch(proxyPath, { method: 'HEAD', mode: 'cors' })
+      .then(res => {
+        if (res.ok) {
+          iframe.src = proxyPath;
+        } else {
+          iframe.src = url; // fallback to direct URL
+        }
+        addressBar.value = url;
 
-    updateButtons();
+        if (pushHistory && historyStack[historyIndex] !== url) {
+          historyStack = historyStack.slice(0, historyIndex + 1);
+          historyStack.push(url);
+          historyIndex++;
+        }
+
+        updateButtons();
+      })
+      .catch(() => {
+        // On error, fallback to direct URL
+        iframe.src = url;
+        addressBar.value = url;
+        if (pushHistory && historyStack[historyIndex] !== url) {
+          historyStack = historyStack.slice(0, historyIndex + 1);
+          historyStack.push(url);
+          historyIndex++;
+        }
+        updateButtons();
+      });
   }
 
   // Keyboard and button interactions
