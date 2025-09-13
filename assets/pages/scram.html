@@ -1,227 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>grog yes to</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SJ zxs</title>
   <style>
-    body {
+    /* Darker pastel green palette with richer animations (CSS-only) */
+    :root {
+      --bg: #0e1b14;              /* darker pastel green background */
+      --secondary-bg: #1a2f25;
+      --third-bg: #244f36;
+      --fourth-bg: #1a3a2a;
+      --primary: #69c27a;
+      --secondary: #58b075;
+      --text-color: #e6f7ea;       /* light text on dark bg for readability */
+      --secondary-text-color: #d2f0d0;
+      --button-bg: #254e38;
+      --button-hover: #315c45;
+      --gradient-start: #2b6f4a;
+      --gradient-end: #1a3d2a;
+    }
+
+    /* Global / base */
+    html, body {
+      height: 100%;
+      width: 100%;
       margin: 0;
-      font-family: 'Fredoka', sans-serif;
-      font-weight: 800;
-      background: #0a0a0a;
-      color: #a8ffbf;
+      padding: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-color);
+      /* smooth gradient background with gentle animation */
+      background: linear-gradient(135deg, var(--bg) 0%, var(--secondary-bg) 40%, var(--third-bg) 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 30s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Scrollbar aesthetics */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { border-radius: 6px; background: var(--fourth-bg); transition: 0.3s; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--third-bg); }
+
+    /* Layout: single frame view (no tabs) */
+    .browser-container {
+      height: 100vh;
+      width: 100vw;
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .toolbar {
+    /* Top navigation row (erasable bottom space by layout) */
+    .nav {
       display: flex;
       align-items: center;
-      padding: 10px;
-      background: #111;
-      box-shadow: 0 2px 8px rgba(168, 255, 191, 0.1);
+      gap: 0.5rem;
+      padding: 0.6rem 0.8rem;
+      height: 58px;
+      box-sizing: border-box;
+      background: rgba(0,0,0,0.08); /* subtle separation from content */
     }
 
-    .toolbar button {
-      color: #a8ffbf;
-      background: #1a1a1a;
+    .nav button {
+      color: var(--text-color);
+      background: var(--button-bg);
       border: none;
-      font-size: 22px;
-      margin: 0 6px;
-      padding: 8px 12px;
-      border-radius: 12px;
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      font-size: 1.05rem;
+      transition: transform 0.2s ease, background 0.2s ease;
+      min-width: 44px;
+      height: 40px;
     }
+    .nav button:hover { background: var(--button-hover); transform: translateY(-1px); }
 
-    .toolbar button:hover:enabled {
-      transform: scale(1.2);
-      box-shadow: 0 0 10px #a8ffbf;
-    }
-
-    .toolbar button:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
-    #addressBar {
+    .bar {
       flex: 1;
-      margin-left: 6px;
-      background: #1a1a1a;
-      border: 2px solid #2f4f3f;
-      color: #a8ffbf;
-      font-size: 16px;
-      padding: 10px 14px;
-      border-radius: 20px;
-      outline: none;
-      transition: box-shadow 0.3s ease;
-    }
-
-    #addressBar:focus {
-      box-shadow: 0 0 12px #a8ffbf;
-    }
-
-    #addressBar::placeholder {
-      color: #5f7f6b;
-    }
-
-    #view {
-      flex: 1;
-      width: 100%;
+      min-width: 0;
+      height: 40px;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
       border: none;
-      background: #0a0a0a;
-      opacity: 0;
-      transition: opacity 0.5s ease;
+      outline: none;
+      background: var(--button-bg);
+      color: var(--text-color);
+      font-size: 1.0rem;
+    }
+    .bar:focus { background: var(--button-hover); }
+
+    /* Iframe region fills the rest of the screen */
+    .iframe-container {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+      /* Ensure the container doesn't create extra bottom space */
     }
 
-    #view.loaded {
-      opacity: 1;
+    .iframe-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 12px;
+      background: #fff;
+      /* subtle entrance animation for the embedded page */
+      animation: fadeIn 0.5s ease both;
     }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Minor accessibility/UX extras */
+    :focus-visible {
+      outline: 3px solid var(--secondary);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+    button:focus-visible,
+    .bar:focus-visible {
+      outline: 3px solid var(--secondary);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    /* Remove any theming remnants if present (themes disabled) */
+    #themeStylesheet, link#themeStylesheet { display: none !important; }
   </style>
 </head>
+
 <body>
-  <div class="toolbar">
-    <button id="backBtn">⯇</button>
-    <button id="forwardBtn">⯈</button>
-    <button id="reloadBtn">⟳</button>
-    <input id="addressBar" type="text" placeholder="Enter URL or search...">
-  </div>
-  <iframe id="view"></iframe>
+  <div id="app"></div>
 
-<script>
-  const iframe = document.getElementById('view');
-  const addressBar = document.getElementById('addressBar');
-  const backBtn = document.getElementById('backBtn');
-  const forwardBtn = document.getElementById('forwardBtn');
-  const reloadBtn = document.getElementById('reloadBtn');
-
-  let historyStack = [];
-  let historyIndex = -1;
-
-  function isLikelyUrl(input) {
-    return /^https?:\/\//i.test(input) || /^[\w.-]+\.[a-z]{2,}/i.test(input);
-  }
-
-  function normalizeUrl(input) {
-    if (/^https?:\/\//i.test(input)) return input;
-    return "https://" + input;
-  }
-
-  function updateButtons() {
-    backBtn.disabled = historyIndex <= 0;
-    forwardBtn.disabled = historyIndex >= historyStack.length - 1;
-  }
-
-  function renderHome(pushHistory = true) {
-    iframe.removeAttribute("src");
-    iframe.removeAttribute("srcdoc");
-    iframe.srcdoc = `
-      <style>
-        body { background:#0a0a0a; color:#a8ffbf; font-family:'Fredoka',sans-serif; font-weight:800; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
-        h1 { font-size:32px; margin-bottom:10px; text-shadow:0 0 6px #a8ffbf; }
-        p { font-size:18px; margin-bottom:30px; color:#7fbf9f; }
-        .shortcuts { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:20px; width:80%; max-width:600px; }
-        .shortcut { background:#1a1a1a; color:#a8ffbf; padding:14px 18px; border-radius:20px; text-align:center; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease; }
-        .shortcut:hover { transform:translateY(-4px); box-shadow:0 0 12px #a8ffbf; }
-      </style>
-      <body>
-        <h1>Welcome Home</h1>
-        <p>Choose your destination:</p>
-        <div class="shortcuts">
-          <div class="shortcut" onclick="parent.loadPage('https://search.brave.com', true, true)">Brave</div>
-          <div class="shortcut" onclick="parent.loadPage('https://wikipedia.org', true, true)">Wikipedia</div>
-          <div class="shortcut" onclick="parent.loadPage('https://github.com', true, true)">GitHub</div>
-          <div class="shortcut" onclick="parent.loadPage('https://reddit.com', true, true)">Reddit</div>
-          <div class="shortcut" onclick="parent.loadPage('https://youtube.com', true, true)">YouTube</div>
-        </div>
-      </body>
-    `;
-    addressBar.value = "zxs://home";
-
-    if (pushHistory && historyStack[historyIndex] !== "zxs://home") {
-      historyStack = historyStack.slice(0, historyIndex + 1);
-      historyStack.push("zxs://home");
-      historyIndex++;
-    }
-    updateButtons();
-  }
-
-  // trustUrl = true means skip search logic
-  function loadPage(input, pushHistory = true, trustUrl = false) {
-    let url = input.trim();
-
-    if (!url || url === "zxs://home") {
-      renderHome(pushHistory);
-      return;
-    }
-
-    if (!trustUrl) {
-      if (isLikelyUrl(url)) {
-        url = normalizeUrl(url);
-      } else {
-        url = "https://search.brave.com/search?q=" + encodeURIComponent(url);
-      }
-    }
-
-    iframe.removeAttribute("srcdoc");
-    iframe.src = "about:blank";
-    void iframe.offsetHeight; // force reflow
-    iframe.classList.remove("loaded");
-
-    iframe.src = "/scramjet/" + encodeURIComponent(url);
-    addressBar.value = url;
-
-    if (pushHistory && historyStack[historyIndex] !== url) {
-      historyStack = historyStack.slice(0, historyIndex + 1);
-      historyStack.push(url);
-      historyIndex++;
-    }
-
-    updateButtons();
-  }
-
-  addressBar.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      const val = addressBar.value.trim();
-      if (val) loadPage(val, true, false);
-    }
-  });
-
-  backBtn.addEventListener("click", () => {
-    if (historyIndex > 0) {
-      historyIndex--;
-      loadPage(historyStack[historyIndex], false, true);
-    }
-  });
-
-  forwardBtn.addEventListener("click", () => {
-    if (historyIndex < historyStack.length - 1) {
-      historyIndex++;
-      loadPage(historyStack[historyIndex], false, true);
-    }
-  });
-
-  reloadBtn.addEventListener("click", () => {
-    if (historyIndex >= 0) {
-      loadPage(historyStack[historyIndex], false, true);
-    }
-  });
-
-  iframe.addEventListener("load", () => {
-    iframe.classList.add("loaded");
-  });
-
-  // Initial load
-  renderHome(true);
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
   <script src="/baremux/index.js"></script>
   <script src="/scram/scramjet.all.js"></script>
+  <script src="/scram/scramjet.wasm.wasm"></script>
   <script src="/assets/config.js"></script>
+
   <script>
+    // Initialize Scramjet (no tabs)
     const { ScramjetController } = $scramjetLoadController();
-    
+
     const scramjet = new ScramjetController({
       files: {
         wasm: "/scram/scramjet.wasm.wasm",
@@ -229,11 +158,14 @@
         sync: "/scram/scramjet.sync.js",
       },
     });
-    
+
     scramjet.init();
-    navigator.serviceWorker.register("./sw.js");
+    // Service worker (as before)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
 
-
+    // BareMux connection (unchanged)
     const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
     const store = {
@@ -249,6 +181,84 @@
     };
 
     connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+
+    // Single-frame state
+    let singleFrame = null;
+
+    function createSingleFrame() {
+      singleFrame = scramjet.createFrame();
+      // Start with a friendly landing page
+      singleFrame.frame.src = "/page/newtab.html";
+
+      // Update address bar when URL changes
+      singleFrame.addEventListener("urlchange", (e) => {
+        if (!e.url) return;
+        const addressBar = document.getElementById("address-bar");
+        if (addressBar) addressBar.value = e.url;
+
+        // Update window title for context
+        try {
+          const title = singleFrame.frame.contentWindow?.document?.title || new URL(e.url).hostname;
+          document.title = title || "Vapor scramjet";
+        } catch {
+          document.title = new URL(e.url).hostname || "Vapor scramjet";
+        }
+      });
+    }
+
+    window.addEventListener("load", async () => {
+      const root = document.getElementById("app");
+
+      // Minimal UI: nav + address bar + single embed
+      root.innerHTML = `
+        <div class="browser-container">
+          <div class="nav">
+            <button onclick="window.__CURRENT_FRAME?.back()">&larr;</button>
+            <button onclick="window.__CURRENT_FRAME?.forward()">&rarr;</button>
+            <button onclick="window.__CURRENT_FRAME?.reload()">⟲</button>
+            <input class="bar" id="address-bar" autocomplete="off" autocapitalize="off" autocorrect="off"
+              onkeyup="event.keyCode === 13 && handleSubmit()"
+              placeholder="Enter URL or search"/>
+          </div>
+          <div class="iframe-container" id="iframe-container"></div>
+        </div>
+      `;
+
+      // Create and mount the single frame
+      createSingleFrame();
+      const container = document.getElementById("iframe-container");
+      if (singleFrame?.frame) {
+        container.appendChild(singleFrame.frame);
+        // expose to global for inline onclicks
+        window.__CURRENT_FRAME = singleFrame;
+      }
+
+      // Optional initial navigation hint
+      try {
+        // Prefetch or set up if needed
+      } catch (e) {
+        // ignore
+      }
+    });
+
+    // Navigate using the single frame
+    function handleSubmit() {
+      if (!singleFrame || !singleFrame.go) return;
+      const addressBar = document.getElementById("address-bar");
+      if (!addressBar) return;
+
+      let url = addressBar.value.trim();
+
+      if (!url.startsWith("http") && !url.includes(".")) {
+        url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
+      } else if (!url.startsWith("http")) {
+        url = "https://" + url;
+      }
+
+      // Navigate the single frame
+      singleFrame.go(url);
+      addressBar.value = url;
+    }
   </script>
 </body>
 </html>
