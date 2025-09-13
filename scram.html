@@ -12,6 +12,89 @@
   <link rel="stylesheet" href="https://vapor.my/styles/defaults.css" />
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
+   :root {
+  --bg: #0a111d;
+  --secondary-bg: #2b384d;
+  --third-bg: #444f60;
+  --fourth-bg: #212630;
+  --primary: #a4b8db;
+  --secondary: #7d93ba;
+  --text-color: #d5dce8;
+  --secondary-text-color: #d5dce8;
+  --button-bg: #2b384d;
+  --button-hover: #3c4a5d;
+  --gradient-start: #8aeee9;
+  --gradient-end: #6366f1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter";
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+body {
+  height: 100vh;
+  background: var(--bg);
+  color: var(--text-color);
+  font-family: "Inter", sans-serif;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+img {
+  pointer-events: none;
+}
+
+::-moz-selection {
+  color: var(--bg);
+  background: var(--text-color);
+}
+
+::selection {
+  color: var(--bg);
+  background: var(--text-color);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  padding: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: var(--fourth-bg);
+  transition: 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--third-bg);
+}
+
+.badge {
+  text-transform: uppercase;
+  font-size: 12px;
+  background: #ffffff30;
+  border-radius: 5px;
+  opacity: 0.8;
+  padding: 1px 3px;
+}
+
+.redbadge {
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #e54848;
+  background: #e5484860;
+  border-radius: 5px;
+  opacity: 0.8;
+  padding: 1px 3px;
+}
     body,
     html,
     #app {
@@ -282,8 +365,7 @@
   <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
   <script src="/baremux/index.js"></script>
   <script src="/scram/scramjet.all.js"></script>
-  <script src="https://vapor.my/config.js"></script>
-  <script src="https://vapor.my/scripts/theme.js"></script>
+  <script src="/assets/config.js"></script>
 </head>
 
 <body>
@@ -594,6 +676,115 @@
         // naw
       }
     });
+   // FONT AAAAA
+function applyCustomFont(fontFamily) {
+    const oldFontStyle = document.getElementById('custom-font-style');
+    if (oldFontStyle) oldFontStyle.remove();
+
+    if (fontFamily === 'Default' || !fontFamily) {
+        return;
+    }
+
+    const fontNameForUrl = fontFamily.replace(/ /g, '+');
+    const fontUrl = `https://fonts.googleapis.com/css2?family=${fontNameForUrl}:wght@400;700&display=swap`;
+
+    const fontStyle = document.createElement('style');
+    fontStyle.id = 'custom-font-style';
+    fontStyle.innerHTML = `
+        @import url('${fontUrl}');
+        * {
+            font-family: '${fontFamily}', sans-serif;
+        }
+    `;
+    document.head.appendChild(fontStyle);
+}
+
+function loadPresetTheme(themeName) {
+  const root = document.documentElement;
+  const existingStylesheet = document.getElementById("themeStylesheet");
+  const themeVars = ['--primary', '--secondary', '--bg', '--secondary-bg', '--third-bg', '--fourth-bg', '--text-color', '--secondary-text-color', '--button-bg', '--button-hover'];
+  themeVars.forEach(varName => root.style.removeProperty(varName));
+
+  if (existingStylesheet) {
+    existingStylesheet.remove();
+  }
+
+  const themeElement = document.createElement("link");
+  themeElement.id = "themeStylesheet";
+  themeElement.rel = "stylesheet";
+  themeElement.href = `/styles/themes/${themeName}.css`;
+  
+  themeElement.onload = () => {
+    window.dispatchEvent(new Event("themeLoaded"));
+  };
+
+  document.head.appendChild(themeElement);
+};
+
+function applyCustomThemeColors(themeObject) {
+  const root = document.documentElement;
+  const existingStylesheet = document.getElementById("themeStylesheet");
+
+  if (existingStylesheet) {
+    existingStylesheet.remove();
+  }
+  
+  for (const [key, value] of Object.entries(themeObject)) {
+    root.style.setProperty(key, value);
+  }
+};
+
+function initializeTheme() {
+    const livePreviewJson = localStorage.getItem('livePreviewTheme');
+    if (livePreviewJson) {
+        try {
+            const liveData = JSON.parse(livePreviewJson);
+            applyCustomThemeColors(liveData.colors);
+            applyCustomFont(liveData.settings.font || 'Default');
+            window.dispatchEvent(new Event("themeLoaded"));
+        } catch (e) {
+            console.error("Failed to parse live preview theme.", e);
+            loadSavedTheme();
+        }
+    } else {
+        loadSavedTheme();
+    }
+}
+
+function loadSavedTheme() {
+    const activeTheme = localStorage.getItem("theme") || "vapor";
+    const customThemeJson = localStorage.getItem("customTheme");
+    const customSettingsJson = localStorage.getItem("customThemeSettings");
+
+    if (activeTheme === "custom" && customThemeJson) {
+        try {
+            const customThemeObject = JSON.parse(customThemeJson);
+            applyCustomThemeColors(customThemeObject);
+
+            if (customSettingsJson) {
+                const customSettings = JSON.parse(customSettingsJson);
+                applyCustomFont(customSettings.font || 'Default');
+            } else {
+                applyCustomFont('Default');
+            }
+            
+            window.dispatchEvent(new Event("themeLoaded"));
+        } catch (e) {
+            console.error("failed to parse custom theme!!!", e);
+            loadPresetTheme("vapor");
+            applyCustomFont('Default');
+        }
+    } else {
+        loadPresetTheme(activeTheme);
+        applyCustomFont('Default');
+    }
+}
+
+window.addEventListener("DOMContentLoaded", initializeTheme);
+
+window.addEventListener("storage", () => {
+    initializeTheme();
+});
   </script>
 </body>
 
