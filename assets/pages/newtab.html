@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New Tab - zxs proxy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', sans-serif;
+      background: linear-gradient(135deg, #0e1b14, #1a2f25, #244f36);
+      background-size: 200% 200%;
+      animation: gradientShift 30s ease infinite;
+      color: #69c27a;
+      text-align: center;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin: 0;
+    }
+
+    .time {
+      font-size: 3rem;
+      margin-top: 0.5rem;
+      letter-spacing: 2px;
+    }
+
+    .date {
+      font-size: 1.5rem;
+      margin-top: 0.2rem;
+      color: #a0d9a2;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 16px;
+      font-size: 1rem;
+      color: #58b075;
+      font-family: 'Fredoka One', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to zxs proxy</h1>
+  <div class="time" id="time">--:--:--</div>
+  <div class="date" id="date">Loading date...</div>
+
+  <footer>New Tab</footer>
+
+  <script>
+    function updateTime() {
+      const now = new Date();
+      const pad = n => n.toString().padStart(2,'0');
+      document.getElementById('time').textContent = 
+        `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+      document.getElementById('date').textContent =
+        now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+  </script>
+</body>
+</html>
