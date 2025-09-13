@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>grog yes to</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@800&display=swap" rel="stylesheet">
   <style>
@@ -83,25 +83,32 @@
 </head>
 <body>
   <div class="toolbar">
-    <button id="backBtn">⯇</button>
-    <button id="forwardBtn">⯈</button>
-    <button id="reloadBtn">⟳</button>
+    <button id="backBtn" aria-label="Back">⯇</button>
+    <button id="forwardBtn" aria-label="Forward">⯈</button>
+    <button id="reloadBtn" aria-label="Reload">⟳</button>
     <input id="addressBar" type="text" placeholder="Enter URL or search...">
   </div>
-  <iframe id="view"></iframe>
+  <iframe id="view" title="Browser view"></iframe>
 
 <script>
-  const iframe = document.getElementById('view');
+  // Single-file browser UI that routes navigations through /scramjet/(requested url)
+  // while preserving the original behavior and visuals.
+
   const addressBar = document.getElementById('addressBar');
   const backBtn = document.getElementById('backBtn');
   const forwardBtn = document.getElementById('forwardBtn');
   const reloadBtn = document.getElementById('reloadBtn');
+  const iframe = document.getElementById('view');
 
+  // History stack to mimic multiple navigations in a single frame
   let historyStack = [];
   let historyIndex = -1;
 
   function isLikelyUrl(input) {
-    return /^https?:\/\//i.test(input) || /^[\w.-]+\.[a-z]{2,}/i.test(input);
+    return (
+      /^https?:\/\//i.test(input) ||
+      /^[\w.-]+\.[a-z]{2,}(?:\/.*)?$/i.test(input)
+    );
   }
 
   function normalizeUrl(input) {
@@ -114,21 +121,21 @@
     forwardBtn.disabled = historyIndex >= historyStack.length - 1;
   }
 
+  // Home page shown inside the iframe (no external navigation)
   function renderHome(pushHistory = true) {
-    iframe.removeAttribute("src");
-    iframe.removeAttribute("srcdoc");
-    iframe.srcdoc = `
+    const homeContent = `
       <style>
-        body { background:#0a0a0a; color:#a8ffbf; font-family:'Fredoka',sans-serif; font-weight:800; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
-        h1 { font-size:32px; margin-bottom:10px; text-shadow:0 0 6px #a8ffbf; }
-        p { font-size:18px; margin-bottom:30px; color:#7fbf9f; }
-        .shortcuts { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:20px; width:80%; max-width:600px; }
-        .shortcut { background:#1a1a1a; color:#a8ffbf; padding:14px 18px; border-radius:20px; text-align:center; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease; }
+        html, body { margin:0; padding:0; height:100%; background:#0a0a0a; color:#a8ffbf; font-family:'Fredoka', sans-serif; font-weight:800; display:flex; align-items:center; justify-content:center; }
+        .wrapper { text-align:center; padding:40px; }
+        h1 { font-size:42px; margin:0 0 12px; text-shadow:0 0 8px #a8ffbf; }
+        p { font-size:18px; margin:0 0 20px; color:#7fbf9f; }
+        .shortcuts { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; width:80%; max-width:720px; margin:0 auto; }
+        .shortcut { background:#1a1a1a; color:#a8ffbf; padding:14px 18px; border-radius:14px; text-align:center; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease; }
         .shortcut:hover { transform:translateY(-4px); box-shadow:0 0 12px #a8ffbf; }
       </style>
-      <body>
+      <div class="wrapper">
         <h1>Welcome Home</h1>
-        <p>Choose your destination:</p>
+        <p>Choose a destination:</p>
         <div class="shortcuts">
           <div class="shortcut" onclick="parent.loadPage('https://search.brave.com', true, true)">Brave</div>
           <div class="shortcut" onclick="parent.loadPage('https://wikipedia.org', true, true)">Wikipedia</div>
@@ -136,8 +143,9 @@
           <div class="shortcut" onclick="parent.loadPage('https://reddit.com', true, true)">Reddit</div>
           <div class="shortcut" onclick="parent.loadPage('https://youtube.com', true, true)">YouTube</div>
         </div>
-      </body>
+      </div>
     `;
+    iframe.srcdoc = homeContent;
     addressBar.value = "zxs://home";
 
     if (pushHistory && historyStack[historyIndex] !== "zxs://home") {
@@ -145,13 +153,14 @@
       historyStack.push("zxs://home");
       historyIndex++;
     }
+    iframe.classList.remove('loaded');
     updateButtons();
   }
 
-  // trustUrl = true means skip search logic
+  // Navigate to a URL or search result
+  // trustUrl true means skip the "likely URL" heuristic
   function loadPage(input, pushHistory = true, trustUrl = false) {
     let url = input.trim();
-
     if (!url || url === "zxs://home") {
       renderHome(pushHistory);
       return;
@@ -165,12 +174,9 @@
       }
     }
 
-    iframe.removeAttribute("srcdoc");
-    iframe.src = "about:blank";
-    void iframe.offsetHeight; // force reflow
-    iframe.classList.remove("loaded");
-
-    iframe.src = "/s/embed.html#" + url;
+    // Route via scramjet
+    iframe.removeAttribute('srcdoc');
+    iframe.src = '/scramjet/' + encodeURIComponent(url);
     addressBar.value = url;
 
     if (pushHistory && historyStack[historyIndex] !== url) {
@@ -182,7 +188,8 @@
     updateButtons();
   }
 
-  addressBar.addEventListener("keydown", e => {
+  // Keyboard and button interactions
+  addressBar.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       const val = addressBar.value.trim();
       if (val) loadPage(val, true, false);
@@ -213,8 +220,10 @@
     iframe.classList.add("loaded");
   });
 
-  // Initial load
-  renderHome(true);
+  // Initialize to home page
+  window.addEventListener("DOMContentLoaded", () => {
+    renderHome(true);
+  });
 </script>
 </body>
 </html>
