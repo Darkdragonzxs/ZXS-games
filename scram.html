@@ -280,10 +280,10 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
-  <script src="/baremux/index.js"></script>
+  <script src="https://vapor.my/baremux/index.js"></script>
   <script src="/scram/scramjet.all.js"></script>
-  <script src="config.js"></script>
-  <script src="/scripts/theme.js"></script>
+  <script src="https://vapor.my/config.js"></script>
+  <script src="https://vapor.my/scripts/theme.js"></script>
 </head>
 
 <body>
@@ -307,7 +307,7 @@
 
     const store = {
       url: "https://",
-      wispurl: localStorage.getItem("proxServer") || "wss://gointospace.app/wisp/",
+      wispurl: localStorage.getItem("proxServer") || "wss://wisp.mercurywork.shop/wisp/",
       bareurl:
         _CONFIG?.bareurl ||
         (location.protocol === "https:" ? "https" : "http") +
@@ -348,7 +348,7 @@
         favicon: getFaviconUrl("https://start.duckduckgo.com"),
       };
 
-      frame.frame.src = "/page/newtab.html";
+      frame.frame.src = "/";
 
       frame.addEventListener("urlchange", (e) => {
         if (!e.url) return;
