@@ -1,682 +1,382 @@
-
 <!DOCTYPE html>
-<!----------------------!
- ! SJ-Static | by VAPOR
- !---------------------->
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vapor scramjet not skid frfrfr</title>
+  <title>Vapor scramjet - green, smooth, rounded</title>
 
+  <!-- Keep the external scripts if you need them on your site -->
   <link rel="stylesheet" href="https://vapor.my/styles/defaults.css" />
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+  <!-- Green, rounded, smooth UI -->
   <style>
-   :root {
-  --bg: #0a111d;
-  --secondary-bg: #2b384d;
-  --third-bg: #444f60;
-  --fourth-bg: #212630;
-  --primary: #a4b8db;
-  --secondary: #7d93ba;
-  --text-color: #d5dce8;
-  --secondary-text-color: #d5dce8;
-  --button-bg: #2b384d;
-  --button-hover: #3c4a5d;
-  --gradient-start: #8aeee9;
-  --gradient-end: #6366f1;
-}
+    :root {
+      --bg: #0a1f0a;
+      --surface: rgba(20, 120, 60, 0.92);
+      --surface-2: rgba(14, 52, 20, 0.92);
+      --accent: #4bdc88;
+      --accent-dark: #2e9c63;
+      --text: #eafff0;
+      --muted: #b6f0c2;
+      --button-bg: rgba(12, 70, 30, 0.95);
+      --button-hover: rgba(28, 120, 50, 0.95);
+      --radius: 20px;
+      --shadow: 0 20px 40px rgba(0,0,0,.25);
+    }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter";
-  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
 
-body {
-  height: 100vh;
-  background: var(--bg);
-  color: var(--text-color);
-  font-family: "Inter", sans-serif;
-  overflow: hidden;
-  transition: background-color 0.3s ease;
-}
-
-img {
-  pointer-events: none;
-}
-
-::-moz-selection {
-  color: var(--bg);
-  background: var(--text-color);
-}
-
-::selection {
-  color: var(--bg);
-  background: var(--text-color);
-}
-
-::-webkit-scrollbar {
-  width: 5px;
-  padding: 2px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background: var(--fourth-bg);
-  transition: 0.3s;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--third-bg);
-}
-
-.badge {
-  text-transform: uppercase;
-  font-size: 12px;
-  background: #ffffff30;
-  border-radius: 5px;
-  opacity: 0.8;
-  padding: 1px 3px;
-}
-
-.redbadge {
-  text-transform: uppercase;
-  font-size: 12px;
-  color: #e54848;
-  background: #e5484860;
-  border-radius: 5px;
-  opacity: 0.8;
-  padding: 1px 3px;
-}
-    body,
-    html,
-    #app {
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-        sans-serif;
-      width: 100vw;
+    body {
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      background: radial-gradient(circle at 10% 10%, #0b2a0b 0%, #07220f 40%, #041a0a 100%), var(--bg);
+      color: var(--text);
       height: 100vh;
-      margin: 0;
-      padding: 0;
-      background: var(--bg);
-      overflow: hidden;
-    }
-
-    @keyframes fade {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .flex {
       display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 20px;
     }
 
-    .col {
+    /* Glassy shell with rounded corners and green glow */
+    .shell {
+      width: min(1100px, 96%);
+      height: calc(100vh - 40px);
+      border-radius: calc(var(--radius) + 6px);
+      padding: 14px;
+      display: flex;
       flex-direction: column;
+      background: linear-gradient(135deg, rgba(10,40,14,0.95), rgba(10,80,20,0.95));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,.25);
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
     }
 
-    .browser-container {
+    /* Subtle outer glow when focused */
+    .shell:focus-within {
+      box-shadow: 0 0 0 6px rgba(76, 255, 164, 0.25), var(--shadow);
+    }
+
+    /* Top toolbar (rounded, glassy, green) */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(6px) saturate(1.2);
+      -webkit-backdrop-filter: blur(6px) saturate(1.2);
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      margin: 6px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(#155a2f, #0f3b1a);
+      color: #dfffe0;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 6px 14px rgba(0,0,0,.25);
+    }
+
+    .btn:hover { transform: translateY(-1px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,.3); }
+    .btn:active { transform: translateY(0) scale(0.98); }
+
+    .address {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(0,0,0,0.25);
+    }
+
+    #addressBar {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      outline: none;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #eafff0;
+      background: linear-gradient(#1f5c21, #174e1a);
+    }
+
+    #addressBar:focus {
+      box-shadow: 0 0 0 4px rgba(76, 255, 165, 0.5);
+    }
+
+    .go {
+      background: linear-gradient(#2b8f4d, #1e6f3f);
+      color: #eafff0;
+      border-radius: 12px;
+      padding: 9px 14px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .go:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+    .go:active { transform: translateY(0); }
+
+    .iframe-wrap {
+      flex: 1;
+      margin: 8px 6px 6px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+      padding: 6px;
+      /* soft shadow around the iframe area */
+      box-shadow: 0 20px 40px rgba(0,0,0,.25);
+    }
+
+    #view {
       width: 100%;
       height: 100%;
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      padding: 0.5em;
-      padding-top: 0;
-      box-sizing: border-box;
-    }
-
-    .browser-container a {
-      color: var(--primary);
-    }
-
-    .browser-container input,
-    .browser-container button {
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-        sans-serif;
-    }
-
-    .browser-container h1 {
-      font-family: "Inter", system-ui, -apple-system,
-        BlinkMacSystemFont, sans-serif;
-      margin-bottom: 0;
-      color: var(--text-color);
-    }
-
-    .browser-container iframe {
-      background-color: #fff;
       border: none;
-      border-radius: 12px;
-      flex: 1;
-      width: 100%;
+      border-radius: 14px;
+      background: #fff;
+      opacity: 0;
+      transition: opacity .5s ease;
     }
 
-    input.bar {
-      font-family: "Inter";
-      padding: 0.6rem 1rem;
-      border: none;
-      outline: none;
-      color: var(--text-color);
-      height: auto;
-      border-radius: 8px;
-      flex: 1;
-      background: var(--button-bg);
-      font-size: 1.1rem;
-      transition: 0.2s ease;
-    }
-
-    input.bar:focus {
-      background-color: var(--button-hover);
-    }
-
-    p {
-      margin: 0;
-      margin-top: 0.2em;
-    }
-
-    .nav {
-      padding-top: 0.6rem;
-      padding-bottom: 0.6rem;
-      gap: 0.5rem;
-    }
-
-    .nav button {
-      color: var(--text-color);
-      outline: none;
-      border: none;
-      border-radius: 8px;
-      background: var(--button-bg);
-      padding: 0.6rem 1rem;
-      cursor: pointer;
-      transition: 0.2s ease;
-      font-size: 1.1rem;
-    }
-
-    .nav button:hover {
-      background-color: var(--button-hover);
+    #view.loaded {
+      opacity: 1;
     }
 
     .tabs {
-      padding-top: 0.6rem;
-      padding-bottom: 0rem;
-      gap: 0.3rem;
-      overflow-x: auto;
-      overflow-y: hidden;
+      display: flex;
+      gap: 0.5rem;
+      overflow: auto;
+      padding: 6px;
+      margin: 6px;
       white-space: nowrap;
-    }
-
-    .tabs::-webkit-scrollbar {
-      height: 4px;
-    }
-
-    .tabs::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .tabs::-webkit-scrollbar-thumb {
-      background: var(--third-bg);
-      border-radius: 2px;
     }
 
     .tab {
-      color: var(--text-color);
-      outline: none;
-      border: none;
-      border-radius: 8px;
-      background: var(--button-bg);
-      padding: 0.5rem 1rem;
-      width: 245px;
-      min-width: 245px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: 0.2s ease;
-      font-size: 1rem;
+      gap: .5rem;
+      padding: .5rem .75rem;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.25);
+      color: #e8ffd6;
+      border: 1px solid rgba(0,0,0,.25);
+      font-size: .95rem;
     }
 
     .tab.active {
-      background-color: var(--button-hover);
-    }
-
-    .tab:hover:not(.active) {
-      background-color: var(--third-bg);
+      background: linear-gradient(135deg, rgba(60,210,120,.9), rgba(0,180,70,.9));
+      color: #041a0a;
+      box-shadow: inset 0 0 8px rgba(255,255,255,.25);
     }
 
     .tab-favicon {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-      border-radius: 4px;
+      width: 16px; height: 16px; border-radius: 3px; background: #fff;
     }
 
-    .tab-title {
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .tab-close {
-      background: none;
-      border: none;
-      color: var(--secondary-text-color);
-      cursor: pointer;
-      padding: 0;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      flex-shrink: 0;
-      transition: 0.2s ease;
-      font-size: 1.2rem;
-    }
-
-    .tab-close:hover {
-      background-color: var(--third-bg);
-      color: var(--text-color);
-    }
-
-    .new-tab {
-      color: var(--text-color);
-      outline: none;
-      border: none;
-      border-radius: 8px;
-      background: var(--button-bg);
-      padding: 0.7rem;
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: 0.2s ease;
-      font-size: 1.3rem;
-    }
-
-    .new-tab:hover {
-      background-color: var(--button-hover);
-    }
-
-    .iframe-container {
-      flex: 1;
-      position: relative;
-    }
-
-    .iframe-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .iframe-container iframe.hidden {
-      display: none;
-    }
-
-    .sortable-ghost {
-      opacity: 0.5 !important;
-    }
-
-    .sortable-drag {
-      transform: rotate(2deg);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .version {
-      color: var(--secondary-text-color) !important;
-      font-size: 1rem;
-      margin-left: auto;
-    }
-
-    .version b {
-      color: var(--text-color);
-    }
-
-    .config-btn {
-      display: none;
+  @media (max-width: 720px) {
+      .toolbar { padding: 10px; }
+      #addressBar { font-size: 13px; padding: 10px; }
+      .btn { width: 38px; height: 38px; }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
-  <script src="/baremux/index.js"></script>
-  <script src="/scram/scramjet.all.js"></script>
-  <script src="/assets/config.js"></script>
 </head>
 
 <body>
-  <div id="app"></div>
+  <div class="shell" id="shell">
+    <div class="toolbar" aria-label="toolbar">
+      <button class="btn" id="backBtn" aria-label="Back" title="Back">⟵</button>
+      <button class="btn" id="forwardBtn" aria-label="Forward" title="Forward">⟶</button>
+      <button class="btn" id="reloadBtn" aria-label="Reload" title="Reload">↻</button>
+
+      <div class="address">
+        <input id="addressBar" placeholder="Enter URL or search..." />
+      </div>
+
+      <button class="go" id="goBtn" aria-label="Go" title="Go">Go</button>
+    </div>
+
+    <div class="tabs" id="tabs-container" aria-label="tabs" role="navigation"></div>
+
+    <div class="iframe-wrap">
+      <iframe id="view" title="Browser view" allowfullscreen></iframe>
+    </div>
+  </div>
+
   <script>
-    const { ScramjetController } = $scramjetLoadController();
-    
-    const scramjet = new ScramjetController({
-      files: {
-        wasm: "/scram/scramjet.wasm.wasm",
-        all: "/scram/scramjet.all.js",
-        sync: "/scram/scramjet.sync.js",
-      },
-    });
-    
-    scramjet.init();
-    navigator.serviceWorker.register("./sw.js");
+    // Green, smooth, rounded UI with proxy-first (via /scramjet) and fallback to direct URL.
+    // Back/Forward/Reload and an explicit Go button.
 
+    const addressBar = document.getElementById('addressBar');
+    const backBtn = document.getElementById('backBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
+    const reloadBtn = document.getElementById('reloadBtn');
+    const goBtn = document.getElementById('goBtn');
+    const iframe = document.getElementById('view');
 
-    const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+    // Optional: if you want a tab-like UI in future
+    const tabsContainer = document.getElementById('tabs-container');
 
-    const store = {
-      url: "https://",
-      wispurl: localStorage.getItem("proxServer") || "wss://gointospace.app/wisp/",
-      bareurl:
-        _CONFIG?.bareurl ||
-        (location.protocol === "https:" ? "https" : "http") +
-        "://" +
-        location.host +
-        "/bare/",
-      proxy: "",
-    };
+    let historyStack = [];
+    let historyIndex = -1;
 
-    connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
-
-    // tab management
-    let tabs = [];
-    let activeTabId = 1;
-    let nextTabId = 2;
-    let sortableInstance = null;
-
-    function getFaviconUrl(url) {
-      try {
-        const domain = new URL(url).origin;
-        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
-          domain
-        )}`;
-      } catch {
-        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
-          url
-        )}`;
-      }
+    function isLikelyUrl(input) {
+      return (
+        /^https?:\/\//i.test(input) ||
+        /^[\w.-]+\.[a-z]{2,}(?:\/.*)?$/i.test(input)
+      );
     }
 
-    function createTab() {
-      const frame = scramjet.createFrame();
-      const tab = {
-        id: nextTabId++,
-        title: "New Tab",
-        url: "https://start.duckduckgo.com/",
-        frame: frame,
-        favicon: getFaviconUrl("https://start.duckduckgo.com"),
-      };
-
-      frame.frame.src = "/page/newtab.html";
-
-      frame.addEventListener("urlchange", (e) => {
-        if (!e.url) return;
-        tab.url = e.url;
-        tab.favicon = getFaviconUrl(e.url);
-
-        try {
-          const title =
-            frame.frame.contentWindow?.document?.title ||
-            new URL(e.url).hostname;
-          tab.title = title || "...";
-        } catch (err) {
-          tab.title = new URL(e.url).hostname || "...";
-        }
-
-        updateTabsUI();
-        updateAddressBar();
-      });
-
-      tabs.push(tab);
-      return tab;
+    function normalizeUrl(input) {
+      if (/^https?:\/\//i.test(input)) return input;
+      return "https://" + input;
     }
 
-    function getActiveTab() {
-      return tabs.find((tab) => tab.id === activeTabId);
+    function updateButtons() {
+      backBtn.disabled = historyIndex <= 0;
+      forwardBtn.disabled = historyIndex >= historyStack.length - 1;
     }
 
-    function switchTab(tabId) {
-      tabs.forEach((tab) => {
-        tab.frame.frame.classList.add("hidden");
-      });
-
-      activeTabId = tabId;
-      const activeTab = getActiveTab();
-      if (activeTab) {
-        activeTab.frame.frame.classList.remove("hidden");
-      }
-
-      updateTabsUI();
-      updateAddressBar();
-    }
-
-    function closeTab(tabId) {
-      const tabIndex = tabs.findIndex((tab) => tab.id === tabId);
-      if (tabIndex === -1) return;
-
-      const tab = tabs[tabIndex];
-
-
-      if (tabs.length === 1) {
-        const newTab = createTab();
-        document.getElementById("iframe-container").appendChild(newTab.frame.frame);
-        switchTab(newTab.id);
-      }
-
-      if (tab.frame.frame.parentNode) {
-        tab.frame.frame.parentNode.removeChild(tab.frame.frame);
-      }
-
-      tabs.splice(tabIndex, 1);
-
-
-      if (activeTabId === tabId && tabs.length > 0) {
-        const newActiveIndex = Math.min(tabIndex, tabs.length - 1);
-        activeTabId = tabs[newActiveIndex].id;
-        switchTab(activeTabId);
-      } else {
-        updateTabsUI();
-      }
-    }
-
-    function updateTabsUI() {
-      const tabsContainer = document.getElementById("tabs-container");
-      if (!tabsContainer) return;
-
-      tabsContainer.innerHTML = "";
-
-      tabs.forEach((tab) => {
-        const tabElement = document.createElement("div");
-        tabElement.className = `tab ${tab.id === activeTabId ? "active" : ""
-          }`;
-        tabElement.setAttribute("data-tab-id", tab.id);
-        tabElement.onclick = () => switchTab(tab.id);
-
-        const faviconImg = document.createElement("img");
-        faviconImg.className = "tab-favicon";
-        faviconImg.src = tab.favicon;
-        faviconImg.alt = "";
-        faviconImg.onerror = () => {
-          faviconImg.style.display = "none";
-        };
-
-        const titleSpan = document.createElement("span");
-        titleSpan.className = "tab-title";
-        titleSpan.textContent = tab.title;
-
-        const closeButton = document.createElement("button");
-        closeButton.className = "tab-close";
-        closeButton.textContent = "×";
-        closeButton.onclick = (e) => {
-          e.stopPropagation();
-          closeTab(tab.id);
-        };
-
-        tabElement.appendChild(faviconImg);
-        tabElement.appendChild(titleSpan);
-        tabElement.appendChild(closeButton);
-        tabsContainer.appendChild(tabElement);
-      });
-
-      const newTabButton = document.createElement("button");
-      newTabButton.className = "new-tab";
-      newTabButton.textContent = "+";
-      newTabButton.onclick = () => {
-        const newTab = createTab();
-        document
-          .getElementById("iframe-container")
-          .appendChild(newTab.frame.frame);
-        switchTab(newTab.id);
-      };
-      tabsContainer.appendChild(newTabButton);
-
-      if (sortableInstance) {
-        sortableInstance.destroy();
-      }
-
-      sortableInstance = new Sortable(tabsContainer, {
-        animation: 200,
-        direction: "horizontal",
-        ghostClass: "sortable-ghost",
-        dragClass: "sortable-drag",
-        filter: ".new-tab",
-        onStart: () => {
-          tabsContainer
-            .querySelectorAll(".tab:not(.sortable-ghost)")
-            .forEach((t) => {
-              t.style.opacity = "0.5";
-            });
-        },
-        onEnd: (evt) => {
-          tabsContainer.querySelectorAll(".tab").forEach((t) => {
-            t.style.opacity = "1";
-          });
-
-          if (evt.oldIndex !== evt.newIndex) {
-            const movedTab = tabs.splice(evt.oldIndex, 1)[0];
-            tabs.splice(evt.newIndex, 0, movedTab);
-          }
-        },
-      });
-    }
-
-    function updateAddressBar() {
-      const addressBar = document.getElementById("address-bar");
-      const activeTab = getActiveTab();
-      if (addressBar && activeTab) {
-        addressBar.value = activeTab.url;
-      }
-    }
-
-    function handleSubmit() {
-      const activeTab = getActiveTab();
-      const addressBar = document.getElementById("address-bar");
-      if (!activeTab || !addressBar) return;
-
-      let url = addressBar.value.trim();
-
-
-      if (!url.startsWith("http") && !url.includes(".")) {
-
-        url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
-      } else if (!url.startsWith("http")) {
-
-        url = "https://" + url;
-      }
-
-      activeTab.url = url;
-      activeTab.favicon = getFaviconUrl(url);
-      return activeTab.frame.go(url);
-    }
-
-    window.addEventListener("load", async () => {
-      const root = document.getElementById("app");
-
-      root.innerHTML = `
-          <div class="browser-container">
-            <div class="flex tabs" id="tabs-container">
-            </div>
-
-            <div class="flex nav">
-              <button onclick="getActiveTab()?.frame.back()"><i class="fa-regular fa-chevron-left"></i></button>
-              <button onclick="getActiveTab()?.frame.forward()"><i class="fa-regular fa-chevron-right"></i></button>
-              <button onclick="getActiveTab()?.frame.reload()"><i class="fa-regular fa-rotate-right"></i></button>
-
-              <input class="bar" id="address-bar" autocomplete="off" autocapitalize="off" autocorrect="off" 
-                onkeyup="event.keyCode === 13 && handleSubmit()">
-
-              <button onclick="window.open(scramjet.encodeUrl(getActiveTab()?.url))"><i class="fa-regular fa-arrow-up-right-from-square"></i></button>
-
-              <p class="version">
-                <b></b>
-              </p>
-            </div>
-
-            <div class="iframe-container" id="iframe-container">
-            </div>
+    // Home view via srcdoc (green themed)
+    function renderHome(pushHistory = true) {
+      const homeContent = `
+        <!DOCTYPE html>
+        <html><head><meta charset="utf-8" /><style>
+          html,body{margin:0;height:100%;font-family: Inter, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;background:#0a1f0a;
+          color:#d5ffd9;display:flex;align-items:center;justify-content:center}
+          .wrap{text-align:center;padding:40px}
+          h1{font-size:40px;margin:0 0 12px;color:#d5ffd9;text-shadow:0 0 12px #4bdc88}
+          p{font-size:16px;color:#a3e8b0;margin:0 0 18px}
+          .shortcuts{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;width:90%;max-width:650px;margin:0 auto}
+          .shortcut{background:#1b3f1d;color:#d8ffd9;padding:12px 14px;border-radius:14px;cursor:pointer;
+            transition:transform .2s ease, box-shadow .2s ease}
+          .shortcut:hover{transform:translateY(-2px);box-shadow:0 6px 18px #4bdc88}
+        </style></head><body><div class="wrap">
+          <h1>Welcome Home</h1>
+          <p>Choose a destination:</p>
+          <div class="shortcuts">
+            <div class="shortcut" onclick="parent.loadPage('https://search.brave.com', true, true)">Brave</div>
+            <div class="shortcut" onclick="parent.loadPage('https://wikipedia.org', true, true)">Wikipedia</div>
+            <div class="shortcut" onclick="parent.loadPage('https://github.com', true, true)">GitHub</div>
+            <div class="shortcut" onclick="parent.loadPage('https://reddit.com', true, true)">Reddit</div>
+            <div class="shortcut" onclick="parent.loadPage('https://youtube.com', true, true)">YouTube</div>
           </div>
-        `;
+        </div></body></html>
+      `;
+      iframe.srcdoc = homeContent;
+      addressBar.value = "zxs://home";
 
-      const initialTab = createTab();
-      document
-        .getElementById("iframe-container")
-        .appendChild(initialTab.frame.frame);
-      switchTab(initialTab.id);
-      updateTabsUI();
-
-      try {
-        function b64(buffer) {
-          let binary = "";
-          const bytes = new Uint8Array(buffer);
-          const len = bytes.byteLength;
-          for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-          }
-          return btoa(binary);
-        }
-        const arraybuffer = await (
-          await fetch("/assets/scramjet.png")
-        ).arrayBuffer();
-        console.log(
-          "%cb",
-          `
-              background-image: url(data:image/png;base64,${b64(arraybuffer)});
-              color: transparent;
-              padding-left: 200px;
-              padding-bottom: 100px;
-              background-size: contain;
-              background-position: center center;
-              background-repeat: no-repeat;
-          `
-        );
-      } catch (e) {
+      if (pushHistory && historyStack[historyIndex] !== "zxs://home") {
+        historyStack = historyStack.slice(0, historyIndex + 1);
+        historyStack.push("zxs://home");
+        historyIndex++;
       }
+
+      iframe.classList.remove('loaded');
+      updateButtons();
+    }
+
+    // Navigate: proxy first, then direct
+    function loadPage(input, pushHistory = true, trustUrl = false) {
+      let url = input.trim();
+      if (!url || url === "zxs://home") {
+        renderHome(pushHistory);
+        return;
+      }
+
+      if (!trustUrl) {
+        if (isLikelyUrl(url)) {
+          url = normalizeUrl(url);
+        } else {
+          url = "https://search.brave.com/search?q=" + encodeURIComponent(url);
+        }
+      }
+
+      const proxiedPath = '/scramjet/' + encodeURIComponent(url);
+
+      // Try proxied path first
+      fetch(proxiedPath, { method: 'HEAD', mode: 'cors' })
+        .then(res => {
+          if (res.ok) iframe.src = proxiedPath;
+          else iframe.src = url;
+          addressBar.value = url;
+
+          if (pushHistory && historyStack[historyIndex] !== url) {
+            historyStack = historyStack.slice(0, historyIndex + 1);
+            historyStack.push(url);
+            historyIndex++;
+          }
+          updateButtons();
+        })
+        .catch(() => {
+          iframe.src = url;
+          addressBar.value = url;
+          if (pushHistory && historyStack[historyIndex] !== url) {
+            historyStack = historyStack.slice(0, historyIndex + 1);
+            historyStack.push(url);
+            historyIndex++;
+          }
+          updateButtons();
+        });
+    }
+
+    // Bind UI
+    addressBar.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const val = addressBar.value.trim();
+        if (val) loadPage(val, true, false);
+      }
+    });
+
+    goBtn.addEventListener("click", () => {
+      const val = addressBar.value.trim();
+      if (val) loadPage(val, true, false);
+    });
+
+    backBtn.addEventListener("click", () => {
+      if (historyIndex > 0) {
+        historyIndex--;
+        loadPage(historyStack[historyIndex], false, true);
+      }
+    });
+
+    forwardBtn.addEventListener("click", () => {
+      if (historyIndex < historyStack.length - 1) {
+        historyIndex++;
+        loadPage(historyStack[historyIndex], false, true);
+      }
+    });
+
+    reloadBtn.addEventListener("click", () => {
+      if (historyIndex >= 0) {
+        loadPage(historyStack[historyIndex], false, true);
+      }
+    });
+
+    iframe.addEventListener("load", () => {
+      iframe.classList.add("loaded");
+    });
+
+    // Init
+    window.addEventListener("DOMContentLoaded", () => {
+      renderHome(true);
     });
   </script>
 </body>
-
 </html>
