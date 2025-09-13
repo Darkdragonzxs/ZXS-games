@@ -238,14 +238,14 @@
       background: var(--tile-bg);
       border-radius: 16px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-      padding: 20px 0;
+      padding: 20px;
       max-width: 900px;
       width: 96vw;
       max-height: 90vh;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
       position: relative;
       z-index: 151;
       overflow-y: auto;
@@ -254,104 +254,98 @@
     .settings-panel h2 {
       font-size: 2rem;
       color: var(--accent);
-      margin-bottom: 36px;
+      margin-bottom: 16px;
       margin-top: 0;
       font-weight: 900;
       text-align: left;
       letter-spacing: 0.08em;
       width: 100%;
       font-family: var(--font-big);
-      padding: 0 6px;
     }
-    .settings-section {
-      width: 90%;
-      display: flex;
-      flex-direction: column;
-      gap: 36px;
-      border: none;
-      padding: 0;
-      margin: 0;
+
+    /* New formatting: section headers and grid layout */
+    .settings-section-title {
+      font-size: 1.05rem;
+      color: var(--accent);
+      font-weight: 900;
+      margin: 12px 0 6px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
     }
-    .settings-row {
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+      align-items: end;
       width: 100%;
+    }
+
+    .settings-item {
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      border: none;
-      padding: 0;
-      margin: 0;
+      gap: 6px;
+      padding: 6px 8px;
+      border-radius: 10px;
     }
-    .settings-panel label, .settings-panel legend {
-      font-size: 1.18rem;
+
+    .settings-panel label {
+      font-size: 0.95rem;
       color: var(--accent);
       font-weight: 700;
-      margin-bottom: 8px;
-      display: block;
-      margin-top: 0;
-      font-family: var(--font-big);
-      text-align: left;
-      width: 100%;
     }
-    /* New: Proxy Engine select styling */
+
+    .settings-panel input,
     .settings-panel select {
       width: 100%;
-      border-radius: 9px;
+      border-radius: 8px;
       border: 1.5px solid var(--accent);
-      padding: 13px 14px;
+      padding: 12px 14px;
       background: var(--tile-bg);
       color: var(--accent);
       font-family: var(--font-big);
-      font-size: 1.18rem;
-      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      font-size: 1rem;
     }
+
+    .settings-panel input:focus,
     .settings-panel select:focus {
       border-color: var(--text-main);
-      box-shadow: 0 0 0 2px rgba(0, 255, 94, 0.2);
+      box-shadow: 0 0 0 2px rgba(0, 255, 94, 0.25);
+      outline: none;
     }
-    .settings-panel input[type="text"], .settings-panel input[type="url"] {
-      width: 100%;
-      border-radius: 9px;
-      border: 1.5px solid var(--accent);
-      padding: 13px 14px;
-      background: var(--tile-bg);
-      color: var(--accent);
-      font-family: var(--font-big);
-      font-size: 1.18rem;
-      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    }
-    .settings-panel input:focus {
-      border-color: var(--text-main);
-      box-shadow: 0 0 0 2px rgba(0, 255, 94, 0.2);
-    }
+
     .settings-panel button {
+      align-self: flex-start;
       background: var(--accent);
       color: var(--bg);
-      border-radius: 12px;
+      border-radius: 10px;
       font-family: var(--font-big);
-      font-size: 1.18rem;
-      padding: 18px 0;
+      font-size: 1rem;
+      padding: 12px 18px;
       border: none;
       cursor: pointer;
-      margin: 0;
+      margin: 6px 0 0;
       transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
       outline: none;
-      letter-spacing: 0.09em;
-      width: 100%;
-      font-weight: 700;
+      font-weight: 900;
     }
-    .settings-panel button:hover, .settings-panel button:focus-visible {
+
+    .settings-panel button:hover,
+    .settings-panel button:focus-visible {
       background: var(--tile-hover-bg);
       color: var(--accent);
       transform: translateY(-1px);
     }
+
     .settings-panel .status {
       color: var(--accent);
-      font-size: 1.18rem;
-      margin-top: 30px;
+      font-size: 1.02rem;
+      margin-top: 8px;
       text-align: left;
       font-weight: 600;
       width: 100%;
     }
+
     .settings-panel .panic-row {
       display: flex;
       flex-direction: row;
@@ -361,6 +355,7 @@
       width: 100%;
       flex-wrap: wrap;
     }
+
     kbd {
       background: var(--tile-bg);
       padding: 4px 10px;
@@ -370,6 +365,7 @@
       color: var(--accent);
       font-family: var(--font-big);
     }
+
     .topbar {
       position: fixed;
       top: 0;
@@ -493,6 +489,7 @@
       color: var(--accent);
       transform: translateY(-2px);
     }
+
     @media (max-width: 768px) {
       .main-block, .settings-panel, .annc-popup {
         max-width: 99vw;
@@ -528,6 +525,7 @@
         transition: transform 0.3s ease-out, opacity 0.3s ease-out;
       }
     }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -555,6 +553,7 @@
     </div>
   </div>
   <div id="particles-js" aria-hidden="true"></div>
+
   <main class="dashboard-wrap" id="dashboard">
     <div class="main-block" id="main-block">
       <img src="/assets/images/logoV.png" alt="ZXS Games Logo" class="main-logo" />
@@ -607,50 +606,64 @@
   </section>
 
   <div id="fullscreen-settings" role="dialog" aria-labelledby="settings-title" aria-modal="true">
-    <div class="settings-panel">
+    <div class="settings-panel" aria-label="Settings">
       <h2 id="settings-title">Settings</h2>
-      <form class="settings-section" id="settings-form" onsubmit="return false;">
-        <fieldset class="settings-row">
-          <legend class="sr-only">Tab Customization</legend>
-          <label for="tab-name">Tab Name</label>
-          <input type="text" id="tab-name" placeholder="Enter tab name" autocomplete="off" />
-          <legend class="sr-only">Favicon Settings</legend>
-          <label for="favicon-url">Favicon URL</label>
-          <input type="url" id="favicon-url" placeholder="Enter favicon URL" autocomplete="off" />
-          <button type="button" onclick="applyTabCloak()">Apply Tab Cloak</button>
-        </fieldset>
 
-        <fieldset class="settings-row">
-          <legend class="sr-only">Panic Settings</legend>
-          <label for="panic-url">Panic Redirect URL</label>
-          <input type="url" id="panic-url" placeholder="Enter URL (e.g., https://google.com)" value="https://google.com" autocomplete="off" />
-          <button type="button" onclick="savePanicSettings()">Save Panic URL</button>
-        </fieldset>
-
-        <fieldset class="settings-row">
-          <label for="proxy-engine">Proxy method</label>
-          <select id="proxy-engine" aria-label="Proxy engine selection">
-            <option value="ultraviolet">Ultraviolet</option>
-            <option value="scramjet">Scramjet</option>
-          </select>
-          <button type="button" onclick="setProxyEngine()">Apply Proxy Engine</button>
-          <div class="status" id="proxy-engine-status" aria-live="polite"></div>
-        </fieldset>
-
-        <fieldset class="settings-row">
-          <legend class="sr-only">Panic Settings</legend>
-          <label for="panic-key-help" style="display:none;"></label>
-          <legend>Panic Key Controls</legend>
-          <div class="panic-row" style="flex-direction:column; align-items:flex-start;">
-            <div style="display:flex;gap:8px;align-items:center;">
-              <span>Current Panic Key: </span>
-              <kbd id="current-panic-key" aria-label="Current panic key">]</kbd>
-              <button type="button" id="change-panic-key-btn">Change Key</button>
-              <span id="listening-status" aria-live="polite"></span>
+      <!-- Updated, fully formatted settings content -->
+      <form class="settings-section" id="settings-form" onsubmit="return false;" aria-label="Settings forms">
+        <!-- Tab Customization -->
+        <section class="settings-section" aria-label="Tab Customization">
+          <h3 class="settings-section-title">Tab Customization</h3>
+          <div class="settings-grid">
+            <div class="settings-item">
+              <label for="tab-name">Tab Name</label>
+              <input type="text" id="tab-name" placeholder="Enter tab name" autocomplete="off" />
+            </div>
+            <div class="settings-item">
+              <label for="favicon-url">Favicon URL</label>
+              <input type="url" id="favicon-url" placeholder="Enter favicon URL" autocomplete="off" />
             </div>
           </div>
-        </fieldset>
-        <div class="status" id="panic-status" aria-live="polite">Panic key is active</div>
+          <button type="button" onclick="applyTabCloak()">Apply Tab Cloak</button>
+        </section>
+
+        <!-- Panic Settings with Panic Key underneath Panic URL -->
+        <section class="settings-section" aria-label="Panic Settings" style="margin-top:14px;">
+          <h3 class="settings-section-title">Panic Settings</h3>
+          <div class="settings-grid">
+            <div class="settings-item" style="grid-column:1 / -1;">
+              <label for="panic-url">Panic Redirect URL</label>
+              <input type="url" id="panic-url" placeholder="Enter URL (e.g., https://google.com)" value="https://google.com" autocomplete="off" />
+            </div>
+
+            <!-- Panic Key selector directly underneath the Panic URL -->
+            <div class="settings-item" style="grid-column:1 / -1;">
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <span>Current Panic Key: </span>
+                <kbd id="current-panic-key" aria-label="Current panic key">]</kbd>
+                <button type="button" id="change-panic-key-btn">Change Key</button>
+                <span id="listening-status" aria-live="polite"></span>
+              </div>
+            </div>
+          </div>
+          <button type="button" onclick="savePanicSettings()">Save Panic URL</button>
+        </section>
+
+        <!-- Proxy Engine -->
+        <section class="settings-section" aria-label="Proxy Engine" style="margin-top:14px;">
+          <h3 class="settings-section-title">Proxy Engine</h3>
+          <div class="settings-grid">
+            <div class="settings-item" style="grid-column:1 / -1;">
+              <label for="proxy-engine">Proxy method</label>
+              <select id="proxy-engine" aria-label="Proxy engine selection">
+                <option value="ultraviolet">Ultraviolet</option>
+                <option value="scramjet">Scramjet</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" onclick="setProxyEngine()">Apply Proxy Engine</button>
+          <div class="status" id="proxy-engine-status" aria-live="polite"></div>
+        </section>
       </form>
     </div>
   </div>
@@ -991,30 +1004,6 @@
         if (iframe) iframe.src = (value === 'scramjet') ? '/scram.html' : '/assets/pages/prox.html';
       }
     }
-  </script>
-
-  <script type="module">
-  import { ScramjetController } from "/scram/scramjet.controller.js";
-
-  const scramjet = new ScramjetController({
-      files: {
-          wasm: "/scram/scramjet.wasm.wasm",
-          sync: "/scram/scramjet.sync.js",
-          shared: "/scram/scramjet.shared.js",
-          client: "/scram/scramjet.client.js"
-      }
-  });
-
-  scramjet.init();
-
-  if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js")
-        .then(() => console.log("Scramjet SW registered"));
-  }
-
-  function proxyUrl(url) {
-      return `/scram/${encodeURIComponent(url)}`;
-  }
   </script>
 </body>
 </html>
