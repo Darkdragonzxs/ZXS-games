@@ -37,7 +37,7 @@
     }
 
     .toolbar button:hover:enabled {
-      transform: scale(1.2);
+      transform: scale(1.15);
       box-shadow: 0 0 10px #a8ffbf;
     }
 
@@ -73,7 +73,7 @@
       border: none;
       background: #0a0a0a;
       opacity: 0;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.3s ease;
     }
 
     #view.loaded {
@@ -91,8 +91,9 @@
   <iframe id="view" title="Browser view"></iframe>
 
 <script>
-  // Single-file browser UI with proxy route fallback:
-  // Try /scramjet/<url> first, else load the real URL directly.
+  // Simple single-file browser UI
+  // Proxy path: /scramjet/<encoded_url>
+  // Fallback: load the real URL directly if proxy is unavailable.
 
   const addressBar = document.getElementById('addressBar');
   const backBtn = document.getElementById('backBtn');
@@ -100,7 +101,7 @@
   const reloadBtn = document.getElementById('reloadBtn');
   const iframe = document.getElementById('view');
 
-  // History stack to mimic navigation
+  // History stack to emulate navigation
   let historyStack = [];
   let historyIndex = -1;
 
@@ -121,11 +122,11 @@
     forwardBtn.disabled = historyIndex >= historyStack.length - 1;
   }
 
-  // Home view (embedded with srcdoc)
+  // Home view (embedded content)
   function renderHome(pushHistory = true) {
     const homeContent = `
       <style>
-        html, body { margin:0; padding:0; height:100%; background:#0a0a0a; color:#a8ffbf; font-family:'Fredoka', sans-serif; font-weight:800; display:flex; align-items:center; justify-content:center; }
+        html, body { margin:0; padding:0; height:100%; background:#0a0a0a; color:#a8ffbf; display:flex; align-items:center; justify-content:center; font-family:'Fredoka', sans-serif; font-weight:800; }
         .wrapper { text-align:center; padding:40px; }
         h1 { font-size:42px; margin:0 0 12px; text-shadow:0 0 8px #a8ffbf; }
         p { font-size:18px; margin:0 0 20px; color:#7fbf9f; }
@@ -157,7 +158,7 @@
     updateButtons();
   }
 
-  // Normalize and request via proxy, with fallback
+  // Navigate: try proxy first, fallback to direct URL
   function loadPage(input, pushHistory = true, trustUrl = false) {
     let url = input.trim();
     if (!url || url === "zxs://home") {
@@ -169,20 +170,20 @@
       if (isLikelyUrl(url)) {
         url = normalizeUrl(url);
       } else {
+        // generic search if not a URL
         url = "https://search.brave.com/search?q=" + encodeURIComponent(url);
       }
     }
 
-    // Proxied path
-    const proxyPath = '/scramjet/' + encodeURIComponent(url);
+    const proxiedPath = '/scramjet/' + encodeURIComponent(url);
 
-    // Try the proxied path first
-    fetch(proxyPath, { method: 'HEAD', mode: 'cors' })
+    // Preflight: try the proxied path with HEAD
+    fetch(proxiedPath, { method: 'HEAD', mode: 'cors' })
       .then(res => {
         if (res.ok) {
-          iframe.src = proxyPath;
+          iframe.src = proxiedPath;
         } else {
-          iframe.src = url; // fallback to direct URL
+          iframe.src = url;
         }
         addressBar.value = url;
 
@@ -191,11 +192,10 @@
           historyStack.push(url);
           historyIndex++;
         }
-
         updateButtons();
       })
       .catch(() => {
-        // On error, fallback to direct URL
+        // On error, fall back to direct URL
         iframe.src = url;
         addressBar.value = url;
         if (pushHistory && historyStack[historyIndex] !== url) {
@@ -207,7 +207,7 @@
       });
   }
 
-  // Keyboard and button interactions
+  // UI bindings
   addressBar.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       const val = addressBar.value.trim();
@@ -239,7 +239,7 @@
     iframe.classList.add("loaded");
   });
 
-  // Initialize to home page
+  // Init
   window.addEventListener("DOMContentLoaded", () => {
     renderHome(true);
   });
