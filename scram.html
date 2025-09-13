@@ -361,6 +361,74 @@ img {
     .config-btn {
       display: none;
     }
+
+    /* Ergonomic enhancements (append-only) */
+    /* Base readability enhancements */
+    html, body {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Focus accessibility for keyboards (visible focus) */
+    :focus-visible {
+      outline: 3px solid var(--secondary);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+    button:focus-visible,
+    input.bar:focus-visible,
+    .tab:focus-visible,
+    .tab-close:focus-visible {
+      outline: 3px solid var(--secondary);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    /* Larger, easier-to-tap targets for controls */
+    .nav button,
+    .new-tab,
+    .tab-close {
+      min-width: 44px;
+      height: 44px;
+      padding: 0.6rem 0.8rem;
+    }
+    input.bar {
+      height: 44px;
+      font-size: 1.05rem;
+      padding: 0.6rem 1rem;
+    }
+
+    /* Tab sizing and readability in the tab strip */
+    .tab {
+      min-width: 180px;
+      padding: 0.6rem 0.9rem;
+      /* preserve existing visuals but ensure it's comfy to tap */
+    }
+
+    /* Reduced motion for users who prefer it */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* Responsive tweaks for small viewports */
+    @media (max-width: 700px) {
+      .tab {
+        width: 200px;
+      }
+      .version {
+        display: none;
+      }
+      input.bar {
+        width: 100%;
+      }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
   <script src="/baremux/index.js"></script>
