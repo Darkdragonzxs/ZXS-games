@@ -170,7 +170,7 @@
     void iframe.offsetHeight; // force reflow
     iframe.classList.remove("loaded");
 
-    iframe.src = "/s/embed.html#" + url;
+    iframe.src = "/scramjet/" + encodeURIComponent(url);
     addressBar.value = url;
 
     if (pushHistory && historyStack[historyIndex] !== url) {
