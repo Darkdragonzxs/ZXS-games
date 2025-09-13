@@ -216,5 +216,39 @@
   // Initial load
   renderHome(true);
 </script>
+  <script src="/baremux/index.js"></script>
+  <script src="/scram/scramjet.all.js"></script>
+  <script src="/assets/config.js"></script>
+  <script>
+    const { ScramjetController } = $scramjetLoadController();
+    
+    const scramjet = new ScramjetController({
+      files: {
+        wasm: "/scram/scramjet.wasm.wasm",
+        all: "/scram/scramjet.all.js",
+        sync: "/scram/scramjet.sync.js",
+      },
+    });
+    
+    scramjet.init();
+    navigator.serviceWorker.register("./sw.js");
+
+
+    const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+
+    const store = {
+      url: "https://",
+      wispurl: localStorage.getItem("proxServer") || "wss://gointospace.app/wisp/",
+      bareurl:
+        _CONFIG?.bareurl ||
+        (location.protocol === "https:" ? "https" : "http") +
+        "://" +
+        location.host +
+        "/bare/",
+      proxy: "",
+    };
+
+    connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+  </script>
 </body>
 </html>
