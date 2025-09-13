@@ -2,74 +2,219 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Searcher</title>
+  <title>Neon Proxy Browser</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@800&display=swap" rel="stylesheet">
   <style>
     body {
-      background: #000;
-      color: #0f0;
-      font-family: monospace;
       margin: 0;
-      padding: 1rem;
-      text-align: center;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 800;
+      background: #0a0a0a;
+      color: #a8ffbf;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
-    input {
-      width: 60%;
-      padding: 0.5rem;
-      border: 2px solid #0f0;
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      padding: 10px;
       background: #111;
-      color: #0f0;
-      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(168, 255, 191, 0.1);
     }
-    button {
-      padding: 0.5rem 1rem;
+
+    .toolbar button {
+      color: #a8ffbf;
+      background: #1a1a1a;
       border: none;
-      background: #0f0;
-      color: #000;
-      font-weight: bold;
-      border-radius: 5px;
+      font-size: 22px;
+      margin: 0 6px;
+      padding: 8px 12px;
+      border-radius: 12px;
       cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    iframe {
-      width: 90%;
-      height: 80vh;
-      border: 2px solid #0f0;
-      margin-top: 1rem;
-      border-radius: 8px;
+
+    .toolbar button:hover:enabled {
+      transform: scale(1.2);
+      box-shadow: 0 0 10px #a8ffbf;
+    }
+
+    .toolbar button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    #addressBar {
+      flex: 1;
+      margin-left: 6px;
+      background: #1a1a1a;
+      border: 2px solid #2f4f3f;
+      color: #a8ffbf;
+      font-size: 16px;
+      padding: 10px 14px;
+      border-radius: 20px;
+      outline: none;
+      transition: box-shadow 0.3s ease;
+    }
+
+    #addressBar:focus {
+      box-shadow: 0 0 12px #a8ffbf;
+    }
+
+    #addressBar::placeholder {
+      color: #5f7f6b;
+    }
+
+    #view {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #0a0a0a;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #view.loaded {
+      opacity: 1;
     }
   </style>
-
-  <!-- waves scripts -->
-  <script src="https://waves.lat/b?id=1"></script>
-  <script src="https://waves.lat/b?id=2"></script>
-  <script src="https://waves.lat/b?id=3"></script>
-  <script src="https://waves.lat/b?id=4"></script>
 </head>
 <body>
-  <h1>Proxy Searcher</h1>
-  <form id="searchForm">
-    <input type="text" id="urlInput" placeholder="Enter a URL (example.com)">
-    <button type="submit">Go</button>
-  </form>
-  <div id="embedContainer"></div>
+  <div class="toolbar">
+    <button id="backBtn">⯇</button>
+    <button id="forwardBtn">⯈</button>
+    <button id="reloadBtn">⟳</button>
+    <input id="addressBar" type="text" placeholder="Enter URL or search...">
+  </div>
+  <iframe id="view"></iframe>
 
-  <script>
-    document.getElementById("searchForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      let url = document.getElementById("urlInput").value.trim();
-      if (!url) return;
+<script>
+  const iframe = document.getElementById('view');
+  const addressBar = document.getElementById('addressBar');
+  const backBtn = document.getElementById('backBtn');
+  const forwardBtn = document.getElementById('forwardBtn');
+  const reloadBtn = document.getElementById('reloadBtn');
 
-      // auto prepend https:// if missing
-      if (!/^https?:\/\//i.test(url)) {
-        url = "https://" + url;
+  let historyStack = [];
+  let historyIndex = -1;
+
+  function isLikelyUrl(input) {
+    return /^https?:\/\//i.test(input) || /^[\w.-]+\.[a-z]{2,}/i.test(input);
+  }
+
+  function normalizeUrl(input) {
+    if (/^https?:\/\//i.test(input)) return input;
+    return "https://" + input;
+  }
+
+  function updateButtons() {
+    backBtn.disabled = historyIndex <= 0;
+    forwardBtn.disabled = historyIndex >= historyStack.length - 1;
+  }
+
+  function renderHome(pushHistory = true) {
+    iframe.removeAttribute("src");
+    iframe.removeAttribute("srcdoc");
+    iframe.srcdoc = `
+      <style>
+        body { background:#0a0a0a; color:#a8ffbf; font-family:'Fredoka',sans-serif; font-weight:800; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
+        h1 { font-size:32px; margin-bottom:10px; text-shadow:0 0 6px #a8ffbf; }
+        p { font-size:18px; margin-bottom:30px; color:#7fbf9f; }
+        .shortcuts { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:20px; width:80%; max-width:600px; }
+        .shortcut { background:#1a1a1a; color:#a8ffbf; padding:14px 18px; border-radius:20px; text-align:center; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease; }
+        .shortcut:hover { transform:translateY(-4px); box-shadow:0 0 12px #a8ffbf; }
+      </style>
+      <body>
+        <h1>Welcome Home</h1>
+        <p>Choose your destination:</p>
+        <div class="shortcuts">
+          <div class="shortcut" onclick="parent.loadPage('https://search.brave.com', true, true)">Brave</div>
+          <div class="shortcut" onclick="parent.loadPage('https://wikipedia.org', true, true)">Wikipedia</div>
+          <div class="shortcut" onclick="parent.loadPage('https://github.com', true, true)">GitHub</div>
+          <div class="shortcut" onclick="parent.loadPage('https://reddit.com', true, true)">Reddit</div>
+          <div class="shortcut" onclick="parent.loadPage('https://youtube.com', true, true)">YouTube</div>
+        </div>
+      </body>
+    `;
+    addressBar.value = "zxs://home";
+
+    if (pushHistory && historyStack[historyIndex] !== "zxs://home") {
+      historyStack = historyStack.slice(0, historyIndex + 1);
+      historyStack.push("zxs://home");
+      historyIndex++;
+    }
+    updateButtons();
+  }
+
+  // trustUrl = true means skip search logic
+  function loadPage(input, pushHistory = true, trustUrl = false) {
+    let url = input.trim();
+
+    if (!url || url === "zxs://home") {
+      renderHome(pushHistory);
+      return;
+    }
+
+    if (!trustUrl) {
+      if (isLikelyUrl(url)) {
+        url = normalizeUrl(url);
+      } else {
+        url = "https://search.brave.com/search?q=" + encodeURIComponent(url);
       }
+    }
 
-      // encode with btoa for now (replace with scramjet.encode if needed)
-      const encoded = btoa(url);
-      const embedUrl = "/b/s/" + encoded;
+    iframe.removeAttribute("srcdoc");
+    iframe.src = "about:blank";
+    void iframe.offsetHeight; // force reflow
+    iframe.classList.remove("loaded");
 
-      document.getElementById("embedContainer").innerHTML =
-        `<iframe src="${embedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
-    });
-  </script>
+    iframe.src = "/s/embed.html#" + url;
+    addressBar.value = url;
+
+    if (pushHistory && historyStack[historyIndex] !== url) {
+      historyStack = historyStack.slice(0, historyIndex + 1);
+      historyStack.push(url);
+      historyIndex++;
+    }
+
+    updateButtons();
+  }
+
+  addressBar.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      const val = addressBar.value.trim();
+      if (val) loadPage(val, true, false);
+    }
+  });
+
+  backBtn.addEventListener("click", () => {
+    if (historyIndex > 0) {
+      historyIndex--;
+      loadPage(historyStack[historyIndex], false, true);
+    }
+  });
+
+  forwardBtn.addEventListener("click", () => {
+    if (historyIndex < historyStack.length - 1) {
+      historyIndex++;
+      loadPage(historyStack[historyIndex], false, true);
+    }
+  });
+
+  reloadBtn.addEventListener("click", () => {
+    if (historyIndex >= 0) {
+      loadPage(historyStack[historyIndex], false, true);
+    }
+  });
+
+  iframe.addEventListener("load", () => {
+    iframe.classList.add("loaded");
+  });
+
+  // Initial load
+  renderHome(true);
+</script>
 </body>
 </html>
