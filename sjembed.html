@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SJ zxs</title>
+  <style>
+    :root {
+      --bg: #0e1b14;
+      --secondary-bg: #1a2f25;
+      --third-bg: #244f36;
+      --fourth-bg: #1a3a2a;
+      --primary: #69c27a;
+      --secondary: #58b075;
+      --text-color: #e6f7ea;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .iframe-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    .iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="iframe-container" id="iframe-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
+  <script src="/baremux/index.js"></script>
+  <script src="/scram/scramjet.all.js"></script>
+  <script src="/scram/scramjet.wasm.wasm"></script>
+  <script src="/assets/config.js"></script>
+
+  <script>
+    const { ScramjetController } = $scramjetLoadController();
+    const scramjet = new ScramjetController({
+      files: {
+        wasm: "/scram/scramjet.wasm.wasm",
+        all: "/scram/scramjet.all.js",
+        sync: "/scram/scramjet.sync.js",
+      },
+    });
+    scramjet.init();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+
+    const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+    const store = {
+      wispurl: localStorage.getItem("proxServer") || "wss://gointospace.app/wisp/",
+      bareurl:
+        _CONFIG?.bareurl ||
+        (location.protocol === "https:" ? "https" : "http") +
+        "://" +
+        location.host +
+        "/bare/",
+    };
+    connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    window.addEventListener("load", () => {
+      const targetUrl = getQueryParam("url") || "/assets/pages/newtab.html";
+
+      const singleFrame = scramjet.createFrame();
+      singleFrame.frame.src = targetUrl;
+
+      document.getElementById("iframe-container").appendChild(singleFrame.frame);
+
+      singleFrame.addEventListener("urlchange", (e) => {
+        if (!e.url) return;
+        try {
+          const title = singleFrame.frame.contentWindow?.document?.title || new URL(e.url).hostname;
+          document.title = title || "Vapor scramjet";
+        } catch {
+          document.title = new URL(e.url).hostname || "Vapor scramjet";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
