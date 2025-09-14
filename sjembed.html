@@ -1,102 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SJ zxs</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SJ zxs — embed</title>
   <style>
-    :root {
-      --bg: #0e1b14;
-      --secondary-bg: #1a2f25;
-      --third-bg: #244f36;
-      --fourth-bg: #1a3a2a;
-      --primary: #69c27a;
-      --secondary: #58b075;
-      --text-color: #e6f7ea;
+    :root { --bg: #0e1b14; --text: #e6f7ea; }
+    html,body { height:100%; width:100%; margin:0; padding:0; background:var(--bg); color:var(--text); overflow:hidden; }
+    #iframe-container { position:fixed; inset:0; width:100%; height:100%; display:block; }
+    /* fallback message if nothing to load */
+    #empty {
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      font-family:Inter,system-ui,sans-serif; color:#9fd8a8; background:linear-gradient(135deg,#07140c55,transparent);
     }
-
-    html, body {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      background: var(--bg);
-      overflow: hidden;
-    }
-
-    .iframe-container {
-      width: 100%;
-      height: 100%;
-    }
-
-    .iframe-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: #fff;
+    iframe.fullscreen {
+      position:fixed;
+      top:0; left:0; width:100%; height:100%;
+      border:0; margin:0; padding:0; display:block;
     }
   </style>
 </head>
-
 <body>
-  <div class="iframe-container" id="iframe-container"></div>
+  <div id="iframe-container"></div>
+  <div id="empty" style="display:none">No URL provided. Use <code>?url=https://example.com</code></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
-  <script src="/baremux/index.js"></script>
-  <script src="/scram/scramjet.all.js"></script>
-  <script src="/scram/scramjet.wasm.wasm"></script>
-  <script src="/assets/config.js"></script>
+  <!-- Optional libs (you can keep scramjet.all.js if your build needs it) -->
+  <script src="/scram/scramjet.all.js" defer></script>
+  <script src="/baremux/index.js" defer></script>
 
   <script>
-    const { ScramjetController } = $scramjetLoadController();
-    const scramjet = new ScramjetController({
-      files: {
-        wasm: "/scram/scramjet.wasm.wasm",
-        all: "/scram/scramjet.all.js",
-        sync: "/scram/scramjet.sync.js",
-      },
-    });
-    scramjet.init();
+    (function () {
+      function getParam(name) {
+        try { return new URLSearchParams(location.search).get(name); } catch { return null; }
+      }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register("./sw.js").catch(() => {});
-    }
+      function normalizeTarget(t) {
+        if (!t) return null;
+        t = t.trim();
+        // if it's already a proxy path (user passed /sjembed?url=...), allow it:
+        if (t.startsWith('/')) return t;
+        // add protocol if missing (simple heuristic)
+        if (!/^[a-zA-Z][a-zA-Z0-9+\-.]*:\/\//.test(t)) t = 'https://' + t;
+        return t;
+      }
 
-    const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-    const store = {
-      wispurl: localStorage.getItem("proxServer") || "wss://gointospace.app/wisp/",
-      bareurl:
-        _CONFIG?.bareurl ||
-        (location.protocol === "https:" ? "https" : "http") +
-        "://" +
-        location.host +
-        "/bare/",
-    };
-    connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+      const raw = getParam('url');
+      const target = normalizeTarget(raw);
 
-    function getQueryParam(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name);
-    }
+      const container = document.getElementById('iframe-container');
+      const empty = document.getElementById('empty');
 
-    window.addEventListener("load", () => {
-      const targetUrl = getQueryParam("url") || "/assets/pages/newtab.html";
+      if (!target) {
+        empty.style.display = 'flex';
+        return;
+      }
 
-      const singleFrame = scramjet.createFrame();
-      singleFrame.frame.src = targetUrl;
+      // Build the proxy path your server expects:
+      // If you want Scramjet to handle proxying client-side, change this.
+      const proxyPath = (target.startsWith('/') ? target : '/sjembed?url=' + encodeURIComponent(target));
 
-      document.getElementById("iframe-container").appendChild(singleFrame.frame);
-
-      singleFrame.addEventListener("urlchange", (e) => {
-        if (!e.url) return;
-        try {
-          const title = singleFrame.frame.contentWindow?.document?.title || new URL(e.url).hostname;
-          document.title = title || "Vapor scramjet";
-        } catch {
-          document.title = new URL(e.url).hostname || "Vapor scramjet";
+      // Try Scramjet first if available, otherwise fallback to plain iframe.
+      async function mount() {
+        // SHORT CHECK: many users break things by including the wasm file as <script src="...wasm"> — don't do that.
+        // Fallback iframe (works as long as the server route /sjembed exists and rewrites headers)
+        function mountIframe(src) {
+          const ifr = document.createElement('iframe');
+          ifr.className = 'fullscreen';
+          ifr.src = src;
+          // allow common features (adjust if you need stricter sandboxing)
+          ifr.setAttribute('allow', 'fullscreen; autoplay; encrypted-media; picture-in-picture; clipboard-write');
+          // remove any default sandbox; if you want sandboxing, add it deliberately.
+          container.appendChild(ifr);
+          // expose for debugging
+          window.__CURRENT_IFRAME = ifr;
         }
-      });
-    });
+
+        // Use Scramjet only if the helper exists and seems usable.
+        try {
+          if (window.$scramjetLoadController) {
+            const maybe = $scramjetLoadController();
+            const ScramjetController = maybe?.ScramjetController || maybe?.default?.ScramjetController;
+            if (typeof ScramjetController === 'function') {
+              const scramjet = new ScramjetController({
+                files: {
+                  wasm: '/scram/scramjet.wasm.wasm',    // controller may fetch this, don't include as <script>
+                  all: '/scram/scramjet.all.js',
+                  sync: '/scram/scramjet.sync.js'
+                }
+              });
+              if (scramjet.init) await scramjet.init();
+              // Prefer giving createFrame the proxy path as src (some versions accept options)
+              const frameObj = scramjet.createFrame ? scramjet.createFrame({ src: proxyPath }) : null;
+              if (frameObj && frameObj.frame) {
+                const f = frameObj.frame;
+                f.className = 'fullscreen';
+                // ensure style is fullscreen if scramjet didn't set it
+                f.style.position = 'fixed';
+                f.style.top = '0';
+                f.style.left = '0';
+                f.style.width = '100%';
+                f.style.height = '100%';
+                f.style.border = '0';
+                container.appendChild(f);
+                window.__CURRENT_FRAME = frameObj;
+                return;
+              }
+            }
+          }
+        } catch (err) {
+          // swallow and fallback
+          console.warn('Scramjet attempt failed — falling back to iframe:', err);
+        }
+
+        // fallback:
+        mountIframe(proxyPath);
+      }
+
+      mount();
+
+      // Helpful debugging tips (shown in console)
+      console.info('Embed loader: target=', target, ' proxyPath=', proxyPath);
+      console.info('If the frame is blank: check devtools Network and Console for 1) 404 to /sjembed 2) X-Frame-Options/CSP blocking 3) mixed-content errors (https→http).');
+    })();
   </script>
 </body>
 </html>
