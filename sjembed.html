@@ -95,7 +95,7 @@
     const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
     const store = {
-      wispurl: localStorage.getItem("proxServer") || "wss://macha.icu.cdn.cloudflare.net/w/",
+      wispurl: localStorage.getItem("proxServer") || "wss://gointospace.app/wisp/",
       bareurl:
         _CONFIG?.bareurl ||
         (location.protocol === "https:" ? "https" : "http") +
