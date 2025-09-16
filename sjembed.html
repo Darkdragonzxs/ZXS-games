@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SJ Embed</title>
+  <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0e1b14;
+    }
+    .iframe-container {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+    .iframe-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="iframe-container" id="iframe-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
+  <script src="/baremux/index.js"></script>
+  <script src="/scram/scramjet.all.js"></script>
+  <script src="/scram/scramjet.wasm.wasm"></script>
+  <script src="/assets/config.js"></script>
+
+  <script>
+    const { ScramjetController } = $scramjetLoadController();
+    const scramjet = new ScramjetController({
+      files: {
+        wasm: "/scram/scramjet.wasm.wasm",
+        all: "/scram/scramjet.all.js",
+        sync: "/scram/scramjet.sync.js",
+      },
+    });
+    scramjet.init();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+
+    const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+    const store = {
+      wispurl: localStorage.getItem("proxServer") || "wss://gointospace.app/wisp/",
+      bareurl: (location.protocol === "https:" ? "https" : "http") + "://" + location.host + "/bare/",
+    };
+    connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+
+    const container = document.getElementById("iframe-container");
+    const params = new URLSearchParams(window.location.search);
+    const target = params.get("url"); // Get URL to proxify
+
+    if (target) {
+      const frame = scramjet.createFrame();
+      frame.frame.src = target; // Proxified by Scramjet internally
+      frame.addEventListener("urlchange", (e) => {
+        if (!e.url) return;
+        try {
+          document.title = frame.frame.contentWindow?.document?.title || new URL(e.url).hostname;
+        } catch {
+          document.title = new URL(e.url).hostname;
+        }
+      });
+      container.appendChild(frame.frame);
+      window.__CURRENT_FRAME = frame;
+    } else {
+      container.innerHTML = "<p style='color:white;text-align:center;padding-top:2rem;'>No URL provided</p>";
+    }
+  </script>
+</body>
+</html>
