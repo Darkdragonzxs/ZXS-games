@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vapor scramjet not skid frfrfr</title>
 
-  <link rel="stylesheet" href="/styles/defaults.css" />
+  <link rel="stylesheet" href="https://vapor.my/styles/defaults.css" />
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
     body,
@@ -282,8 +282,7 @@
   <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
   <script src="/baremux/index.js"></script>
   <script src="/scram/scramjet.all.js"></script>
-  <script src="config.js"></script>
-  <script src="/scripts/theme.js"></script>
+  <script src="/assets/config.js"></script>
 </head>
 
 <body>
@@ -348,7 +347,7 @@
         favicon: getFaviconUrl("https://start.duckduckgo.com"),
       };
 
-      frame.frame.src = "/page/newtab.html";
+      frame.frame.src = "/assets/pages/newtab.html";
 
       frame.addEventListener("urlchange", (e) => {
         if (!e.url) return;
