@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<!----------------------!
+ ! SJ-Static | by VAPOR
+ !---------------------->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vapor scramjet not skid frfrfr</title>
+
+  <link rel="stylesheet" href="/styles/defaults.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <style>
+    body,
+    html,
+    #app {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        sans-serif;
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .col {
+      flex-direction: column;
+    }
+
+    .browser-container {
+      width: 100%;
+      height: 100%;
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      padding: 0.5em;
+      padding-top: 0;
+      box-sizing: border-box;
+    }
+
+    .browser-container a {
+      color: var(--primary);
+    }
+
+    .browser-container input,
+    .browser-container button {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        sans-serif;
+    }
+
+    .browser-container h1 {
+      font-family: "Inter", system-ui, -apple-system,
+        BlinkMacSystemFont, sans-serif;
+      margin-bottom: 0;
+      color: var(--text-color);
+    }
+
+    .browser-container iframe {
+      background-color: #fff;
+      border: none;
+      border-radius: 12px;
+      flex: 1;
+      width: 100%;
+    }
+
+    input.bar {
+      font-family: "Inter";
+      padding: 0.6rem 1rem;
+      border: none;
+      outline: none;
+      color: var(--text-color);
+      height: auto;
+      border-radius: 8px;
+      flex: 1;
+      background: var(--button-bg);
+      font-size: 1.1rem;
+      transition: 0.2s ease;
+    }
+
+    input.bar:focus {
+      background-color: var(--button-hover);
+    }
+
+    p {
+      margin: 0;
+      margin-top: 0.2em;
+    }
+
+    .nav {
+      padding-top: 0.6rem;
+      padding-bottom: 0.6rem;
+      gap: 0.5rem;
+    }
+
+    .nav button {
+      color: var(--text-color);
+      outline: none;
+      border: none;
+      border-radius: 8px;
+      background: var(--button-bg);
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-size: 1.1rem;
+    }
+
+    .nav button:hover {
+      background-color: var(--button-hover);
+    }
+
+    .tabs {
+      padding-top: 0.6rem;
+      padding-bottom: 0rem;
+      gap: 0.3rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+    }
+
+    .tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .tabs::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .tabs::-webkit-scrollbar-thumb {
+      background: var(--third-bg);
+      border-radius: 2px;
+    }
+
+    .tab {
+      color: var(--text-color);
+      outline: none;
+      border: none;
+      border-radius: 8px;
+      background: var(--button-bg);
+      padding: 0.5rem 1rem;
+      width: 245px;
+      min-width: 245px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .tab.active {
+      background-color: var(--button-hover);
+    }
+
+    .tab:hover:not(.active) {
+      background-color: var(--third-bg);
+    }
+
+    .tab-favicon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      border-radius: 4px;
+    }
+
+    .tab-title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tab-close {
+      background: none;
+      border: none;
+      color: var(--secondary-text-color);
+      cursor: pointer;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      flex-shrink: 0;
+      transition: 0.2s ease;
+      font-size: 1.2rem;
+    }
+
+    .tab-close:hover {
+      background-color: var(--third-bg);
+      color: var(--text-color);
+    }
+
+    .new-tab {
+      color: var(--text-color);
+      outline: none;
+      border: none;
+      border-radius: 8px;
+      background: var(--button-bg);
+      padding: 0.7rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: 0.2s ease;
+      font-size: 1.3rem;
+    }
+
+    .new-tab:hover {
+      background-color: var(--button-hover);
+    }
+
+    .iframe-container {
+      flex: 1;
+      position: relative;
+    }
+
+    .iframe-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .iframe-container iframe.hidden {
+      display: none;
+    }
+
+    .sortable-ghost {
+      opacity: 0.5 !important;
+    }
+
+    .sortable-drag {
+      transform: rotate(2deg);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .version {
+      color: var(--secondary-text-color) !important;
+      font-size: 1rem;
+      margin-left: auto;
+    }
+
+    .version b {
+      color: var(--text-color);
+    }
+
+    .config-btn {
+      display: none;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/dreamland"></script>
+  <script src="/baremux/index.js"></script>
+  <script src="/scram/scramjet.all.js"></script>
+  <script src="config.js"></script>
+  <script src="/scripts/theme.js"></script>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script>
+    const { ScramjetController } = $scramjetLoadController();
+    
+    const scramjet = new ScramjetController({
+      files: {
+        wasm: "/scram/scramjet.wasm.wasm",
+        all: "/scram/scramjet.all.js",
+        sync: "/scram/scramjet.sync.js",
+      },
+    });
+    
+    scramjet.init();
+    navigator.serviceWorker.register("./sw.js");
+
+
+    const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+
+    const store = {
+      url: "https://",
+      wispurl: localStorage.getItem("proxServer") || "wss://gointospace.app/wisp/",
+      bareurl:
+        _CONFIG?.bareurl ||
+        (location.protocol === "https:" ? "https" : "http") +
+        "://" +
+        location.host +
+        "/bare/",
+      proxy: "",
+    };
+
+    connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+
+    // tab management
+    let tabs = [];
+    let activeTabId = 1;
+    let nextTabId = 2;
+    let sortableInstance = null;
+
+    function getFaviconUrl(url) {
+      try {
+        const domain = new URL(url).origin;
+        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
+          domain
+        )}`;
+      } catch {
+        return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
+          url
+        )}`;
+      }
+    }
+
+    function createTab() {
+      const frame = scramjet.createFrame();
+      const tab = {
+        id: nextTabId++,
+        title: "New Tab",
+        url: "https://start.duckduckgo.com/",
+        frame: frame,
+        favicon: getFaviconUrl("https://start.duckduckgo.com"),
+      };
+
+      frame.frame.src = "/page/newtab.html";
+
+      frame.addEventListener("urlchange", (e) => {
+        if (!e.url) return;
+        tab.url = e.url;
+        tab.favicon = getFaviconUrl(e.url);
+
+        try {
+          const title =
+            frame.frame.contentWindow?.document?.title ||
+            new URL(e.url).hostname;
+          tab.title = title || "...";
+        } catch (err) {
+          tab.title = new URL(e.url).hostname || "...";
+        }
+
+        updateTabsUI();
+        updateAddressBar();
+      });
+
+      tabs.push(tab);
+      return tab;
+    }
+
+    function getActiveTab() {
+      return tabs.find((tab) => tab.id === activeTabId);
+    }
+
+    function switchTab(tabId) {
+      tabs.forEach((tab) => {
+        tab.frame.frame.classList.add("hidden");
+      });
+
+      activeTabId = tabId;
+      const activeTab = getActiveTab();
+      if (activeTab) {
+        activeTab.frame.frame.classList.remove("hidden");
+      }
+
+      updateTabsUI();
+      updateAddressBar();
+    }
+
+    function closeTab(tabId) {
+      const tabIndex = tabs.findIndex((tab) => tab.id === tabId);
+      if (tabIndex === -1) return;
+
+      const tab = tabs[tabIndex];
+
+
+      if (tabs.length === 1) {
+        const newTab = createTab();
+        document.getElementById("iframe-container").appendChild(newTab.frame.frame);
+        switchTab(newTab.id);
+      }
+
+      if (tab.frame.frame.parentNode) {
+        tab.frame.frame.parentNode.removeChild(tab.frame.frame);
+      }
+
+      tabs.splice(tabIndex, 1);
+
+
+      if (activeTabId === tabId && tabs.length > 0) {
+        const newActiveIndex = Math.min(tabIndex, tabs.length - 1);
+        activeTabId = tabs[newActiveIndex].id;
+        switchTab(activeTabId);
+      } else {
+        updateTabsUI();
+      }
+    }
+
+    function updateTabsUI() {
+      const tabsContainer = document.getElementById("tabs-container");
+      if (!tabsContainer) return;
+
+      tabsContainer.innerHTML = "";
+
+      tabs.forEach((tab) => {
+        const tabElement = document.createElement("div");
+        tabElement.className = `tab ${tab.id === activeTabId ? "active" : ""
+          }`;
+        tabElement.setAttribute("data-tab-id", tab.id);
+        tabElement.onclick = () => switchTab(tab.id);
+
+        const faviconImg = document.createElement("img");
+        faviconImg.className = "tab-favicon";
+        faviconImg.src = tab.favicon;
+        faviconImg.alt = "";
+        faviconImg.onerror = () => {
+          faviconImg.style.display = "none";
+        };
+
+        const titleSpan = document.createElement("span");
+        titleSpan.className = "tab-title";
+        titleSpan.textContent = tab.title;
+
+        const closeButton = document.createElement("button");
+        closeButton.className = "tab-close";
+        closeButton.textContent = "×";
+        closeButton.onclick = (e) => {
+          e.stopPropagation();
+          closeTab(tab.id);
+        };
+
+        tabElement.appendChild(faviconImg);
+        tabElement.appendChild(titleSpan);
+        tabElement.appendChild(closeButton);
+        tabsContainer.appendChild(tabElement);
+      });
+
+      const newTabButton = document.createElement("button");
+      newTabButton.className = "new-tab";
+      newTabButton.textContent = "+";
+      newTabButton.onclick = () => {
+        const newTab = createTab();
+        document
+          .getElementById("iframe-container")
+          .appendChild(newTab.frame.frame);
+        switchTab(newTab.id);
+      };
+      tabsContainer.appendChild(newTabButton);
+
+      if (sortableInstance) {
+        sortableInstance.destroy();
+      }
+
+      sortableInstance = new Sortable(tabsContainer, {
+        animation: 200,
+        direction: "horizontal",
+        ghostClass: "sortable-ghost",
+        dragClass: "sortable-drag",
+        filter: ".new-tab",
+        onStart: () => {
+          tabsContainer
+            .querySelectorAll(".tab:not(.sortable-ghost)")
+            .forEach((t) => {
+              t.style.opacity = "0.5";
+            });
+        },
+        onEnd: (evt) => {
+          tabsContainer.querySelectorAll(".tab").forEach((t) => {
+            t.style.opacity = "1";
+          });
+
+          if (evt.oldIndex !== evt.newIndex) {
+            const movedTab = tabs.splice(evt.oldIndex, 1)[0];
+            tabs.splice(evt.newIndex, 0, movedTab);
+          }
+        },
+      });
+    }
+
+    function updateAddressBar() {
+      const addressBar = document.getElementById("address-bar");
+      const activeTab = getActiveTab();
+      if (addressBar && activeTab) {
+        addressBar.value = activeTab.url;
+      }
+    }
+
+    function handleSubmit() {
+      const activeTab = getActiveTab();
+      const addressBar = document.getElementById("address-bar");
+      if (!activeTab || !addressBar) return;
+
+      let url = addressBar.value.trim();
+
+
+      if (!url.startsWith("http") && !url.includes(".")) {
+
+        url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
+      } else if (!url.startsWith("http")) {
+
+        url = "https://" + url;
+      }
+
+      activeTab.url = url;
+      activeTab.favicon = getFaviconUrl(url);
+      return activeTab.frame.go(url);
+    }
+
+    window.addEventListener("load", async () => {
+      const root = document.getElementById("app");
+
+      root.innerHTML = `
+          <div class="browser-container">
+            <div class="flex tabs" id="tabs-container">
+            </div>
+
+            <div class="flex nav">
+              <button onclick="getActiveTab()?.frame.back()"><i class="fa-regular fa-chevron-left"></i></button>
+              <button onclick="getActiveTab()?.frame.forward()"><i class="fa-regular fa-chevron-right"></i></button>
+              <button onclick="getActiveTab()?.frame.reload()"><i class="fa-regular fa-rotate-right"></i></button>
+
+              <input class="bar" id="address-bar" autocomplete="off" autocapitalize="off" autocorrect="off" 
+                onkeyup="event.keyCode === 13 && handleSubmit()">
+
+              <button onclick="window.open(scramjet.encodeUrl(getActiveTab()?.url))"><i class="fa-regular fa-arrow-up-right-from-square"></i></button>
+
+              <p class="version">
+                <b></b>
+              </p>
+            </div>
+
+            <div class="iframe-container" id="iframe-container">
+            </div>
+          </div>
+        `;
+
+      const initialTab = createTab();
+      document
+        .getElementById("iframe-container")
+        .appendChild(initialTab.frame.frame);
+      switchTab(initialTab.id);
+      updateTabsUI();
+
+      try {
+        function b64(buffer) {
+          let binary = "";
+          const bytes = new Uint8Array(buffer);
+          const len = bytes.byteLength;
+          for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          return btoa(binary);
+        }
+        const arraybuffer = await (
+          await fetch("/assets/scramjet.png")
+        ).arrayBuffer();
+        console.log(
+          "%cb",
+          `
+              background-image: url(data:image/png;base64,${b64(arraybuffer)});
+              color: transparent;
+              padding-left: 200px;
+              padding-bottom: 100px;
+              background-size: contain;
+              background-position: center center;
+              background-repeat: no-repeat;
+          `
+        );
+      } catch (e) {
+        // naw
+      }
+    });
+  </script>
+</body>
+
+</html>
