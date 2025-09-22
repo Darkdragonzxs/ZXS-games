@@ -3,76 +3,122 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movies</title>
+  <title>GreenFlix</title>
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #0d0d0d;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: radial-gradient(circle at top, #0f0f0f, #000000 80%);
       color: #00ff88;
+      overflow-x: hidden;
     }
     header {
-      background-color: #111;
-      padding: 15px;
+      background: linear-gradient(135deg, #0f0f0f, #111);
+      padding: 20px;
       text-align: center;
-      font-size: 1.5em;
+      font-size: 2em;
       font-weight: bold;
       color: #00ff88;
-      border-bottom: 2px solid #00ff88;
+      border-bottom: 2px solid rgba(0, 255, 136, 0.5);
+      text-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+      letter-spacing: 2px;
     }
     .search-bar {
+      position: relative;
       display: flex;
       justify-content: center;
       margin: 20px;
     }
     .search-bar input {
       width: 60%;
-      padding: 10px;
-      border: 2px solid #00ff88;
-      border-radius: 6px;
-      background: #111;
+      padding: 12px 15px;
+      border: 2px solid rgba(0, 255, 136, 0.6);
+      border-radius: 50px;
+      background: rgba(17, 17, 17, 0.85);
+      backdrop-filter: blur(8px);
       color: #00ff88;
       font-size: 1em;
+      transition: all 0.3s ease;
     }
     .search-bar input:focus {
       outline: none;
       border-color: #00ffaa;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+    }
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      width: 60%;
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid #00ff88;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      max-height: 250px;
+      overflow-y: auto;
+      z-index: 100;
+      backdrop-filter: blur(6px);
+    }
+    .suggestion {
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .suggestion:hover {
+      background: #00ff88;
+      color: #111;
+      transform: translateX(5px);
     }
     .category {
-      margin: 30px 20px;
+      margin: 40px 20px;
     }
     .category h2 {
-      margin-bottom: 10px;
-      border-left: 4px solid #00ff88;
-      padding-left: 10px;
-      font-size: 1.3em;
+      margin-bottom: 15px;
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #00ffaa;
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+      border-left: 5px solid #00ff88;
+      padding-left: 12px;
     }
     .media-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 18px;
     }
     .media-card {
-      background: #111;
-      border-radius: 10px;
+      position: relative;
+      background: linear-gradient(145deg, #111, #0a0a0a);
+      border-radius: 15px;
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.2s ease;
-      border: 1px solid #00ff88;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      border: 1px solid rgba(0, 255, 136, 0.4);
+    }
+    .media-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(0, 255, 136, 0.15), transparent 60%);
+      pointer-events: none;
     }
     .media-card:hover {
-      transform: scale(1.05);
+      transform: scale(1.08);
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
       border-color: #00ffaa;
     }
     .media-card img {
       width: 100%;
       display: block;
+      border-bottom: 1px solid rgba(0, 255, 136, 0.2);
     }
     .media-card .title {
-      padding: 10px;
-      font-size: 0.9em;
+      padding: 12px;
+      font-size: 0.95em;
       text-align: center;
       color: #00ff88;
+      font-weight: 500;
+      background: rgba(20, 20, 20, 0.8);
+      backdrop-filter: blur(4px);
     }
     #playerContainer {
       display: none;
@@ -84,33 +130,38 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      backdrop-filter: blur(6px);
     }
     #playerContainer iframe {
       width: 80%;
       height: 70%;
       border: none;
-      border-radius: 12px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.7);
     }
     #closePlayer {
       margin-top: 20px;
-      background: #00ff88;
+      background: linear-gradient(135deg, #00ff88, #00ffaa);
       color: #111;
       border: none;
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 1em;
-      border-radius: 6px;
+      border-radius: 30px;
       cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
     #closePlayer:hover {
-      background: #00ffaa;
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
     }
   </style>
 </head>
 <body>
-  <header>ZXS MOVIES</header>
+  <header>GreenFlix</header>
 
   <div class="search-bar">
-    <input type="text" id="searchQuery" placeholder="Search movies or TV shows... (press Enter)">
+    <input type="text" id="searchQuery" placeholder="Search movies or TV shows...">
+    <div id="suggestions" class="suggestions" style="display:none;"></div>
   </div>
 
   <div id="categories"></div>
@@ -133,25 +184,27 @@
       for (let cat of categories) {
         const res = await fetch(cat.url);
         const data = await res.json();
-
-        const div = document.createElement('div');
-        div.classList.add('category');
-        div.innerHTML = `<h2>${cat.title}</h2><div class="media-grid"></div>`;
-
-        const grid = div.querySelector('.media-grid');
-        data.results.forEach(item => {
-          const card = document.createElement('div');
-          card.classList.add('media-card');
-          card.innerHTML = `
-            <img src="https://image.tmdb.org/t/p/w300${item.poster_path}" alt="">
-            <div class="title">${item.title || item.name}</div>
-          `;
-          card.onclick = () => playMedia(item.id, item.media_type || (item.title ? "movie" : "tv"));
-          grid.appendChild(card);
-        });
-
-        container.appendChild(div);
+        renderCategory(container, cat.title, data.results);
       }
+    }
+
+    function renderCategory(container, title, items) {
+      const div = document.createElement('div');
+      div.classList.add('category');
+      div.innerHTML = `<h2>${title}</h2><div class="media-grid"></div>`;
+      const grid = div.querySelector('.media-grid');
+      items.forEach(item => {
+        if (!item.poster_path) return;
+        const card = document.createElement('div');
+        card.classList.add('media-card');
+        card.innerHTML = `
+          <img src="https://image.tmdb.org/t/p/w300${item.poster_path}" alt="">
+          <div class="title">${item.title || item.name}</div>
+        `;
+        card.onclick = () => playMedia(item.id, item.media_type || (item.title ? "movie" : "tv"));
+        grid.appendChild(card);
+      });
+      container.appendChild(div);
     }
 
     function playMedia(id, type) {
@@ -167,15 +220,64 @@
       document.getElementById('player').src = "";
     };
 
-    document.getElementById("searchQuery").addEventListener("keydown", async function(event) {
+    const searchBox = document.getElementById("searchQuery");
+    const suggestionsBox = document.getElementById("suggestions");
+    const categoriesContainer = document.getElementById("categories");
+
+    searchBox.addEventListener("input", async function() {
+      const query = this.value.trim();
+      if (!query) {
+        suggestionsBox.style.display = "none";
+        return;
+      }
+      const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${query}`);
+      const data = await res.json();
+      suggestionsBox.innerHTML = "";
+      if (data.results.length > 0) {
+        data.results.slice(0, 7).forEach(item => {
+          const div = document.createElement("div");
+          div.classList.add("suggestion");
+          div.textContent = item.title || item.name;
+          div.onclick = () => {
+            playMedia(item.id, item.media_type);
+            suggestionsBox.style.display = "none";
+            searchBox.value = "";
+          };
+          suggestionsBox.appendChild(div);
+        });
+        suggestionsBox.style.display = "block";
+      } else {
+        suggestionsBox.style.display = "none";
+      }
+    });
+
+    searchBox.addEventListener("keydown", async function(event) {
       if (event.key === "Enter") {
         const query = this.value.trim();
+        suggestionsBox.style.display = "none";
         if (!query) return;
         const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${query}`);
         const data = await res.json();
-        const results = data.results;
-        if (results.length > 0) {
-          playMedia(results[0].id, results[0].media_type);
+        if (data.results.length > 0) {
+          const oldSearch = document.getElementById("searchResultsCategory");
+          if (oldSearch) oldSearch.remove();
+          const div = document.createElement("div");
+          div.classList.add("category");
+          div.id = "searchResultsCategory";
+          div.innerHTML = `<h2>Top results for "${query}"</h2><div class="media-grid"></div>`;
+          const grid = div.querySelector('.media-grid');
+          data.results.slice(0, 12).forEach(item => {
+            if (!item.poster_path) return;
+            const card = document.createElement('div');
+            card.classList.add('media-card');
+            card.innerHTML = `
+              <img src="https://image.tmdb.org/t/p/w300${item.poster_path}" alt="">
+              <div class="title">${item.title || item.name}</div>
+            `;
+            card.onclick = () => playMedia(item.id, item.media_type || (item.title ? "movie" : "tv"));
+            grid.appendChild(card);
+          });
+          categoriesContainer.prepend(div);
         } else {
           alert("No results found.");
         }
