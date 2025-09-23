@@ -923,28 +923,5 @@
       showStatusMessage("Settings saved successfully!");
     }
   </script>
-<script type="module">
-import { ScramjetController } from "/scram/scramjet.controller.js";
-
-const scramjet = new ScramjetController({
-    files: {
-        wasm: "/scram/scramjet.wasm.wasm",
-        sync: "/scram/scramjet.sync.js",
-        shared: "/scram/scramjet.shared.js",
-        client: "/scram/scramjet.client.js"
-    }
-});
-
-scramjet.init();
-
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw.js")
-      .then(() => console.log("Scramjet SW registered"));
-}
-
-function proxyUrl(url) {
-    return `/scram/${encodeURIComponent(url)}`;
-}
-</script>
 </body>
 </html>
