@@ -1,23 +1,20 @@
-// Hide the system cursor completely
-document.body.style.cursor = 'none';
+document.querySelectorAll('body, input, textarea, button, a').forEach(el => el.style.cursor = 'none');
 
-// Create the custom cursor element
 const cursor = document.createElement('div');
 cursor.classList.add('custom-cursor');
 document.body.appendChild(cursor);
 
-// Add styles dynamically
 const style = document.createElement('style');
 style.innerHTML = `
 .custom-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 16px;
-  height: 20px;
-  background: #fff; /* solid white */
+  width: 12px;
+  height: 12px;
+  background: #fff;
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  border-radius: 3px;
+  border-radius: 4px;
   transform: translate(-50%, -50%) rotate(-15deg);
   pointer-events: none;
   transition: transform 0.08s ease-out, background 0.2s;
@@ -30,14 +27,12 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// Move the cursor with the mouse
 document.addEventListener('mousemove', e => {
   cursor.style.top = e.clientY + 'px';
   cursor.style.left = e.clientX + 'px';
 });
 
-// Add hover effects on interactive elements
-const addHoverEffect = (selector='button, input, a') => {
+const addHoverEffect = (selector='button, input, a, textarea') => {
   const elements = document.querySelectorAll(selector);
   elements.forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
@@ -45,8 +40,5 @@ const addHoverEffect = (selector='button, input, a') => {
   });
 };
 
-// Initial binding
 addHoverEffect();
-
-// Optional: dynamically rebind if new elements are added later
 window.addEventListener('DOMContentLoaded', () => addHoverEffect());
