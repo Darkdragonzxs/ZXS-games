@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: radial-gradient(circle at top, #0d0d0f, #050505);
+    font-family: Arial, sans-serif;
+    overflow:hidden;
+  }
+
+  /* Chunky glossy card */
+  .signup-box {
+    background: rgba(255,255,255,0.25);
+    border-radius: 28px;
+    padding: 60px 40px;
+    width: 380px;
+    text-align:center;
+    backdrop-filter: blur(24px) saturate(220%);
+    box-shadow: 0 16px 60px rgba(0,0,0,0.75), 0 0 16px rgba(0,198,255,0.3) inset;
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  .signup-box h2 {
+    margin-bottom: 28px;
+    font-weight:600;
+    font-size:26px;
+    letter-spacing:1.2px;
+  }
+
+  /* Chunky inputs */
+  .signup-box input {
+    width:100%;
+    padding:16px;
+    margin:16px 0;
+    border:none;
+    border-radius:16px;
+    background: rgba(255,255,255,0.35);
+    color:#fff;
+    font-size:16px;
+    font-weight:500;
+    outline:none;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+
+  .signup-box input:focus {
+    background: rgba(255,255,255,0.5);
+    box-shadow: 0 0 16px rgba(0,198,255,0.8);
+  }
+
+  /* Chunky glossy button */
+  .signup-box button {
+    margin-top:20px;
+    padding:16px;
+    width:100%;
+    border:none;
+    border-radius:16px;
+    background: linear-gradient(145deg,#00d4ff,#007fff);
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer; /* ignored by cursor.js, our custom cursor shows */
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .signup-box button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,198,255,0.6);
+  }
+
+  @keyframes fadeIn {
+    from {opacity:0; transform:translateY(30px);}
+    to {opacity:1; transform:translateY(0);}
+  }
+</style>
+</head>
+<body>
+
+<div class="signup-box">
+  <h2>Sign Up</h2>
+  <form onsubmit="signup(event)">
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Create Account</button>
+  </form>
+</div>
+
+<!-- External cursor script -->
+<script src="/assets/js/cursor.js"></script>
+
+<script>
+  // Redirect if account exists
+  if(localStorage.getItem('username') && localStorage.getItem('password')){
+    window.location.href = "/login/";
+  }
+
+  function signup(e){
+    e.preventDefault();
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+    if(user && pass){
+      localStorage.setItem('username', user);
+      localStorage.setItem('password', pass);
+      window.location.href = "/login/";
+    } else {
+      alert("Please fill all fields.");
+    }
+  }
+</script>
+</body>
+</html>
