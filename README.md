@@ -7,7 +7,7 @@
 <h2>Why us?</h2>
 <p>We are a wonderful community with many unique features.</p>
 <b>why us?</b>
-<p>We are a good community</p>
+<p>We are a good community and we have the greatest staff, BadIdeas</p>
 <p>owner is responsive</p>
 <p>We have cool partners</p>
 <p>We have lots of links! we have byod too!</p>
